@@ -32,15 +32,15 @@ function UndoneTasksRender (props: any) {
         props.changeInput(obj)
     }
 
-    const handlerDragEnter = (event: any) => {
+    const handlerDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
         props.handlerDragEnter(event)
     }
 
-    const handlerDragOver = (event: any) => {
+    const handlerDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         props.handlerDragOver(event)
     }
 
-    const handlerDrop = (event:any) => {
+    const handlerDrop = (event: React.DragEvent<HTMLDivElement>) => {
         props.handlerDrop(event)
     }
 

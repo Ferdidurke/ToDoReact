@@ -7,8 +7,6 @@ import {UndoneTasksRender} from "./UndoneContainer/script";
 import {DoneTasksRender} from "./DoneContainer/script";
 
 
-
-
 function App() {
 const [toDoTaskList, setToDoTaskList]:any = useState(JSON.parse(localStorage.getItem('toDoTaskList')!) || [])
 const [log, setLog]: any = useState(JSON.parse(localStorage.getItem('log')!) || '')
@@ -29,9 +27,9 @@ const logging = (text: string) => {
 
 }
 
-
 const createTask = (task: any) => {
         setToDoTaskList([...toDoTaskList, task])
+
 }
 
 const ascSort = function () {
@@ -56,14 +54,14 @@ const changeTaskStatus = (id: number) => {
         }
         toDoTaskList[index].checked = !toDoTaskList[index].checked
         setToDoTaskList([...toDoTaskList])
-
-
 }
 
 const markToDelete = (id: number) => {
     const index: number = toDoTaskList.findIndex((item: {id: number}) => item.id === id)
     if (index !== -1 && toDoTaskList[index].markToDelete === false) {
         toDoTaskList[index].markToDelete = true
+        toDoTaskList[index].deletedDate = new Date().toLocaleString()
+        toDoTaskList.sort((a: {deletedDate: string}, b: {deletedDate: string}) => Date.parse(b.deletedDate) - Date.parse(a.deletedDate))
         setToDoTaskList([...toDoTaskList])
         logging(`Task with id:${toDoTaskList[index].id} replace in deleted container at ${new Date().toLocaleString()}`)
         return
@@ -94,15 +92,15 @@ const changeInput = (obj: any) => {
 
 }
 
-const handlerDragEnter = (event: any) => {
+const handlerDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
 }
 
-const handlerDragOver = (event: any) => {
+const handlerDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
 }
 
-const handlerDrop = (event: any) => {
+const handlerDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
     const id: number = Number(event.dataTransfer.getData('id'))
     const index: number = toDoTaskList.findIndex((item: {id: number}) => item.id === id)
@@ -116,6 +114,22 @@ const handlerDrop = (event: any) => {
         }
 
 }
+
+/*const deadliner = () => {
+    toDoTaskList.map((item: any) => {
+        const deadlineDate = Date.parse(item.taskDeadline)
+        const currentDate = Date.parse(new Date().toString())
+        if (deadlineDate - currentDate < 3600000 && deadlineDate - currentDate > 0) {
+            item.color = 'yellow'
+        }
+        if (deadlineDate - currentDate < 0) {
+            item.color = 'red'
+
+        }
+        setToDoTaskList([...toDoTaskList])
+    })
+}*/
+
 
 
 

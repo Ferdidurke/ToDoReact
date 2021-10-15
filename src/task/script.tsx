@@ -6,14 +6,15 @@ import './styles.sass'
 function Task (this: any, taskText : string, taskDeadline : string) {
     this.id = Date.now();
     this.taskText = taskText;
-    this.taskDeadline = dateFormat(taskDeadline);
+    this.taskDeadline = taskDeadline;
     this.date = dateFormat();
     this.checked = false;
     this.color = '';
     this.markToDelete = false;
+    this.deletedDate = '';
 }
 
-function dateFormat(date:Date | string = new Date()) {
+function dateFormat(date:Date | string = new Date()): string {
     return date ? date.toLocaleString() : new Date().toLocaleString()
 }
 
@@ -61,14 +62,16 @@ function CreateTask (props: any) {
         }
     }
 
-    const handlerDragStart = (event: any) => {
-        event.dataTransfer.setData('id', event.target.id)
+    const handlerDragStart = (event: React.DragEvent<HTMLDivElement>) => {
+        // @ts-ignore
+        const { id } = event.target
+        event.dataTransfer.setData('id', id)
     }
 
         return <div className="task"
                     id={props.item.id}
                     tabIndex={0}
-                    color={props.item.color}
+                    style={{background : props.item.color}}
                     draggable="true"
                     onKeyDown={keyboardEvents}
                     onDragStart={handlerDragStart}
@@ -80,7 +83,7 @@ function CreateTask (props: any) {
                 <span className="create-date">Дата создания задачи: {props.item.date.toLocaleString()}</span>
             </div>
             <div className="task-deadline">
-                <span className="deadline-date">Дата выполнения задачи: {props.item.taskDeadline} </span>
+                <span className="deadline-date">Дата выполнения задачи: {dateFormat(props.item.taskDeadline)} </span>
             </div>
             <div className="task-text__block">
                 {
