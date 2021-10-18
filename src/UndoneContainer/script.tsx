@@ -1,49 +1,11 @@
 import './styles.sass'
-import React from "react";
-import {CreateTask} from "../task/script";
-import {Task} from "../task/script";
+import React, {ReactElement} from "react";
+import {TaskForm} from "../task/script";
+import {AppProps} from "../App";
+import {ITask} from "../task/script";
 
 
-
-
-
-
-function UndoneTasksRender (props: any) {
-
-
-
-    const changeStatus = (id: number) => {
-        props.changeStatus(id)
-    }
-
-    const markToDelete = (id: number) => {
-        props.markToDelete(id)
-    }
-
-    const ascSort = () => {
-        props.ascSort()
-    }
-
-    const descSort = () => {
-        props.descSort()
-    }
-
-    const changeInput = (obj: any) => {
-        props.changeInput(obj)
-    }
-
-    const handlerDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
-        props.handlerDragEnter(event)
-    }
-
-    const handlerDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-        props.handlerDragOver(event)
-    }
-
-    const handlerDrop = (event: React.DragEvent<HTMLDivElement>) => {
-        props.handlerDrop(event)
-    }
-
+const UndoneTasks: React.FC<Partial<AppProps>> = (props) => {
 
     return (
         <div className="undone-tasks">
@@ -51,22 +13,22 @@ function UndoneTasksRender (props: any) {
                 <div className="undone-tasks-text">НЕВЫПОЛНЕННЫЕ ЗАДАЧИ</div>
                 <div className="sorting-buttons__container">
                     <button className="asc-button"><img
-                        src="https://cdn-icons-png.flaticon.com/512/814/814031.png" className="button-image" onClick={ascSort}/></button>
+                        src="https://cdn-icons-png.flaticon.com/512/814/814031.png" className="button-image" onClick={props.sortTasksOnAsc}/></button>
                     <button className="desc-button"><img
-                        src="https://cdn-icons-png.flaticon.com/512/814/814055.png" className="button-image" onClick={descSort} /></button>
+                        src="https://cdn-icons-png.flaticon.com/512/814/814055.png" className="button-image" onClick={props.sortTasksOnDesc} /></button>
                 </div>
             </div>
             <div className="undone-tasks__container"
-                 onDragEnter={handlerDragEnter}
-                 onDragOver={handlerDragOver}
-                 onDrop={handlerDrop}>
+                 onDragEnter={props.handlerDragEnter}
+                 onDragOver={props.handlerDragOver}
+                 onDrop={props.handlerDrop}>
                 {
-                    props.toDoList.map((item: any) =>
-                        (item.checked === false && item.markToDelete === false) ? (
-                            <CreateTask key={item.id} item={item}
-                                        changeStatus={changeStatus}
-                                        markToDelete={markToDelete}
-                                        changeInput={changeInput}
+                    props.toDoTaskList!.map((item: ITask) =>
+                        (!item.isChecked && !item.isMarkToDelete) ? (
+                            <TaskForm key={item.id} item={item}
+                                      changeTaskStatus={props.changeTaskStatus}
+                                      markTaskToDelete={props.markTaskToDelete}
+                                      changeTaskText={props.changeTaskText}
 
                                         />
                          ) : <></>
@@ -77,7 +39,7 @@ function UndoneTasksRender (props: any) {
     )
 }
 
-export {UndoneTasksRender}
+export {UndoneTasks}
 
 
 

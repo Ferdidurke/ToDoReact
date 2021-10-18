@@ -1,43 +1,46 @@
-import React, {useState} from "react";
-import {Task} from "../task/script";
+import React, {ReactElement, useState} from "react";
+import {ITask, Task} from "../task/script";
 import './styles.sass'
 
+interface IHeader {
+    toDoList: Array <ITask>
+    newTask(task: ITask): void
+    logging(text: string): void
+}
 
-
-function ToDoHeaderRender (props: any) {
+function ToDoHeader (props: IHeader) : ReactElement<IHeader>{
     const [text, setTaskText] = useState('')
     const [deadlineDate, setDeadlineDate] = useState('')
 
-    const CreateNewTask = () => {
-        const task: any = new (Task as any)(text || '...', new Date(deadlineDate))
+    const createNewTask = (): void => {
+        const task: ITask = new (Task as any)(text || '...', deadlineDate)
         props.newTask(task)
         props.logging(`Create new task with id: ${task.id} at ${new Date().toLocaleString()}. Deadline date: ${new Date(deadlineDate).toLocaleString()}`)
         setTaskText('')
         setDeadlineDate('')
     }
 
-    const textChange = (e: any) => {
+    const changeInputTaskText = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
         setTaskText(e.currentTarget.value)
 
     }
 
-    const deadlineChange = (e: any) => {
+    const changeInputTaskDeadline = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setDeadlineDate(e.currentTarget.value)
-        console.log(deadlineDate)
     }
 
-    const download = (key: string, name: string) => {
-        const tasks = JSON.stringify(localStorage.getItem(`${key}`)!)
-        let a = document.createElement('a');
+    const downloadFiles = (key: string, name: string): void => {
+        const tasks: string = JSON.stringify(localStorage.getItem(`${key}`)!)
+        const a = document.createElement('a');
         a.download = `${name}.txt`;
-        let blob = new Blob([tasks], {type: 'text/plain'})
+        const blob = new Blob([tasks], {type: 'text/plain'})
         a.href = URL.createObjectURL(blob);
         a.click()
         URL.revokeObjectURL(a.href);
     }
 
-    const handleLogs = () => download('log', 'logs')
-    const handleTasks = () => download('toDoTaskList', 'tasks')
+    const handleDownloadLogsButton = (): void => downloadFiles('log', 'logs')
+    const handleDownloadTasksListButton = (): void => downloadFiles('toDoTaskList', 'tasks')
 
 
     return (
@@ -47,7 +50,7 @@ function ToDoHeaderRender (props: any) {
             </div>
             <div className="application">
                 <div className="link-container">
-                    <button className="button download-button" onClick={handleLogs}>
+                    <button className="button download-button" onClick={handleDownloadLogsButton}>
                         DOWNLOAD LOGS
                     </button>
                 </div>
@@ -55,17 +58,17 @@ function ToDoHeaderRender (props: any) {
                     <label className="task-form__label">Срок выполнения задачи:</label>
                     <input type="datetime-local" className="new-task-date"
                            value={deadlineDate}
-                           onChange = {deadlineChange}
+                           onChange = {changeInputTaskDeadline}
                     />
                     <label className="task-form__label">Введите содержание задачи:</label>
                     <textarea className="new-task-text"
                               value={text}
-                              onChange={textChange}
+                              onChange={changeInputTaskText}
                     />
-                    <button className="button new-task__button" onClick={CreateNewTask}> NEW TASK</button>
+                    <button className="button new-task__button" onClick={createNewTask}> NEW TASK</button>
                 </div>
                 <div className="link-container">
-                    <button className="button download-button" onClick={handleTasks}>
+                    <button className="button download-button" onClick={handleDownloadTasksListButton}>
                         DOWNLOAD TASKS
                     </button>
                 </div>
@@ -77,4 +80,4 @@ function ToDoHeaderRender (props: any) {
 
 
 
-export {ToDoHeaderRender}
+export {ToDoHeader}

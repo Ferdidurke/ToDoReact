@@ -1,28 +1,10 @@
-import {CreateTask} from "../task/script";
+import {TaskForm} from "../task/script";
 import './styles.sass'
-import React from "react";
+import React, {ReactElement} from "react";
+import {AppProps} from "../App";
+import {ITask} from "../task/script";
 
-function DoneTasksRender (props: any) {
-    const changeStatus = (id: number) => {
-        props.changeStatus(id)
-    }
-
-    const markToDelete = (id: number) => {
-        props.markToDelete(id)
-    }
-
-    const handlerDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
-        props.handlerDragEnter(event)
-    }
-
-    const handlerDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-        props.handlerDragOver(event)
-    }
-
-    const handlerDrop = (event: React.DragEvent<HTMLDivElement>) => {
-        props.handlerDrop(event)
-    }
-
+const DoneTasks: React.FC<Partial<AppProps>> = (props) => {
 
     return (
         <div className="done-tasks">
@@ -30,16 +12,15 @@ function DoneTasksRender (props: any) {
                 ВЫПОЛНЕННЫЕ ЗАДАЧИ
             </div>
             <div className="done-tasks__container"
-            onDragEnter={handlerDragEnter}
-            onDragOver={handlerDragOver}
-            onDrop={handlerDrop}>
+            onDragEnter={props.handlerDragEnter}
+            onDragOver={props.handlerDragOver}
+            onDrop={props.handlerDrop}>
                 {
-                    props.doneList.map((item: any) =>
-                        (item.checked === true && item.markToDelete === false)? (
-                            <CreateTask key={item.id} item={item}
-                                        changeStatus={changeStatus}
-                                        markToDelete={markToDelete}
-
+                    props.toDoTaskList!.map((item: ITask) =>
+                        (item.isChecked && !item.isMarkToDelete)? (
+                            <TaskForm key={item.id} item={item}
+                                      changeTaskStatus={props.changeTaskStatus}
+                                      markTaskToDelete={props.markTaskToDelete}
                                         />
                         ) : <></>
                     )
@@ -50,7 +31,7 @@ function DoneTasksRender (props: any) {
 }
 
 
-export {DoneTasksRender}
+export {DoneTasks}
 
 
 

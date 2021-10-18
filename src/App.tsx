@@ -1,15 +1,29 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, ReactElement} from 'react';
 
 import './styles.css';
-import {ToDoHeaderRender} from "./Header/script";
-import {DeletedTasksRender} from "./DeletedContainer/script";
-import {UndoneTasksRender} from "./UndoneContainer/script";
-import {DoneTasksRender} from "./DoneContainer/script";
+import {ToDoHeader} from "./Header/script";
+import {DeletedTasks} from "./DeletedContainer/script";
+import {UndoneTasks} from "./UndoneContainer/script";
+import {DoneTasks} from "./DoneContainer/script";
+import {ITask} from "./task/script";
 
+export interface AppProps {
+    toDoTaskList: Array<ITask> | []
+    logging(text: string): void
+    createNewTask(task: ITask): void
+    sortTasksOnAsc(): void
+    sortTasksOnDesc(): void
+    changeTaskStatus(id: number): void
+    markTaskToDelete(id: number): void
+    changeTaskText (obj: {id: number | string, text: string}): void
+    handlerDragEnter(event: React.DragEvent<HTMLDivElement>): void
+    handlerDragOver(event: React.DragEvent<HTMLDivElement>): void
+    handlerDrop(event: React.DragEvent<HTMLDivElement>): void
+}
 
-function App() {
-const [toDoTaskList, setToDoTaskList]:any = useState(JSON.parse(localStorage.getItem('toDoTaskList')!) || [])
-const [log, setLog]: any = useState(JSON.parse(localStorage.getItem('log')!) || '')
+function App (): ReactElement {
+const [toDoTaskList, setToDoTaskList] = useState<Array<any>>(JSON.parse(localStorage.getItem('toDoTaskList')!) || [])
+const [log, setLog] = useState(JSON.parse(localStorage.getItem('log')!) || '')
 
 
 useEffect(() => {
@@ -21,45 +35,43 @@ useEffect(() => {
 }, [log]);
 
 
-const logging = (text: string) => {
+const logging = (text: string): void => {
     setLog([...log, text])
     console.log(text)
 
 }
 
-const createTask = (task: any) => {
+const createNewTask = (task: ITask): void => {
         setToDoTaskList([...toDoTaskList, task])
-
 }
 
-const ascSort = function () {
+const sortTasksOnAsc = (): void => {
         toDoTaskList.sort((a: {taskDeadline: string}, b: {taskDeadline: string}) => Date.parse((a.taskDeadline)) - Date.parse(b.taskDeadline))
         setToDoTaskList([...toDoTaskList])
 
 }
-const descSort = function () {
+const sortTasksOnDesc = (): void => {
         toDoTaskList.sort((a: {taskDeadline: string}, b: {taskDeadline: string}) => Date.parse(b.taskDeadline) - Date.parse(a.taskDeadline))
         setToDoTaskList([...toDoTaskList])
 }
 
 
-const changeTaskStatus = (id: number) => {
-    const index = toDoTaskList.findIndex((item: {id: number} ) => item.id === id)
-    console.log(index)
+const changeTaskStatus = (id: number): void => {
+    const index: number = toDoTaskList.findIndex((item: {id: number} ) => item.id === id)
     if (index !== -1)
-        if (!toDoTaskList[index].checked) {
+        if (!toDoTaskList[index].isChecked) {
             logging(`Task with id:${toDoTaskList[index].id} moved to done at ${new Date().toLocaleString()}`)
         } else {
             logging(`Task with id:${toDoTaskList[index].id} moved to do at ${new Date().toLocaleString()}`)
         }
-        toDoTaskList[index].checked = !toDoTaskList[index].checked
+        toDoTaskList[index].isChecked = !toDoTaskList[index].isChecked
         setToDoTaskList([...toDoTaskList])
 }
 
-const markToDelete = (id: number) => {
+const markTaskToDelete = (id: number): void => {
     const index: number = toDoTaskList.findIndex((item: {id: number}) => item.id === id)
-    if (index !== -1 && toDoTaskList[index].markToDelete === false) {
-        toDoTaskList[index].markToDelete = true
+    if (index !== -1 && toDoTaskList[index].isMarkToDelete === false) {
+        toDoTaskList[index].isMarkToDelete = true
         toDoTaskList[index].deletedDate = new Date().toLocaleString()
         toDoTaskList.sort((a: {deletedDate: string}, b: {deletedDate: string}) => Date.parse(b.deletedDate) - Date.parse(a.deletedDate))
         setToDoTaskList([...toDoTaskList])
@@ -67,11 +79,11 @@ const markToDelete = (id: number) => {
         return
     }
 
-    if (index !== -1 && toDoTaskList[index].markToDelete === true) {
+    if (index !== -1 && toDoTaskList[index].isMarkToDelete === true) {
         const confirmation: boolean = window.confirm('Are you right?')
         if (confirmation) {
-            const taskOnDelete: any = document.getElementById(toDoTaskList[index].id)
-            taskOnDelete.classList.toggle('deleted')
+            const taskOnDelete: HTMLElement | null = document.getElementById(toDoTaskList[index].id)
+            taskOnDelete!.classList.toggle('deleted')
             setTimeout (() => {
                 logging(`Task with id:${toDoTaskList[index].id} deleted at ${new Date().toLocaleString()}`)
                 toDoTaskList.splice(index, 1)
@@ -82,8 +94,7 @@ const markToDelete = (id: number) => {
     }
 }
 
-const changeInput = (obj: any) => {
-    console.log(obj)
+const changeTaskText = (obj: {id: number | string, text: string}): void => {
     const index: number = toDoTaskList.findIndex((item: {id: number}) => item.id === Number(obj.id))
     if (index !== -1) {
         toDoTaskList[index].taskText = obj.text
@@ -92,73 +103,57 @@ const changeInput = (obj: any) => {
 
 }
 
-const handlerDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
+const handlerDragEnter = (event: React.DragEvent<HTMLDivElement>): void => {
     event.preventDefault()
 }
 
-const handlerDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+const handlerDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
     event.preventDefault()
 }
 
-const handlerDrop = (event: React.DragEvent<HTMLDivElement>) => {
+const handlerDrop = (event: React.DragEvent<HTMLDivElement>): void => {
     event.preventDefault()
-    const id: number = Number(event.dataTransfer.getData('id'))
+    const id = Number(event.dataTransfer.getData('id'))
     const index: number = toDoTaskList.findIndex((item: {id: number}) => item.id === id)
-    if (toDoTaskList[index].checked && event.currentTarget.className==='undone-tasks__container')
+    if (toDoTaskList[index].isChecked && event.currentTarget.className==='undone-tasks__container')
         {
         changeTaskStatus(id)
         }
-    if (!toDoTaskList[index].checked && event.currentTarget.className==='done-tasks__container')
+    if (!toDoTaskList[index].isChecked && event.currentTarget.className==='done-tasks__container')
         {
         changeTaskStatus(id)
         }
 
 }
-
-/*const deadliner = () => {
-    toDoTaskList.map((item: any) => {
-        const deadlineDate = Date.parse(item.taskDeadline)
-        const currentDate = Date.parse(new Date().toString())
-        if (deadlineDate - currentDate < 3600000 && deadlineDate - currentDate > 0) {
-            item.color = 'yellow'
-        }
-        if (deadlineDate - currentDate < 0) {
-            item.color = 'red'
-
-        }
-        setToDoTaskList([...toDoTaskList])
-    })
-}*/
-
 
 
 
   return (
   <div className='todo__container'>
-    <ToDoHeaderRender toDoList={toDoTaskList}
-                      newTask={createTask}
-                      logging={logging}/>
+    <ToDoHeader toDoList={toDoTaskList}
+                newTask={createNewTask}
+                logging={logging}/>
       <div className="todo__tasks">
-          <UndoneTasksRender toDoList={toDoTaskList}
-                             changeStatus={changeTaskStatus}
-                             markToDelete={markToDelete}
-                             ascSort={ascSort}
-                             descSort={descSort}
-                             changeInput={changeInput}
-                             handlerDragEnter={handlerDragEnter}
-                             handlerDragOver={handlerDragOver}
-                             handlerDrop={handlerDrop}
+          <UndoneTasks toDoTaskList={toDoTaskList}
+                       changeTaskStatus={changeTaskStatus}
+                       markTaskToDelete={markTaskToDelete}
+                       sortTasksOnAsc={sortTasksOnAsc}
+                       sortTasksOnDesc={sortTasksOnDesc}
+                       changeTaskText={changeTaskText}
+                       handlerDragEnter={handlerDragEnter}
+                       handlerDragOver={handlerDragOver}
+                       handlerDrop={handlerDrop}
                              />
-          <DoneTasksRender doneList={toDoTaskList}
-                           changeStatus={changeTaskStatus}
-                           markToDelete={markToDelete}
+          <DoneTasks toDoTaskList={toDoTaskList}
+                           changeTaskStatus={changeTaskStatus}
+                           markTaskToDelete={markTaskToDelete}
                            handlerDragEnter={handlerDragEnter}
                            handlerDragOver={handlerDragOver}
                            handlerDrop={handlerDrop}
                            />
       </div>
-    <DeletedTasksRender deletedList={toDoTaskList}
-                        markToDelete={markToDelete}/>
+    <DeletedTasks toDoTaskList={toDoTaskList}
+                  markTaskToDelete={markTaskToDelete}/>
   </div>
   )
 }

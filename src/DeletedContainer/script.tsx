@@ -1,30 +1,26 @@
 import './styles.sass'
-import React from "react";
-import {CreateTask} from "../task/script";
+import React, {ReactElement} from "react";
+import {TaskForm} from "../task/script";
+import {AppProps} from "../App";
 
-const handleExtended = () => {
+const handleExtendedDeletedBlock = () => {
     const block: any = document.querySelector('.deleted__tasks__container')
     block.classList.toggle('extended')
 }
 
 
-
-function DeletedTasksRender (props: any) {
-
-    const markToDelete = (id: number) => {
-        props.markToDelete(id)
-    }
+const DeletedTasks: React.FC<Partial<AppProps>> = (props) => {
 
     return (
        <>
        <div className="deleted__tasks__button-container">
-       <button className="button deleted-tasks__button" onClick={handleExtended}>Open</button>
+       <button className="button deleted-tasks__button" onClick={handleExtendedDeletedBlock}>Open</button>
        </div>
         <div className="deleted__tasks__container">
             {
-                props.deletedList.map((item: any) =>
-                    item.markToDelete === true ? (
-                    <CreateTask key={item.id} item={item} markToDelete={markToDelete} />
+                props.toDoTaskList!.map((item: any) =>
+                    item.isMarkToDelete === true ? (
+                    <TaskForm key={item.id} item={item} markTaskToDelete={props.markTaskToDelete} />
                     ) : <></>
                 )
             }
@@ -32,27 +28,6 @@ function DeletedTasksRender (props: any) {
    </>)
 }
 
-export {DeletedTasksRender}
+export {DeletedTasks}
 
 
-
-
-
-
-
-/*let deletedTaskList = !localStorage.deletedTaskList ? [] : JSON.parse(localStorage.getItem('deletedTaskList'))
-
-function deletedTaskMaker() {
-    let deletedTasks = document.querySelector('.deleted__tasks__container')
-    deletedTasks.innerHTML = '';
-    if (deletedTaskList.length > 0) {
-        deletedTaskList.forEach(function (item) {
-            deletedTasks.innerHTML += createTask(item);
-        })
-    }
-}
-
-
-
-
-export {deletedTaskMaker, deletedTaskList}*/
