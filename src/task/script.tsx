@@ -38,7 +38,6 @@ function dateFormat(date:Date | string = new Date()): string {
 
 
 function TaskForm (props: ITaskForm): ReactElement {
-    console.log(props)
     const dispatch = useDispatch()
     const [input, setInput] = useState(false)
     const [textValue, setTextValue] = useState(props.item.taskText)

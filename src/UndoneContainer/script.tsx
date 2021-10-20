@@ -11,7 +11,6 @@ import { RootState } from '../store/store';
 const UndoneTasks: React.FC<Partial<AppProps>> = (props) => {
     const { tasks } = useSelector((state:RootState) => state);
     const dispatch = useDispatch()
-    console.log(tasks)
 
     const markTaskToDelete = (id: number): void => {
         dispatch(markTaskOnDelete(id))

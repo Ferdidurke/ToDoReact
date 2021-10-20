@@ -29,17 +29,18 @@ function ToDoHeader () : ReactElement {
     }
 
     const downloadFiles = (key: string, name: string): void => {
-        const tasks: string = JSON.stringify(localStorage.getItem(`${key}`)!)
+        const tasks: any = JSON.parse(localStorage.getItem(`ReduxStorage`)!)
         const a = document.createElement('a');
         a.download = `${name}.txt`;
-        const blob = new Blob([tasks], {type: 'text/plain'})
+        const downloadFile = JSON.stringify(tasks[key])
+        const blob = new Blob([downloadFile], {type: 'text/plain'})
         a.href = URL.createObjectURL(blob);
         a.click()
         URL.revokeObjectURL(a.href);
     }
 
-    const handleDownloadLogsButton = (): void => downloadFiles('log', 'logs')
-    const handleDownloadTasksListButton = (): void => downloadFiles('toDoTaskList', 'tasks')
+    const handleDownloadLogsButton = (): void => downloadFiles('logs', 'logs')
+    const handleDownloadTasksListButton = (): void => downloadFiles('tasks', 'tasks')
 
 
     return (
