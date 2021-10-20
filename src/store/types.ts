@@ -1,0 +1,7 @@
+export const ADD_TASK = 'ADD_TASK'
+export const CHECK_TASK = 'CHECK_TASK'
+export const SORTED = 'SORTED'
+export const CHANGE_TEXT = 'CHANGE_TEXT'
+export const MARK_TASK_TO_DELETE = 'MARK_TASK_TO_DELETE'
+export const DELETE_TASK = 'DELETE_TASK'
+export const LOGGING = 'LOGGING'

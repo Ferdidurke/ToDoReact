@@ -1,10 +1,18 @@
 import {TaskForm} from "../task/script";
 import './styles.sass'
-import React, {ReactElement} from "react";
+import React from "react";
 import {AppProps} from "../App";
 import {ITask} from "../task/script";
+import {useSelector, useDispatch} from "react-redux";
+import {RootState} from "../store/store";
+import {markTaskOnDelete} from "../store/actions";
 
 const DoneTasks: React.FC<Partial<AppProps>> = (props) => {
+    const { tasks } = useSelector((state:RootState) => state);
+    const dispatch = useDispatch()
+    const markTaskToDelete = (id: number): void => {
+        dispatch(markTaskOnDelete(id))
+    }
 
     return (
         <div className="done-tasks">
@@ -16,12 +24,10 @@ const DoneTasks: React.FC<Partial<AppProps>> = (props) => {
             onDragOver={props.handlerDragOver}
             onDrop={props.handlerDrop}>
                 {
-                    props.toDoTaskList!.map((item: ITask) =>
+                    tasks && tasks.map((item: ITask) =>
                         (item.isChecked && !item.isMarkToDelete)? (
                             <TaskForm key={item.id} item={item}
-                                      changeTaskStatus={props.changeTaskStatus}
-                                      markTaskToDelete={props.markTaskToDelete}
-                                        />
+                                      markTaskToDelete={markTaskToDelete}/>
                         ) : <></>
                     )
                 }
@@ -46,21 +52,3 @@ export {DoneTasks}
 
 
 
-
-
-/*let doneTaskList = !localStorage.doneTaskList ? [] : JSON.parse(localStorage.getItem('doneTaskList'))
-
-function doneTaskMaker() {
-    let DoneTasks = document.querySelector('.done-tasks__container')
-    DoneTasks.innerHTML = '';
-    if (doneTaskList.length > 0) {
-        doneTaskList.forEach(function (item) {
-            DoneTasks.innerHTML += createTask(item);
-        })
-    }
-}
-
-
-
-
-export {doneTaskMaker, doneTaskList}*/

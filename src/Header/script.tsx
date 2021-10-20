@@ -1,28 +1,27 @@
 import React, {ReactElement, useState} from "react";
 import {ITask, Task} from "../task/script";
 import './styles.sass'
+import {addTask} from "../store/actions";
+import {useDispatch} from "react-redux";
+import {logging} from "../store/actions";
 
-interface IHeader {
-    toDoList: Array <ITask>
-    newTask(task: ITask): void
-    logging(text: string): void
-}
 
-function ToDoHeader (props: IHeader) : ReactElement<IHeader>{
+
+function ToDoHeader () : ReactElement {
     const [text, setTaskText] = useState('')
     const [deadlineDate, setDeadlineDate] = useState('')
+    const dispatch = useDispatch()
 
     const createNewTask = (): void => {
         const task: ITask = new (Task as any)(text || '...', deadlineDate)
-        props.newTask(task)
-        props.logging(`Create new task with id: ${task.id} at ${new Date().toLocaleString()}. Deadline date: ${new Date(deadlineDate).toLocaleString()}`)
+        dispatch(addTask(task))
+        dispatch(logging(`Create new task with id: ${task.id} at ${new Date().toLocaleString()}. Deadline date: ${new Date(deadlineDate).toLocaleString()}`))
         setTaskText('')
         setDeadlineDate('')
     }
 
     const changeInputTaskText = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
         setTaskText(e.currentTarget.value)
-
     }
 
     const changeInputTaskDeadline = (e: React.ChangeEvent<HTMLInputElement>): void => {

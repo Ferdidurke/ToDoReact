@@ -1,7 +1,8 @@
 import './styles.sass'
-import React, {ReactElement} from "react";
-import {TaskForm} from "../task/script";
-import {AppProps} from "../App";
+import React from "react";
+import {ITask, TaskForm} from "../task/script";
+import {useSelector, useDispatch} from "react-redux";
+import {deletingTask} from "../store/actions";
 
 const handleExtendedDeletedBlock = () => {
     const block: any = document.querySelector('.deleted__tasks__container')
@@ -9,7 +10,22 @@ const handleExtendedDeletedBlock = () => {
 }
 
 
-const DeletedTasks: React.FC<Partial<AppProps>> = (props) => {
+
+const DeletedTasks: React.FC = () => {
+    const { tasks } = useSelector((state: any) => state);
+    const dispatch = useDispatch()
+
+    const markTaskToDelete = (id: number) => {
+        const index: number = tasks.findIndex((item: ITask) => id === item.id)
+        if (index !== -1 && tasks[index].isMarkToDelete) {
+            const confirmation: boolean = window.confirm('Are you right?')
+            if (confirmation) {
+                const taskOnDelete: HTMLElement | null = document.getElementById(tasks[index].id.toString())
+                taskOnDelete!.classList.toggle('deleted')
+                dispatch(deletingTask(id))
+            }
+        }
+    }
 
     return (
        <>
@@ -18,9 +34,10 @@ const DeletedTasks: React.FC<Partial<AppProps>> = (props) => {
        </div>
         <div className="deleted__tasks__container">
             {
-                props.toDoTaskList!.map((item: any) =>
+                tasks && tasks.map((item: any) =>
                     item.isMarkToDelete === true ? (
-                    <TaskForm key={item.id} item={item} markTaskToDelete={props.markTaskToDelete} />
+                    <TaskForm key={item.id} item={item}
+                              markTaskToDelete={markTaskToDelete}/>
                     ) : <></>
                 )
             }

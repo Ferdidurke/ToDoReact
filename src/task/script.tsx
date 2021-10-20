@@ -1,18 +1,25 @@
 import React, {ReactElement, useState} from "react";
 
 import './styles.sass'
+import {useDispatch} from "react-redux";
+import {changeStatus, changeTaskTextField} from "../store/actions";
 
 export interface ITask {
-    readonly id: number
+    id: number
     taskText: string
     taskDeadline: string
     date: string
     isChecked: boolean
     color: string
-    isMarkToDelete: false
+    isMarkToDelete: boolean
     deletedDate: string
 }
 
+export interface ITaskForm {
+    item: ITask
+    markTaskToDelete(id: number): void
+
+}
 
 function Task (this: any, taskText : string, taskDeadline : string) {
     this.id = Date.now();
@@ -31,16 +38,17 @@ function dateFormat(date:Date | string = new Date()): string {
 
 
 function TaskForm (props: any): ReactElement {
+    console.log(props)
+    const dispatch = useDispatch()
     const [input, setInput] = useState(false)
     const [textValue, setTextValue] = useState(props.item.taskText)
-
     const changeTaskStatus = (): void => {
         const id: number = props.item.id
-        props.changeTaskStatus(id)
+        dispatch(changeStatus(id))
     }
 
     const markTaskToDelete = (): void => {
-        const id = props.item.id
+        const id: number = props.item.id
         props.markTaskToDelete(id)
     }
 
@@ -48,14 +56,14 @@ function TaskForm (props: any): ReactElement {
         if (event.target.parentElement.nextElementSibling.lastChild.checked === false) setInput(true)
     }
 
-    const changeTaskText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const changeTaskTextOnInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
        setTextValue(e.target.value)
     }
 
-    const doneChange = (e: React.ChangeEvent) => {
+    const doneTaskTextChange = (e: React.ChangeEvent): void => {
         const id = (e.target as Element).id
         const obj = {id: id, text: textValue}
-        props.changeTaskText(obj)
+        dispatch(changeTaskTextField(obj))
         setInput(false)
     }
 
@@ -64,12 +72,11 @@ function TaskForm (props: any): ReactElement {
         if (event.keyCode === 69 && event.target.parentElement.className === 'undone-tasks__container') setInput(true)
         if (event.shiftKey && event.keyCode === 39 && event.target.parentElement.className === 'undone-tasks__container')  {
             const id = Number(event.target.id)
-            props.changeTaskStatus(id)
+            dispatch(changeStatus(id))
             }
         if (event.shiftKey && event.keyCode === 37 && event.target.parentElement.className === 'done-tasks__container')  {
             const id = Number(event.target.id)
-            props.changeTaskStatus(id)
-            console.log('22')
+            dispatch(changeStatus(id))
         }
     }
 
@@ -79,7 +86,7 @@ function TaskForm (props: any): ReactElement {
     }
 
         return <div className="task"
-                    id={props.item.id}
+                    id={props.item.id.toString()}
                     tabIndex={0}
                     style={{background : props.item.color}}
                     draggable="true"
@@ -87,21 +94,21 @@ function TaskForm (props: any): ReactElement {
                     onDragStart={handlerDragStart}
                     >
             <div className="closed-button__container">
-                <button id={props.item.id} className="closed-button" onClick={markTaskToDelete}>X</button>
+                <button id={props.item.id.toString()} className="closed-button" onClick={markTaskToDelete}>X</button>
             </div>
             <div className="task-date">
                 <span className="create-date">Дата создания задачи: {props.item.date.toLocaleString()}</span>
             </div>
             <div className="task-deadline">
-                <span className="deadline-date">Дата выполнения задачи: {props.item.taskDeadline} </span>
+                <span className="deadline-date">Дата выполнения задачи: {new Date(props.item.taskDeadline).toLocaleString()} </span>
             </div>
             <div className="task-text__block">
                 {
                     input ? (<input autoFocus
-                                        id={props.item.id}
+                                        id={props.item.id.toString()}
                                         value={textValue}
-                                        onChange={changeTaskText}
-                                        onBlur={doneChange}
+                                        onChange={changeTaskTextOnInput}
+                                        onBlur={doneTaskTextChange}
                             />):
                     (  <p className="task-text" tabIndex={0}
                           onDoubleClick={createInputForText}
