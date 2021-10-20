@@ -4,7 +4,6 @@ import thunk from 'redux-thunk'
 
 const persistedState = localStorage.ReduxStorage ? JSON.parse(localStorage.getItem('ReduxStorage')!) : initialState
 
-
 export const store = createStore(reducer, persistedState, applyMiddleware(thunk));
 
 store.subscribe(()=>{
@@ -12,5 +11,5 @@ store.subscribe(()=>{
 })
 
 export type RootState = ReturnType<typeof store.getState>;
-
+export type AppDispatch = typeof store.dispatch
 

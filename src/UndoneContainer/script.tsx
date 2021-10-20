@@ -24,7 +24,7 @@ const UndoneTasks: React.FC<Partial<AppProps>> = (props) => {
     }
 
     const sortTasksOnDesc = (): void => {
-        if (tasks.length>0) {
+        if (tasks.length > 0) {
             tasks.sort((a: { taskDeadline: string }, b: { taskDeadline: string }) => Date.parse(b.taskDeadline) - Date.parse(a.taskDeadline))
             dispatch(toDoTasksSort())
         }
@@ -49,7 +49,6 @@ const UndoneTasks: React.FC<Partial<AppProps>> = (props) => {
                     tasks && tasks.map((item: ITask) =>
                         (!item.isChecked && !item.isMarkToDelete) ? (
                             <TaskForm key={item.id} item={item}
-                                      changeTaskText={props.changeTaskText}
                                       markTaskToDelete={markTaskToDelete}/>
                          ) : <></>
                     )

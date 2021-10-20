@@ -21,7 +21,7 @@ export interface ITaskForm {
 
 }
 
-function Task (this: any, taskText : string, taskDeadline : string) {
+function Task (this: ITask, taskText : string, taskDeadline : string): void {
     this.id = Date.now();
     this.taskText = taskText;
     this.taskDeadline = taskDeadline;
@@ -37,7 +37,7 @@ function dateFormat(date:Date | string = new Date()): string {
 }
 
 
-function TaskForm (props: any): ReactElement {
+function TaskForm (props: ITaskForm): ReactElement {
     console.log(props)
     const dispatch = useDispatch()
     const [input, setInput] = useState(false)

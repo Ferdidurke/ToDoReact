@@ -3,16 +3,17 @@ import React from "react";
 import {ITask, TaskForm} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
 import {deletingTask} from "../store/actions";
+import {RootState} from "../store/store";
 
 const handleExtendedDeletedBlock = () => {
-    const block: any = document.querySelector('.deleted__tasks__container')
-    block.classList.toggle('extended')
+    const block: HTMLDivElement | null = document.querySelector('.deleted__tasks__container')
+    block!.classList.toggle('extended')
 }
 
 
 
 const DeletedTasks: React.FC = () => {
-    const { tasks } = useSelector((state: any) => state);
+    const { tasks } = useSelector((state: RootState) => state);
     const dispatch = useDispatch()
 
     const markTaskToDelete = (id: number) => {
@@ -34,8 +35,8 @@ const DeletedTasks: React.FC = () => {
        </div>
         <div className="deleted__tasks__container">
             {
-                tasks && tasks.map((item: any) =>
-                    item.isMarkToDelete === true ? (
+                tasks && tasks.map((item: ITask) =>
+                    item.isMarkToDelete ? (
                     <TaskForm key={item.id} item={item}
                               markTaskToDelete={markTaskToDelete}/>
                     ) : <></>

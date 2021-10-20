@@ -1,6 +1,7 @@
 import {ITask} from "../task/script";
-import {logging} from "./actions";
+
 import {ADD_TASK, CHANGE_TEXT, CHECK_TASK, DELETE_TASK, LOGGING, MARK_TASK_TO_DELETE, SORTED} from "./types";
+
 
 
 export const initialState = {
@@ -10,11 +11,11 @@ export const initialState = {
 
 
 export function reducer(state = initialState, action: any) {
+
     switch(action.type) {
         case ADD_TASK: {
             return (
                 {
-
                     ...state,
                     tasks: [...state.tasks, action.task]
                 })
@@ -30,29 +31,34 @@ export function reducer(state = initialState, action: any) {
         case MARK_TASK_TO_DELETE: {
             const deletedTasks: Array<ITask> = state.tasks
             const index: number = deletedTasks.findIndex((item: ITask) => item.id === action.id)
-            console.log(index)
+            let log = ''
             if (index !== -1 && !deletedTasks[index].isMarkToDelete) {
                 deletedTasks[index].isMarkToDelete = true
                 deletedTasks[index].deletedDate = new Date().toLocaleString()
                 deletedTasks.sort((a, b) => Date.parse(b.deletedDate) - Date.parse(a.deletedDate))
-                console.log(deletedTasks)
-                //logging(`Task with id:${toDoTaskList[index].id} replace in deleted container at ${new Date().toLocaleString()}`)
+                log = `Task with id:${deletedTasks[index].id} replace in deleted container at ${new Date().toLocaleString()}`
+                console.log(log)
             }
             return (
                 {
                     ...state,
-                    tasks: [...deletedTasks]
+                    tasks: [...deletedTasks],
+                    logs: [...state.logs, log]
                 })
         }
 
         case DELETE_TASK: {
             const deletedTasks: Array<ITask> = state.tasks
             const index: number = deletedTasks.findIndex((item: ITask) => item.id === action.id)
+            let log = ''
+            log = `Task with id:${deletedTasks[index].id} deleted at ${new Date().toLocaleString()}`
             deletedTasks.splice(index, 1)
+            console.log(log)
                 return (
                     {
                         ...state,
-                        tasks: [...deletedTasks]
+                        tasks: [...deletedTasks],
+                        logs: [...state.logs, log]
                     })
         }
 
@@ -60,17 +66,20 @@ export function reducer(state = initialState, action: any) {
         case CHECK_TASK: {
             const checkedTasks: Array<ITask> = state.tasks
             const index: number = checkedTasks.findIndex((item: {id: number} ) => item.id === action.id)
+            let log = ''
             if (index !== -1)
                 if (!checkedTasks[index].isChecked) {
-                    logging(`Task with id:${checkedTasks[index].id} moved to done at ${new Date().toLocaleString()}`)
+                    log = `Task with id:${checkedTasks[index].id} moved to done at ${new Date().toLocaleString()}`
                 } else {
-                    logging(`Task with id:${checkedTasks[index].id} moved to do at ${new Date().toLocaleString()}`)
+                    log = `Task with id:${checkedTasks[index].id} moved to do at ${new Date().toLocaleString()}`
                 }
                 checkedTasks[index].isChecked = !checkedTasks[index].isChecked
+            console.log(log)
             return (
                 {
                     ...state,
-                    tasks: [...checkedTasks]
+                    tasks: [...checkedTasks],
+                    logs: [...state.logs, log]
                 })
         }
 
@@ -79,7 +88,6 @@ export function reducer(state = initialState, action: any) {
                 const index: number = changingTasks.findIndex((item: {id: number}) => item.id === Number(action.obj.id))
                 if (index !== -1) {
                     changingTasks[index].taskText = action.obj.text
-
                 }
             return (
                 {

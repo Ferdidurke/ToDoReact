@@ -1,6 +1,7 @@
 import {ADD_TASK, CHANGE_TEXT, CHECK_TASK, DELETE_TASK, LOGGING, MARK_TASK_TO_DELETE, SORTED} from "./types";
 import {ITask} from "../task/script";
 import {Action, Dispatch} from "redux";
+import {PayloadAction} from "typesafe-actions";
 
 export const addTask = (task: ITask) => ({
     type: ADD_TASK,
