@@ -54,8 +54,7 @@ const handlerDrop = (event: React.DragEvent<HTMLDivElement>): void => {
 
   return (
   <div className='todo__container'>
-    <ToDoHeader
-                />
+    <ToDoHeader />
       <div className="todo__tasks">
           <UndoneTasks
                        handlerDragEnter={handlerDragEnter}

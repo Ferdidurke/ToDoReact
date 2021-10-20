@@ -39,7 +39,7 @@ const DeletedTasks: React.FC = () => {
                     item.isMarkToDelete ? (
                     <TaskForm key={item.id} item={item}
                               markTaskToDelete={markTaskToDelete}/>
-                    ) : <></>
+                    ) : null
                 )
             }
         </div>

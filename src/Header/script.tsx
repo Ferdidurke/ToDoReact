@@ -65,7 +65,7 @@ function ToDoHeader () : ReactElement {
                               value={text}
                               onChange={changeInputTaskText}
                     />
-                    <button className="button new-task__button" onClick={createNewTask}> NEW TASK</button>
+                    <button data-testid='newTaskButton' className="button new-task__button" onClick={createNewTask}> NEW TASK</button>
                 </div>
                 <div className="link-container">
                     <button className="button download-button" onClick={handleDownloadTasksListButton}>

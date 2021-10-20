@@ -93,7 +93,7 @@ function TaskForm (props: ITaskForm): ReactElement {
                     onDragStart={handlerDragStart}
                     >
             <div className="closed-button__container">
-                <button id={props.item.id.toString()} className="closed-button" onClick={markTaskToDelete}>X</button>
+                <button id={props.item.id.toString()} className="closed-button" data-testid='deletedButton' onClick={markTaskToDelete}>X</button>
             </div>
             <div className="task-date">
                 <span className="create-date">Дата создания задачи: {props.item.date.toLocaleString()}</span>

@@ -28,7 +28,7 @@ const DoneTasks: React.FC<Partial<AppProps>> = (props) => {
                         (item.isChecked && !item.isMarkToDelete)? (
                             <TaskForm key={item.id} item={item}
                                       markTaskToDelete={markTaskToDelete}/>
-                        ) : <></>
+                        ) : null
                     )
                 }
             </div>
