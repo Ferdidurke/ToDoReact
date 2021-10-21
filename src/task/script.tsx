@@ -103,7 +103,7 @@ function TaskForm (props: ITaskForm): ReactElement {
             </div>
             <div className="task-text__block">
                 {
-                    input ? (<input autoFocus
+                    input ? (<input autoFocus data-testid='testInput'
                                         id={props.item.id.toString()}
                                         value={textValue}
                                         onChange={changeTaskTextOnInput}

@@ -1,7 +1,7 @@
 import React, {ReactElement, useState} from "react";
 import {ITask, Task} from "../task/script";
 import './styles.sass'
-import {addTask} from "../store/actions";
+import {addTask, deadliner} from "../store/actions";
 import {useDispatch} from "react-redux";
 import {logging} from "../store/actions";
 
@@ -15,6 +15,7 @@ function ToDoHeader () : ReactElement {
     const createNewTask = (): void => {
         const task: ITask = new (Task as any)(text || '...', deadlineDate)
         dispatch(addTask(task))
+        dispatch(deadliner())
         dispatch(logging(`Create new task with id: ${task.id} at ${new Date().toLocaleString()}. Deadline date: ${new Date(deadlineDate).toLocaleString()}`))
         setTaskText('')
         setDeadlineDate('')

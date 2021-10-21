@@ -1,5 +1,5 @@
 import React from "react";
-import {render, screen, fireEvent, queryByText, getByRole, getByTestId} from "@testing-library/react";
+import {render, screen, fireEvent, queryByText, waitFor} from "@testing-library/react";
 import '@testing-library/jest-dom'
 import App from "./App";
 import {store} from "./store/store";
@@ -8,11 +8,9 @@ import {ToDoHeader} from "./Header/script";
 import {UndoneTasks} from "./UndoneContainer/script";
 import {DoneTasks} from "./DoneContainer/script";
 import {DeletedTasks} from "./DeletedContainer/script";
-import userEvent from '@testing-library/user-event'
-import {initialState} from "./store/reducer";
+
 import {createStore} from "redux";
 import {reducer} from "./store/reducer";
-
 import {Task, TaskForm} from "./task/script";
 
 
@@ -21,7 +19,7 @@ const renderWithRedux = (
         {initialState, store = createStore(reducer, initialState)} = {}
 ) => {
         return {
-            ...render(<Provider store={store}>component</Provider>),
+            ...render(<Provider store={store}>{component}</Provider>),
             store
         }
 }
@@ -31,6 +29,7 @@ describe('Redux testing', () => {
         const { queryByText } = renderWithRedux(<UndoneTasks/>)
         expect(queryByText("Дата выполнения задачи")).toBeNull
     })
+
 
 })
 
@@ -43,6 +42,7 @@ describe('render header', () => {
             </Provider>
         )
         expect(screen.getByText(/TO DO LIST/i)).toBeInTheDocument();
+
     })
 
     it('render header', () => {
@@ -56,11 +56,8 @@ describe('render header', () => {
         fireEvent.change(screen.getByRole('textbox'), {
             target: {value: 'TEST'}
         })
-        const textInput = screen.getByRole('textbox')
-        textInput.value = '...'
         fireEvent.click(screen.getByTestId('newTaskButton'))
-        expect(textInput.value).toBe('')
-
+        expect(screen.getByRole('textbox').value).toBe('')
     })
 })
 
@@ -72,6 +69,18 @@ describe('render undoneTasksContainer', () => {
             </Provider>
         )
         expect(screen.queryByText(/Невыполненные задачи/i)).toBeInTheDocument();
+    })
+
+    it ('delete tasks', () => {
+        const {container} = render(
+            <Provider store={store}>
+                <UndoneTasks />
+            </Provider>
+        )
+        expect(container.firstChild.firstChild.nextSibling.firstChild.className).toBe('task')
+        fireEvent.click(screen.getByTestId('deletedButton'))
+        expect(container.firstChild.firstChild.nextSibling.firstChild).toBe(null)
+
     })
 
 })
@@ -96,10 +105,7 @@ describe('render deletedTasksContainer', () => {
                      <DeletedTasks/>
                 </Provider>
             )
-            expect(screen.queryByRole('button')).toBeInTheDocument();
-            fireEvent.click(screen.getByRole('button'), {
-            })
-
+            expect(screen.getByTestId('extendedBtn')).toBeInTheDocument();
     })
 
     it ('render extended deleteTasksContainer',  () => {
@@ -108,20 +114,20 @@ describe('render deletedTasksContainer', () => {
                     <DeletedTasks/>
                 </Provider>
             )
-            fireEvent.click(screen.getByRole('button'))
+            fireEvent.click(screen.getByTestId('extendedBtn'))
            expect((container.firstChild.nextSibling.className === 'deleted__tasks__container extended')).toBe(true)
     })
-    it ('check for delete task', () => {
-        const task = new Task ('ExampleTaskText', '10/10/2010')
-        task.isMarkToDelete = true
-        console.log(task)
+    it ('check for delete task', async () => {
         const { container } = render(
             <Provider store={store}>
-                <DeletedTasks tasks={[task]}/>
+                <DeletedTasks />
             </Provider>
         )
+        window.confirm = jest.fn(() => true)
         fireEvent.click(screen.getByTestId('deletedButton'))
-        //expect(container.firstChild.nextSibling.firstChild).toBe(null)
+        expect(window.confirm).toBeCalledWith('Are you right?')
+        //console.log(container.firstChild.nextSibling.firstChild.className)
+        await waitFor (() => expect(container.firstChild.nextSibling.firstChild).toBe(null))
     })
 
 })
@@ -138,19 +144,25 @@ describe('renders task', () => {
         expect(screen.getByRole('button')).toBeInTheDocument()
         expect(screen.getByText('ExampleTaskText')).toBeInTheDocument();
         expect(screen.getByRole('checkbox')).toBeInTheDocument();
-
-
     })
 
-    it ('delete tasks', () => {
+    it ('check task for input',  () => {
         const task = new Task ('ExampleTaskText', '10/10/2010')
         const {container} = render(
             <Provider store={store}>
-                   <UndoneTasks tasks={task}/>
+                <TaskForm item={task}/>
             </Provider>
         )
-        fireEvent.click(screen.getByTestId('deletedButton'))
-        expect(container.firstChild.firstChild.nextSibling.firstChild).toBe(null)
+        const taskTextField = container.firstChild.childNodes[3].lastChild
+        fireEvent.dblClick(taskTextField)
+        expect(screen.getByTestId('testInput')).toBeInTheDocument()
+
+        fireEvent.change(screen.getByTestId('testInput'), {
+            target: {value: 'test input value'}
+        })
+        fireEvent.blur(screen.getByTestId('testInput'))
+        expect(screen.queryByTestId('testInput')).not.toBeInTheDocument()
     })
+
 })
 

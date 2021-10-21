@@ -1,6 +1,6 @@
 import {ITask} from "../task/script";
 
-import {ADD_TASK, CHANGE_TEXT, CHECK_TASK, DELETE_TASK, LOGGING, MARK_TASK_TO_DELETE, SORTED} from "./types";
+import {ADD_TASK, CHANGE_TEXT, CHECK_TASK, DELETE_TASK, LOGGING, MARK_TASK_TO_DELETE, SORTED, DEADLINER} from "./types";
 
 
 
@@ -105,6 +105,32 @@ export function reducer(state = initialState, action: any) {
                 }
             )
         }
+
+        case DEADLINER: {
+            const deadlineTasks: Array<ITask> = state.tasks
+            deadlineTasks.forEach(function (item) {
+                const deadlineTime: number = Date.parse(item.taskDeadline)
+                const currentTime: number = Date.now()
+                if (item.isChecked) {
+                    item.color = ''
+                } else {
+                    if (deadlineTime - currentTime < 3600000 && deadlineTime - currentTime > 0) {
+                    item.color = 'yellow'
+                }
+                    if (deadlineTime - currentTime < 0) {
+                        item.color = 'red'
+                    }
+                }
+
+            })
+
+            return (
+                {
+                    ...state,
+                    tasks: [...deadlineTasks]
+                })
+        }
+
 
 
         default: return state;

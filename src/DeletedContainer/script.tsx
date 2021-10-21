@@ -15,7 +15,6 @@ const handleExtendedDeletedBlock = () => {
 const DeletedTasks: React.FC = () => {
     const { tasks } = useSelector((state: RootState) => state);
     const dispatch = useDispatch()
-
     const markTaskToDelete = (id: number) => {
         const index: number = tasks.findIndex((item: ITask) => id === item.id)
         if (index !== -1 && tasks[index].isMarkToDelete) {
@@ -31,7 +30,7 @@ const DeletedTasks: React.FC = () => {
     return (
        <>
        <div className="deleted__tasks__button-container">
-       <button className="button deleted-tasks__button" onClick={handleExtendedDeletedBlock}>Open</button>
+       <button data-testid ='extendedBtn' className="button deleted-tasks__button" onClick={handleExtendedDeletedBlock}>Open</button>
        </div>
         <div className="deleted__tasks__container">
             {
