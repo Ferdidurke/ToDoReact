@@ -85,6 +85,7 @@ function TaskForm (props: ITaskForm): ReactElement {
     }
 
         return <div className="task"
+                    data-testid="testTask"
                     id={props.item.id.toString()}
                     tabIndex={0}
                     style={{background : props.item.color}}

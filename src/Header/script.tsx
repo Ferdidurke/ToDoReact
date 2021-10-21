@@ -40,6 +40,7 @@ function ToDoHeader () : ReactElement {
         URL.revokeObjectURL(a.href);
     }
 
+
     const handleDownloadLogsButton = (): void => downloadFiles('logs', 'logs')
     const handleDownloadTasksListButton = (): void => downloadFiles('tasks', 'tasks')
 
@@ -51,7 +52,7 @@ function ToDoHeader () : ReactElement {
             </div>
             <div className="application">
                 <div className="link-container">
-                    <button className="button download-button" onClick={handleDownloadLogsButton}>
+                    <button data-testid = "downloadBtn" className="button download-button" onClick={handleDownloadLogsButton}>
                         DOWNLOAD LOGS
                     </button>
                 </div>

@@ -17,15 +17,18 @@ const UndoneTasks: React.FC<Partial<AppProps>> = (props) => {
     }
 
     const sortTasksOnAsc = (): void => {
+            console.log('ascSort')
             tasks.sort((a: { taskDeadline: string }, b: { taskDeadline: string }) => Date.parse((a.taskDeadline)) - Date.parse(b.taskDeadline))
             dispatch(toDoTasksSort())
 
     }
 
     const sortTasksOnDesc = (): void => {
+        console.log('ascSort')
         if (tasks.length > 0) {
             tasks.sort((a: { taskDeadline: string }, b: { taskDeadline: string }) => Date.parse(b.taskDeadline) - Date.parse(a.taskDeadline))
             dispatch(toDoTasksSort())
+
         }
 
     }
@@ -34,9 +37,9 @@ const UndoneTasks: React.FC<Partial<AppProps>> = (props) => {
             <div className="undone-tasks__header">
                 <div className="undone-tasks-text">НЕВЫПОЛНЕННЫЕ ЗАДАЧИ</div>
                 <div className="sorting-buttons__container">
-                    <button className="asc-button"><img
+                    <button data-testid="ascSortButton" className="asc-button"><img
                         src="https://cdn-icons-png.flaticon.com/512/814/814031.png" className="button-image" onClick={sortTasksOnAsc}/></button>
-                    <button className="desc-button"><img
+                    <button data-testid="descSortButton" className="desc-button"><img
                         src="https://cdn-icons-png.flaticon.com/512/814/814055.png" className="button-image" onClick={sortTasksOnDesc} /></button>
                 </div>
             </div>
