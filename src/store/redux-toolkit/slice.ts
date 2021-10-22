@@ -26,8 +26,6 @@ export const toolkitSlice = createSlice({
             state.tasks[index].isChecked = !state.tasks[index].isChecked
             state.tasks = [...state.tasks]
             console.log(log)
-
-
         },
 
         sortOnAsc: (state) => {
@@ -38,7 +36,6 @@ export const toolkitSlice = createSlice({
         sortOnDesc: (state) => {
             state.tasks.sort((a: { taskDeadline: string }, b: { taskDeadline: string }) => Date.parse(b.taskDeadline) - Date.parse(a.taskDeadline))
             state.tasks = [...state.tasks]
-
         },
 
         changeTaskTextField: (state, action) => {
@@ -46,31 +43,27 @@ export const toolkitSlice = createSlice({
             if (index !== -1) {
                 state.tasks[index].taskText = action.payload.text
             }
-
         },
 
         markTaskOnDelete: (state, action) => {
             const index: number = state.tasks.findIndex((item: ITask) => item.id === action.payload)
-            let log = ''
+
             if (index !== -1 && !state.tasks[index].isMarkToDelete) {
                 state.tasks[index].isMarkToDelete = true
                 state.tasks[index].deletedDate = new Date().toLocaleString()
                 state.tasks.sort((a, b) => Date.parse(b.deletedDate) - Date.parse(a.deletedDate))
-                log = `Task with id:${state.tasks[index].id} replace in deleted container at ${new Date().toLocaleString()}`
+                const log = `Task with id:${state.tasks[index].id} replace in deleted container at ${new Date().toLocaleString()}`
                 console.log(log)
                 state.logs.push(log)
             }
-
         },
 
         deletingTask: (state, action) => {
             const index: number = state.tasks.findIndex((item: ITask) => item.id === action.payload)
-            let log = ''
-            log = `Task with id:${state.tasks[index].id} deleted at ${new Date().toLocaleString()}`
+            const log = `Task with id:${state.tasks[index].id} deleted at ${new Date().toLocaleString()}`
             state.tasks.splice(index, 1)
             console.log(log)
             state.logs.push(log)
-
         },
 
         logging: (state, action) => {
@@ -79,7 +72,21 @@ export const toolkitSlice = createSlice({
         },
 
         deadliner: (state) => {
-            state.tasks
+            state.tasks.forEach(function (item) {
+                const deadlineTime: number = Date.parse(item.taskDeadline)
+                const currentTime: number = Date.now()
+                if (item.isChecked) {
+                    item.color = ''
+                } else {
+                    if (deadlineTime - currentTime < 3600000 && deadlineTime - currentTime > 0) {
+                    item.color = 'yellow'
+                }
+                    if (deadlineTime - currentTime < 0) {
+                        item.color = 'red'
+                    }
+                }
+            })
+
         }
     }
 })
