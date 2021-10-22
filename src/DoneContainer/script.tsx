@@ -4,8 +4,8 @@ import React from "react";
 import {AppProps} from "../App";
 import {ITask} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
-import {RootState} from "../store/store";
-import {markTaskOnDelete} from "../store/actions";
+import {RootState} from "../store/redux-toolkit/store";
+import {markTaskOnDelete} from "../store/redux-toolkit/slice";
 
 const DoneTasks: React.FC<Partial<AppProps>> = (props) => {
     const { tasks } = useSelector((state:RootState) => state);

@@ -4,43 +4,29 @@ import {TaskForm} from "../task/script";
 import {AppProps} from "../App";
 import {ITask} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
-import {markTaskOnDelete, toDoTasksSort} from "../store/actions";
-import { RootState } from '../store/store';
+import {sortOnAsc, sortOnDesc, markTaskOnDelete} from "../store/redux-toolkit/slice";
+import { RootState} from "../store/redux-toolkit/store";
 
 
 const UndoneTasks: React.FC<Partial<AppProps>> = (props) => {
     const { tasks } = useSelector((state:RootState) => state);
     const dispatch = useDispatch()
 
+
     const markTaskToDelete = (id: number): void => {
         dispatch(markTaskOnDelete(id))
     }
 
-    const sortTasksOnAsc = (): void => {
-            console.log('ascSort')
-            tasks.sort((a: { taskDeadline: string }, b: { taskDeadline: string }) => Date.parse((a.taskDeadline)) - Date.parse(b.taskDeadline))
-            dispatch(toDoTasksSort())
 
-    }
-
-    const sortTasksOnDesc = (): void => {
-        console.log('ascSort')
-        if (tasks.length > 0) {
-            tasks.sort((a: { taskDeadline: string }, b: { taskDeadline: string }) => Date.parse(b.taskDeadline) - Date.parse(a.taskDeadline))
-            dispatch(toDoTasksSort())
-
-        }
-
-    }
     return (
         <div className="undone-tasks">
             <div className="undone-tasks__header">
                 <div className="undone-tasks-text">НЕВЫПОЛНЕННЫЕ ЗАДАЧИ</div>
                 <div className="sorting-buttons__container">
-                    <button data-testid="ascSortButton" className="asc-button"><img
-                        src="https://cdn-icons-png.flaticon.com/512/814/814031.png" className="button-image" onClick={sortTasksOnAsc}/></button>
-                    <button data-testid="descSortButton" className="desc-button"><img
-                        src="https://cdn-icons-png.flaticon.com/512/814/814055.png" className="button-image" onClick={sortTasksOnDesc} /></button>
+                    <button className="asc-button"><img data-testid="ascSortButton"
+                        src="https://cdn-icons-png.flaticon.com/512/814/814031.png" className="button-image" onClick={() => dispatch(sortOnAsc())}/></button>
+                    <button className="desc-button"><img data-testid="descSortButton"
+                        src="https://cdn-icons-png.flaticon.com/512/814/814055.png" className="button-image" onClick={() => dispatch(sortOnDesc())} /></button>
                 </div>
             </div>
             <div className="undone-tasks__container"

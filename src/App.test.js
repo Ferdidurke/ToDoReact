@@ -2,21 +2,22 @@ import React from "react";
 import {render, screen, fireEvent, queryByText, waitFor, getByTestId} from "@testing-library/react";
 import '@testing-library/jest-dom'
 import App from "./App";
-import {store} from "./store/store";
+import {store} from "./store/redux-toolkit/store";
 import {Provider} from "react-redux";
 import {ToDoHeader} from "./Header/script";
 import {UndoneTasks} from "./UndoneContainer/script";
 import {DoneTasks} from "./DoneContainer/script";
 import {DeletedTasks} from "./DeletedContainer/script";
 import {createStore} from "redux";
-import {reducer} from "./store/reducer";
+import {toolkitSlice} from "./store/redux-toolkit/slice";
 import {Task, TaskForm} from "./task/script";
 import userEvent from '@testing-library/user-event'
+import {click} from "@testing-library/user-event/dist/click";
 
 
 const renderWithRedux = (
     component,
-        {initialState, store = createStore(reducer, initialState)} = {}
+        {initialState, store = createStore(toolkitSlice.reducer, initialState)} = {}
 ) => {
         return {
             ...render(<Provider store={store}>{component}</Provider>),
@@ -199,25 +200,71 @@ describe('check for render items on donetasks', () => {
 })
 
 
-// describe('sorting tasks on deadline', () => {
-//     it('should check',  () => {
-//         const task1 = new Task('Task 1', '2021-10-21T16:00')
-//         const task2 = new Task('Task 2', '2021-10-21T17:00')
-//         const task3 = new Task('Task 3', '2021-10-21T18:00')
-//         task1.id = '1'
-//         task2.id = '2'
-//         task3.id = '3'
-//         const store = createStore(() => ({tasks: [task1, task2, task3]}))
-//         renderWithRedux(<UndoneTasks />, { store })
-//         const asc = expect(screen.getByTestId('ascSortButton'))
-//         const desc = container.querySelector('.desc-button')
-//         const asc = screen.getByTestId("ascSortButton")
-//         asc.click()
-//
-//         xpect(container.firstChild.firstChild.nextSibling.firstChild.className).toBe('task')
-//     });
-//
-// })
+
+
+
+
+describe('check for sort', () => {
+    it ('check undone container for task sorting', () => {
+        const { container } = render(
+            <Provider store={store}>
+                <App/>
+            </Provider>
+        )
+        fireEvent.change(screen.getByTestId('dateInput'), {
+            target: {value: '2021-10-21T16:00'}
+        })
+        fireEvent.change(screen.getByRole('textbox'), {
+            target: {value: 'Task 1'}
+        })
+        fireEvent.click(screen.getByTestId('newTaskButton'))
+        fireEvent.change(screen.getByTestId('dateInput'), {
+            target: {value: '2021-10-21T17:00'}
+        })
+        fireEvent.change(screen.getByRole('textbox'), {
+            target: {value: 'Task 2'}
+        })
+        fireEvent.click(screen.getByTestId('newTaskButton'))
+        const undoneContainer = container.querySelector('.undone-tasks__container')
+
+        expect(undoneContainer.firstChild.childNodes[3].lastChild.textContent).toBe('Task 1')
+        const desc = screen.getByTestId('descSortButton')
+        const asc = screen.getByTestId('ascSortButton')
+        fireEvent.click(desc)
+        expect(undoneContainer.firstChild.childNodes[3].lastChild.textContent).toBe('Task 2')
+        fireEvent.click(asc)
+        expect(undoneContainer.firstChild.childNodes[3].lastChild.textContent).toBe('Task 1')
+    })
+})
+
+
+
+describe('check for replacing by keyboard event', () => {
+    it ('check', () => {
+        const { container } = render(
+            <Provider store={store}>
+                <App/>
+            </Provider>
+        )
+
+        fireEvent.click(screen.getByTestId('newTaskButton'))
+        const undoneContainer = container.querySelector('.undone-tasks__container')
+        const taskCheckbox = undoneContainer.firstChild.childNodes[4].lastChild
+        const doneContainer = container.querySelector('.done-tasks__container')
+        const deletedContainer = container.querySelector('.deleted__tasks__container')
+        fireEvent.click(taskCheckbox)
+        expect(doneContainer.firstChild.className).toBe('task')
+        const task = undoneContainer.firstChild
+        task.focus()
+        userEvent.keyboard('{del}')
+        expect(deletedContainer.firstChild.className).toBe('task')
+
+    })
+})
+
+
+
+
 
 
 
@@ -244,3 +291,4 @@ describe('check for download files', () => {
     })
 
 })
+

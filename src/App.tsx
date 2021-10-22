@@ -6,9 +6,9 @@ import {DeletedTasks} from "./DeletedContainer/script";
 import {UndoneTasks} from "./UndoneContainer/script";
 import {DoneTasks} from "./DoneContainer/script";
 import {ITask} from "./task/script";
-import {changeStatus} from "./store/actions";
+import {changeStatus} from "./store/redux-toolkit/slice";
 import {useSelector} from "react-redux";
-import {RootState} from "./store/store";
+import {RootState} from "./store/redux-toolkit/store";
 
 export interface AppProps {
     logging(text: string): void

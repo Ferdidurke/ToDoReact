@@ -2,7 +2,7 @@ import React, {ReactElement, useState} from "react";
 
 import './styles.sass'
 import {useDispatch} from "react-redux";
-import {changeStatus, changeTaskTextField} from "../store/actions";
+import {changeStatus, changeTaskTextField} from "../store/redux-toolkit/slice";
 
 export interface ITask {
     id: number
@@ -68,14 +68,21 @@ function TaskForm (props: ITaskForm): ReactElement {
 
 
     const keyboardEvents = (event: React.KeyboardEvent | any): void => {
+
         if (event.keyCode === 69 && event.target.parentElement.className === 'undone-tasks__container') setInput(true)
         if (event.shiftKey && event.keyCode === 39 && event.target.parentElement.className === 'undone-tasks__container')  {
+            console.log(event.target)
             const id = Number(event.target.id)
             dispatch(changeStatus(id))
             }
         if (event.shiftKey && event.keyCode === 37 && event.target.parentElement.className === 'done-tasks__container')  {
             const id = Number(event.target.id)
             dispatch(changeStatus(id))
+        }
+
+        if (event.keyCode === 46) {
+            const id = Number(event.target.id)
+            props.markTaskToDelete(id)
         }
     }
 

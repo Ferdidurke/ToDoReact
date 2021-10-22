@@ -1,10 +1,9 @@
 import React, {ReactElement, useState} from "react";
 import {ITask, Task} from "../task/script";
 import './styles.sass'
-import {addTask, deadliner} from "../store/actions";
+import {addTask, deadliner} from "../store/redux-toolkit/slice";
 import {useDispatch} from "react-redux";
-import {logging} from "../store/actions";
-
+import {logging} from "../store/redux-toolkit/slice";
 
 
 function ToDoHeader () : ReactElement {
@@ -58,7 +57,7 @@ function ToDoHeader () : ReactElement {
                 </div>
                 <div className="new-task__container">
                     <label className="task-form__label">Срок выполнения задачи:</label>
-                    <input type="datetime-local" className="new-task-date"
+                    <input type="datetime-local" data-testid='dateInput' className="new-task-date"
                            value={deadlineDate}
                            onChange = {changeInputTaskDeadline}
                     />
