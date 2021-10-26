@@ -11,8 +11,6 @@ import {createStore} from "redux";
 import {todoReducer} from "./store/redux-toolkit/todoReducer";
 import {Task, TaskForm} from "./Todos/task/script";
 import userEvent from '@testing-library/user-event'
-import {initialState} from "./store/redux-toolkit/todoReducer";
-
 import Todos from "./Todos/Todos";
 import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
 import {blogReducer} from "./store/redux-toolkit/blogReducer";
