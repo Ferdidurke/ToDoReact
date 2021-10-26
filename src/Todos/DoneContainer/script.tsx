@@ -1,14 +1,14 @@
 import {TaskForm} from "../task/script";
 import './styles.sass'
 import React from "react";
-import {AppProps} from "../App";
+import {TodosProps} from "../Todos";
 import {ITask} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
-import {RootState} from "../store/redux-toolkit/store";
-import {markTaskOnDelete} from "../store/redux-toolkit/slice";
+import {RootState} from "../../store/redux-toolkit/store";
+import {markTaskOnDelete} from "../../store/redux-toolkit/todoReducer";
 
-const DoneTasks: React.FC<Partial<AppProps>> = (props) => {
-    const { tasks } = useSelector((state:RootState) => state);
+const DoneTasks: React.FC<Partial<TodosProps>> = (props) => {
+    const { tasks } = useSelector((state:RootState) => state.todo);
     const dispatch = useDispatch()
     const markTaskToDelete = (id: number): void => {
         dispatch(markTaskOnDelete(id))

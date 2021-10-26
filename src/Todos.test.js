@@ -1,24 +1,33 @@
 import React from "react";
 import {render, screen, fireEvent, queryByText, waitFor, getByTestId} from "@testing-library/react";
 import '@testing-library/jest-dom'
-import App from "./App";
 import {store} from "./store/redux-toolkit/store";
 import {Provider} from "react-redux";
-import {ToDoHeader} from "./Header/script";
-import {UndoneTasks} from "./UndoneContainer/script";
-import {DoneTasks} from "./DoneContainer/script";
-import {DeletedTasks} from "./DeletedContainer/script";
+import {ToDoHeader} from "./Todos/Header/script";
+import {UndoneTasks} from "./Todos/UndoneContainer/script";
+import {DoneTasks} from "./Todos/DoneContainer/script";
+import {DeletedTasks} from "./Todos/DeletedContainer/script";
 import {createStore} from "redux";
-import {toolkitSlice} from "./store/redux-toolkit/slice";
-import {Task, TaskForm} from "./task/script";
+import {todoReducer} from "./store/redux-toolkit/todoReducer";
+import {Task, TaskForm} from "./Todos/task/script";
 import userEvent from '@testing-library/user-event'
-import {click} from "@testing-library/user-event/dist/click";
+import {initialState} from "./store/redux-toolkit/todoReducer";
+
+import Todos from "./Todos/Todos";
+import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
+import {blogReducer} from "./store/redux-toolkit/blogReducer";
 
 
 const renderWithRedux = (
     component,
-        {initialState, store = createStore(toolkitSlice.reducer, initialState)} = {}
-) => {
+    {
+        store = configureStore({
+            reducer: {
+                todo: todoReducer.reducer,
+                blog: blogReducer.reducer,
+            },
+        })
+    } = {} ) => {
         return {
             ...render(<Provider store={store}>{component}</Provider>),
             store
@@ -34,30 +43,17 @@ describe('Redux testing', () => {
 })
 
 
-describe('check for render App/Header', () => {
-    it('render App', () => {
+describe('check for render Todos/Header', () => {
+    it('render Todos', () => {
         render(
             <Provider store={store}>
-                <App/>
+                <Todos/>
             </Provider>
         )
         expect(screen.getByText(/TO DO LIST/i)).toBeInTheDocument();
 
     })
 
-    // it("should prevent default action on drag&drop", () => {
-    //     const { container } = render(
-    //         <Provider store={store}>
-    //             <App />
-    //         </Provider>
-    //     )
-    //     // console.log(container.firstChild)
-    //     // console.log(container.lastChild)
-    //     const evt = { preventDefault: jest.fn() }
-    //     const undContainer = container.querySelector('.undone-tasks__container')
-    //     fireEvent.dragOver(undContainer, evt)
-    //     expect(evt.preventDefault).toHaveBeenCalledTimes(1)
-    // });
 
 
     it('render Header', () => {
@@ -96,7 +92,6 @@ describe('check render undoneTasksContainer', () => {
                 <UndoneTasks />
             </Provider>
         )
-
         expect(container.firstChild.firstChild.nextSibling.firstChild.className).toBe('task')
         fireEvent.click(screen.getByTestId('deletedButton'))
         expect(container.firstChild.firstChild.nextSibling.firstChild).toBe(null)
@@ -192,7 +187,7 @@ describe('check for render items on donetasks', () => {
     it('should check',  () => {
         const task = new Task('111', '222')
         task.isChecked = true
-        const store = createStore(() => ({tasks: [task]}))
+        const store = createStore(() => ({todo: {tasks: [task]}}))
         const {container} = renderWithRedux(<DoneTasks />, { store })
         expect(container.firstChild.firstChild.nextSibling.firstChild.className).toBe('task')
     });
@@ -208,7 +203,7 @@ describe('check for sort', () => {
     it ('check undone container for task sorting', () => {
         const { container } = render(
             <Provider store={store}>
-                <App/>
+                <Todos/>
             </Provider>
         )
         fireEvent.change(screen.getByTestId('dateInput'), {
@@ -243,7 +238,7 @@ describe('check for replacing by keyboard event', () => {
     it ('check', () => {
         const { container } = render(
             <Provider store={store}>
-                <App/>
+                <Todos/>
             </Provider>
         )
 
@@ -261,15 +256,6 @@ describe('check for replacing by keyboard event', () => {
 
     })
 })
-
-
-
-
-
-
-
-
-
 
 
 describe('check for download files', () => {

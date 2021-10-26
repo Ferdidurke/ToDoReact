@@ -2,8 +2,8 @@ import './styles.sass'
 import React from "react";
 import {ITask, TaskForm} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
-import {deletingTask} from "../store/redux-toolkit/slice";
-import {RootState} from "../store/redux-toolkit/store";
+import {deletingTask} from "../../store/redux-toolkit/todoReducer";
+import {RootState} from "../../store/redux-toolkit/store";
 
 const handleExtendedDeletedBlock = () => {
     const block: HTMLDivElement | null = document.querySelector('.deleted__tasks__container')
@@ -13,7 +13,7 @@ const handleExtendedDeletedBlock = () => {
 
 
 const DeletedTasks: React.FC = () => {
-    const { tasks }  = useSelector((state: RootState) => state);
+    const { tasks }  = useSelector((state: RootState) => state.todo);
     const dispatch = useDispatch()
     const markTaskToDelete = (id: number) => {
         const index: number = tasks.findIndex((item: ITask) => id === item.id)

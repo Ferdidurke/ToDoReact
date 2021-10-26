@@ -1,15 +1,16 @@
 import './styles.sass'
 import React from "react";
 import {TaskForm} from "../task/script";
-import {AppProps} from "../App";
+import {TodosProps} from "../Todos";
 import {ITask} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
-import {sortOnAsc, sortOnDesc, markTaskOnDelete} from "../store/redux-toolkit/slice";
-import { RootState} from "../store/redux-toolkit/store";
+import {sortOnAsc, sortOnDesc, markTaskOnDelete} from "../../store/redux-toolkit/todoReducer";
+import { RootState} from "../../store/redux-toolkit/store";
 
 
-const UndoneTasks: React.FC<Partial<AppProps>> = (props) => {
-    const { tasks } = useSelector((state:RootState) => state);
+
+const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
+    const { tasks }= useSelector((state:RootState) => state.todo);
     const dispatch = useDispatch()
 
 

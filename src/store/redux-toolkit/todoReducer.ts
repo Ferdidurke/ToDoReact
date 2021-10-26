@@ -1,14 +1,15 @@
-import {ITask} from "../../task/script";
+import {ITask} from "../../Todos/task/script";
 import {createSlice} from "@reduxjs/toolkit";
 
 
+export const initialState = {
+    tasks: <Array<ITask>>[],
+    logs: <Array<string>>[],
+}
 
-export const toolkitSlice = createSlice({
-    name: 'toolkit',
-    initialState: {
-        tasks: <Array<ITask>>[],
-        logs: <Array<string>>[]
-    },
+export const todoReducer = createSlice({
+    name: 'todoReducer',
+    initialState,
     reducers: {
         addTask: (state, action) => {
             state.tasks.push(action.payload)
@@ -92,6 +93,6 @@ export const toolkitSlice = createSlice({
 })
 
 
-export default toolkitSlice.reducer
-export const {addTask, logging, markTaskOnDelete, changeTaskTextField, sortOnAsc, sortOnDesc, changeStatus, deletingTask, deadliner} = toolkitSlice.actions
+export default todoReducer.reducer
+export const {addTask, logging, markTaskOnDelete, changeTaskTextField, sortOnAsc, sortOnDesc, changeStatus, deletingTask, deadliner} = todoReducer.actions
 

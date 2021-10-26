@@ -1,24 +1,27 @@
 import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
-import {toolkitSlice} from "./slice";
-import {ITask} from "../../task/script";
+import {todoReducer} from "./todoReducer";
+
+import {blogReducer} from "./blogReducer";
 
 
 
-const initialState = {
-    tasks: <Array<ITask>>[],
-    logs: <Array<string>>[]
-}
+const persistedState = localStorage.ReduxStorage ? JSON.parse(localStorage.getItem('ReduxStorage')!) : {}
 
-const persistedState = localStorage.ReduxStorage ? JSON.parse(localStorage.getItem('ReduxStorage')!) : initialState
+
 
 export const store = configureStore ({
-    reducer: toolkitSlice.reducer,
+    reducer: {
+        todo: todoReducer.reducer,
+        blog: blogReducer.reducer,
+    },
     middleware: getDefaultMiddleware({
         serializableCheck: false
     }),
     preloadedState: persistedState
 
 })
+
+console.log(store.getState())
 
 
 store.subscribe(()=>{
