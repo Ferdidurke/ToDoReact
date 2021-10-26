@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ReactElement, useState} from 'react';
 import PostForm, {Ipost} from "../Post";
 import './styles.sass'
 import {useDispatch, useSelector} from "react-redux";
@@ -9,7 +9,7 @@ import {Pagination} from "../functions/pagination";
 
 
 
-function PostsContainer() {
+function PostsContainer(): ReactElement {
     const dispatch = useDispatch()
     const { posts } = useSelector((state:RootState) => state.blog)
     const totalPosts = posts.length
@@ -20,34 +20,34 @@ function PostsContainer() {
     const currentPosts = posts.slice(indexOfFirstPage, indexOfLastPage)
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
-    const nextPage = () => {
+    const nextPage = (): void => {
          setCurrentPage(prevState => prevState + 1)
     }
 
-    const previousPage = () => {
+    const previousPage = (): void => {
          setCurrentPage(prevState => prevState - 1)
     }
 
-    const sortingPostsOnDateDesc = () => {
+    const sortingPostsOnDateDesc = (): void => {
         const sortedPosts = [...posts]
         sortedPosts.sort((a: { date: string }, b: { date: string }) => Date.parse(b.date) - Date.parse(a.date))
         dispatch(sortPostsOnDateDesc(sortedPosts))
     }
 
-    const sortingPostsOnDateAsc = () => {
+    const sortingPostsOnDateAsc = (): void => {
         const sortedPosts = [...posts]
         sortedPosts.sort((a: { date: string }, b: { date: string }) => Date.parse(a.date) - Date.parse(b.date))
         dispatch(sortPostsOnDateAsc(sortedPosts))
 
     }
 
-    const sortingPostsOnAuthorDesc = () => {
+    const sortingPostsOnAuthorDesc = (): void => {
         const sortedPosts = [...posts]
         sortedPosts.sort((a: { id: number }, b: { id: number  }) => b.id - a.id)
         dispatch(sortPostsOnAuthorDesc(sortedPosts))
     }
 
-    const sortingPostsOnAuthorAsc = () => {
+    const sortingPostsOnAuthorAsc = (): void => {
         const sortedPosts = [...posts]
         sortedPosts.sort((a: { id: number }, b: { id: number  }) => a.id - b.id)
         dispatch(sortPostsOnAuthorAsc(sortedPosts))

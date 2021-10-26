@@ -1,10 +1,9 @@
-import {render} from "react-dom";
-import React, {useState} from "react";
+import React, {ReactElement} from "react";
 import Main from "../Main";
 import './styles.sass'
 import Sidebar from "./Sidebar";
 import PostsContainer from "./PostsContainer";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, } from "react-redux";
 import {getData} from "../store/redux-toolkit/blogReducer";
 
 
@@ -12,19 +11,10 @@ import {getData} from "../store/redux-toolkit/blogReducer";
 
 
 
-
-export function Blog (props: any) {
-
-
-
+export function Blog(): ReactElement {
 
     const dispatch = useDispatch()
     dispatch(getData())
-
-
-
-
-
 
     return (
         <div className='blog'>

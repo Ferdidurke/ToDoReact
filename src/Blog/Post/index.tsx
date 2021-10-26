@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ReactElement, useState} from 'react';
 import './styles.sass'
 import {useDispatch} from "react-redux";
 import {addNewComment} from "../../store/redux-toolkit/blogReducer";
@@ -9,7 +9,7 @@ export interface Ipost {
     date: Date
     title: string
     body: string
-    comments: []
+    comments: [ {commentText: string, commentDate: string} ]
 }
 
 interface IPostForm {
@@ -18,26 +18,26 @@ interface IPostForm {
 
 
 
-function PostForm ( {item} : IPostForm) {
+function PostForm ( {item} : IPostForm) : ReactElement  {
     const [comment, setComment] = useState(false)
     const [commentText, setCommentText] = useState('')
     const dispatch = useDispatch()
 
-    const addComment = () => {
+    const addComment = (): void => {
         setComment(true)
     }
 
-    const submitComment = () => {
-        const id = item.id
-        const text = commentText
-        const date = new Date().toLocaleString()
+    const submitComment = (): void => {
+        const id: number = item.id
+        const text: string = commentText
+        const date: string = new Date().toLocaleString()
         dispatch(addNewComment({id, text, date}))
         setComment(false)
         setCommentText('')
     }
 
 
-    const changeCommentText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const changeCommentText = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
         setCommentText(e.currentTarget.value)
     }
 
@@ -70,7 +70,7 @@ function PostForm ( {item} : IPostForm) {
                                              >
                                 </textarea>) :
                             (
-                                item.comments.map((comment: any, index) => <Comment text={comment.commentText}
+                                item.comments.map((comment, index) => <Comment text={comment.commentText}
                                                                                     date={comment.commentDate}
                                                                                     key={index}
                                                                                     counter={index}/>)

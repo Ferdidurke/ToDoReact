@@ -1,6 +1,13 @@
 import React from "react";
 
-const Comment = (props: any) => {
+interface IComment {
+    counter: number,
+    text: string,
+    date: string
+}
+
+
+const Comment : React.FC<IComment> = (props: IComment)  => {
     console.log(props)
     return (
     <div className='comment'>

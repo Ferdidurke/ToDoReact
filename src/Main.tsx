@@ -1,6 +1,6 @@
-import React from "react";
+import React, {ReactElement} from "react";
 
-export default function Main () {
+export default function Main () : ReactElement {
     return (
         <div className='navbar'>
             <div className='navbar__link-container'>
