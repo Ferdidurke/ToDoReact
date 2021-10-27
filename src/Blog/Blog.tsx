@@ -4,7 +4,7 @@ import './styles.sass'
 import Sidebar from "./Sidebar";
 import PostsContainer from "./PostsContainer";
 import {useDispatch, } from "react-redux";
-import {getData} from "../store/redux-toolkit/blogReducer";
+
 
 
 
@@ -14,7 +14,6 @@ import {getData} from "../store/redux-toolkit/blogReducer";
 export function Blog(): ReactElement {
 
     const dispatch = useDispatch()
-    dispatch(getData())
 
     return (
         <div className='blog'>

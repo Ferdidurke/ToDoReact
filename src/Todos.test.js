@@ -14,6 +14,7 @@ import userEvent from '@testing-library/user-event'
 import Todos from "./Todos/Todos";
 import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
 import {blogReducer} from "./store/redux-toolkit/blogReducer";
+import {blogApi} from "./Blog/services/PostService";
 
 
 const renderWithRedux = (
@@ -22,7 +23,7 @@ const renderWithRedux = (
         store = configureStore({
             reducer: {
                 todo: todoReducer.reducer,
-                blog: blogReducer.reducer,
+                [blogApi.reducerPath]: blogApi.reducer,
             },
         })
     } = {} ) => {

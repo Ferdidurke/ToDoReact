@@ -34,40 +34,31 @@ describe('check for render posts', () => {
         await waitFor(() => expect(postContainer.childNodes.length > 5).toBe(true))
     })
 
-    it ('check for sorting posts', () =>{
-        const {container} = render(
-            <Provider store={store}>
-                <PostsContainer />
-            </Provider>
-        )
-        const postContainer = container.querySelector('.posts__container')
-        const ascBtn = screen.getByTestId('sortAuthorAsc')
-        const descBtn = screen.getByTestId('sortAuthorDesc')
-        fireEvent.click(ascBtn)
-        expect(postContainer.firstChild.id).toBe('1')
-        fireEvent.click(descBtn)
-        expect(postContainer.firstChild.id).toBe('100')
-    })
 
 })
 
 describe('check for render postform', () => {
     it('render post in postform', () => {
         const item = {
-            id: 'Author ID',
+            id: 1,
             title: 'title',
-            date: new Date(),
             body: 'example',
             comments: []
         }
+
+        const user = {
+            name: 'example name'
+        }
+
         render(
             <Provider store={store}>
-                <PostForm item={item}/>
+                <PostForm item={item} user={user}/>
             </Provider>
         )
         expect(screen.queryByText('example')).toBeInTheDocument()
         expect(screen.queryByText(/title/i)).toBeInTheDocument()
-        expect(screen.queryByText(/Author ID/i)).toBeInTheDocument()
+        expect(screen.queryByText(/example name/i)).toBeInTheDocument()
+
     })
 })
 
@@ -90,14 +81,15 @@ describe('check for create comments', ()=> {
         const item = {
             id: 2,
             title: 'title',
-            date: new Date(),
             body: 'example',
-            comments: []
+        }
+        const user = {
+            name: 'example name'
         }
 
         render(
             <Provider store={store}>
-                <PostForm item={item}/>
+                <PostForm item={item} user={user}/>
             </Provider>
         )
         fireEvent.click(screen.getByTestId('addCommentBtn'))
@@ -114,13 +106,12 @@ describe('check for create comments', ()=> {
 
     it('check for render comment', () => {
         const comment = {
-            text: 'test for comment text',
-            date: new Date().toLocaleString()
+            name: 'test for comment text',
+            date: 'EXAMPLE COMMENT TEXT'
         }
         render(
 
-                <Comment text={comment.text}
-                         date={comment.date}
+                <Comment comment={comment}
                          counter={0}/>
 
         )

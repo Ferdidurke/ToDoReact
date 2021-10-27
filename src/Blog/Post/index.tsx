@@ -1,38 +1,45 @@
 import React, {ReactElement, useState} from 'react';
 import './styles.sass'
 import {useDispatch} from "react-redux";
-import {addNewComment} from "../../store/redux-toolkit/blogReducer";
-import Comment from "./comment";
+import Comment, {IComment} from "./comment";
+import {Ipost, IUser} from "./interfaces/interfaces";
 
-export interface Ipost {
-    id: number
-    date: Date
-    title: string
-    body: string
-    comments: [ {commentText: string, commentDate: string} ]
-}
+
 
 interface IPostForm {
-    item: Ipost
+    item: Ipost,
+    user: IUser,
+    comments: IComment[],
+    remove: (post: Ipost) => void;
+    update: (post: Ipost) => void;
+
 }
 
 
-
-function PostForm ( {item} : IPostForm) : ReactElement  {
-    const [comment, setComment] = useState(false)
+function PostForm ( {item , user, comments, remove, update} : IPostForm) : ReactElement  {
+    const [newComment, setNewComment] = useState(false)
     const [commentText, setCommentText] = useState('')
     const dispatch = useDispatch()
 
     const addComment = (): void => {
-        setComment(true)
+        setNewComment(true)
+    }
+
+
+    const watchPost = (): void => {
+        const id = item.id
+    }
+    const handleRemove = (e: React.MouseEvent): void => {
+        e.preventDefault()
+        remove(item)
+
     }
 
     const submitComment = (): void => {
         const id: number = item.id
         const text: string = commentText
         const date: string = new Date().toLocaleString()
-        dispatch(addNewComment({id, text, date}))
-        setComment(false)
+        setNewComment(false)
         setCommentText('')
     }
 
@@ -41,12 +48,12 @@ function PostForm ( {item} : IPostForm) : ReactElement  {
         setCommentText(e.currentTarget.value)
     }
 
-
     return (
         <div className='post' id={item.id.toString()}>
+            <button id={item.id.toString()} onClick={handleRemove}>DELETE</button>
             <div className='post-info'>
-                <p className='post-info__author'>Автор: {item.id}</p>
-                <p className='post-info__date'>Дата создания: {item.date.toLocaleString()}</p>
+                <p className='post-info__author'>Автор: </p>
+                <p className='post-info__date'>Дата создания: </p>
             </div>
             <div className='post-title'>
                 <p className='post-title__text'>Заголовок:</p>
@@ -63,23 +70,22 @@ function PostForm ( {item} : IPostForm) : ReactElement  {
 
                 <div className='post-comments__content'>
                     {
-                        comment ? (<textarea style={{width: '90%', height: '150px'}}
+                        newComment ? (<textarea style={{width: '90%', height: '150px'}}
                                              placeholder='Введите текст комментария'
                                              value={commentText}
                                              onChange={changeCommentText}
                                              >
                                 </textarea>) :
                             (
-                                item.comments.map((comment, index) => <Comment text={comment.commentText}
-                                                                                    date={comment.commentDate}
-                                                                                    key={index}
-                                                                                    counter={index}/>)
+                               comments && comments.map((comment: IComment, index: number) => (comment.postId === item.id) ? (<Comment comment={comment}
+                                                                                                                                key={index}
+                                                                                                                                />) : null)
                             )
                     }
                 </div>
                 <div className='post-comments__button-container'>
                     {
-                        comment ? (<button style={{width: '100%', height: '100%'}} onClick={submitComment} data-testid='submitCommentBtn'>Отправить</button>) : <button onClick={addComment} data-testid='addCommentBtn'>Добавить комментарий</button>
+                        newComment ? (<button style={{width: '100%', height: '100%'}} onClick={submitComment} data-testid='submitCommentBtn'>Отправить</button>) : <button onClick={addComment} data-testid='addCommentBtn'>Добавить комментарий</button>
                     }
 
                 </div>

@@ -1,28 +1,33 @@
-import React from "react";
+import React, {ReactElement} from "react";
 
-interface IComment {
-    counter: number,
-    text: string,
-    date: string
+export interface IComment {
+    postId: number,
+    id: number,
+    name: string
+    email: string
+    body: string
 }
 
+interface ICommentForm {
+    comment: IComment
+}
 
-const Comment : React.FC<IComment> = (props: IComment)  => {
-    console.log(props)
+const Comment = ({comment}: ICommentForm)  => {
+
     return (
     <div className='comment'>
         <div className='comment-number'>
-            {props.counter+1}.
+
         </div>
         <div className='comment-container'>
                 <div className='comment-author'>
-                    Автор:
+                    Автор: {comment.name}
                 </div>
                 <div className='comment-body'>
-                    Текст комментария: {props.text}
+                    Текст комментария: {comment.body}
                 </div>
                 <div className='comment-date'>
-                    Дата комментария: {props.date}
+                    Дата комментария:
                 </div>
         </div>
     </div>

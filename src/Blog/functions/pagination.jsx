@@ -1,4 +1,15 @@
-import React from "react"
+import React, {useState} from "react"
+
+
+// const nextPage = (): void => {
+//     setCurrentPage(prevState => prevState + 1)
+// }
+//
+// const previousPage = (): void => {
+//     setCurrentPage(prevState => prevState - 1)
+// }
+
+
 
 export const Pagination = (props) => {
 
