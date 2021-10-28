@@ -6,8 +6,8 @@ function Sidebar(): ReactElement {
 
     return (
             <div className='blog__sidebar'>
-                <button className='blog__sidebar__navlink'>LOGIN</button>
-                <button className='blog__sidebar__navlink'>NEW POST</button>
+                <button className='blog__button sidebar-btn'>LOGIN</button>
+                <button className='blog__button sidebar-btn'>NEW POST</button>
             </div>
     );
 }

@@ -29,10 +29,11 @@ const CurrentPostPage: React.FC<Partial<IAllPostsProps>> = (props) =>{
 
     return (
         <div>
-            <button style={
+            <button className='blog__button' style={
                 {margin: '0 auto',
-                display: 'block'}
-            }><Link to = '/blog'>GO BACK</Link></button>
+                display: 'block'
+                }
+            }><Link to = '/blog' style={{textDecoration: 'none', color: 'gold'}}>GO BACK</Link></button>
             {
                 post && users && comments ? (<PostForm remove={handleRemove} update={handleUpdate}
                                                          item={post}

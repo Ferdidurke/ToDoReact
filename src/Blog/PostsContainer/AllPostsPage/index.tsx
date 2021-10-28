@@ -4,6 +4,7 @@ import './styles.sass'
 import {Ipost, IUser} from "../../Post/interfaces/interfaces";
 import {blogApi} from "../../services/PostService";
 import {Pagination} from "../../functions/pagination";
+import { Button } from 'react-bootstrap';
 
 import {IComment} from "../../Post/comment";
 
@@ -53,7 +54,11 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
     const handleAdd = () => {
         const post = {
             title: '1111',
-            body: ''
+            body: '',
+            id: 1,
+            userId: 1,
+            date: '1111',
+            comments: []
         }
         addPost(post)
     }
@@ -64,23 +69,23 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                 <div className='links__container'>
                         <div className='links__sorting-buttons__container'>
                             Cортировать по дате:
-                            <button className='sorting-button'>-</button>
-                            <button className='sorting-button'>+</button>
+                            <button className='blog__button'>-</button>
+                            <button className='blog__button'>+</button>
                         </div>
                         <div className='links__sorting-buttons__container'>
                             Cортировать по автору:
-                            <button className='sorting-button' data-testid='sortAuthorAsc'>Убывание</button>
-                            <button className='sorting-button' data-testid='sortAuthorDesc'>Возрастание</button>
+                            <button className='blog__button' data-testid='sortAuthorAsc'>Убывание</button>
+                            <button className='blog__button' data-testid='sortAuthorDesc'>Возрастание</button>
                         </div>
 
                         <div className='links__pagination__container'>
-                            <button onClick={handleAdd}>NEW POST</button>
+                            <button className="blog__button" onClick={handleAdd}>NEW POST</button>
                             {/*<Pagination paginate={paginate}*/}
                             {/*            totalPosts={totalPosts}*/}
                             {/*            postsPerPage={params.limit}/>*/}
-                            <button className='sorting-button' disabled={(params.start < 10)} onClick={prevPage}>PREV</button>
+                            <button className='blog__button' disabled={(params.start < 10)} onClick={prevPage}>PREV</button>
                             <p>Страница: {params.start/10+1}</p>
-                            <button className='sorting-button' disabled={(params.start >= 90)} onClick={nextPage}>NEXT</button>
+                            <button className='blog__button' disabled={(params.start >= 90)} onClick={nextPage}>NEXT</button>
 
                         </div>
                 </div>
@@ -90,7 +95,7 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                     {error && <h1>Произошла ошибка</h1>}
                     {
 
-                        users && posts && posts.map((item: Ipost, index: number) =>
+                        users && posts && comments && posts.map((item: Ipost, index: number) =>
                         <PostForm  remove={handleRemove} update={handleUpdate} key={index}
                                     item={item}
                                     users={users}

@@ -51,9 +51,14 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
         return id
     }
 
+    const handleExtendedCommentsBlock = (e: React.MouseEvent) => {
+        const targetBlock = (e.target as any).nextSibling
+        targetBlock!.classList.toggle('extended__container')
+    }
+
     return (
             <div className='post' id={item.id.toString()}>
-                <button id={item.id.toString()} onClick={handleRemove}>DELETE</button>
+                <button id={item.id.toString()} onClick={handleRemove} className='blog__button'>DELETE</button>
                 <Link to = {getId()}>postpage</Link>
                 <div className='post-info'>
                     <p className='post-info__author'>Автор:
@@ -71,6 +76,7 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
                     <p className='post-content__text'>Содержание:</p>
                     <p className='post-content__text'>{item.body}</p>
                 </div>
+                <button className='blog__button' onClick={handleExtendedCommentsBlock}>Комментарии</button>
                 <div className='post-comments__container'>
                     <div className='post-comments__title'>
                         <p className='post-comments__text'>Комментарии:</p>
@@ -94,7 +100,7 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
                     </div>
                     <div className='post-comments__button-container'>
                         {
-                            newComment ? (<button style={{width: '100%', height: '100%'}} onClick={submitComment} data-testid='submitCommentBtn'>Отправить</button>) : <button onClick={addComment} data-testid='addCommentBtn'>Добавить комментарий</button>
+                            newComment ? (<button style={{width: '100%', height: '100%'}} onClick={submitComment} data-testid='submitCommentBtn' className='blog__button'>Отправить</button>) : <button onClick={addComment} data-testid='addCommentBtn' className='blog__button'>Добавить комментарий</button>
                         }
 
                     </div>

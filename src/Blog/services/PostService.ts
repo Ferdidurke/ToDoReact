@@ -1,22 +1,25 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {Ipost, IUser} from "../Post/interfaces/interfaces";
 import {IComment} from "../Post/comment";
+import {createEntityAdapter} from "@reduxjs/toolkit";
 
-// interface ListResponce<T> {
-//     page: number
-//     perPage: number
-//     total: number
-//     totalPages: number
-//     data: T[]
-// }
 
+export interface IParams {
+    start: number,
+    limit: number
+}
+
+
+const postsAdapter = createEntityAdapter<IUser>({
+    sortComparer: (a, b) => a.name.localeCompare(b.name),
+})
 
 export const blogApi = createApi ({
     reducerPath: 'blogAPI',
     baseQuery: fetchBaseQuery ({baseUrl: 'https://jsonplaceholder.typicode.com/'}),
     tagTypes: ['Post'],
     endpoints: (build) => ({
-        fetchPosts: build.query<Ipost[], any>({
+        fetchPosts: build.query<Ipost[], IParams>({
             query: (params) => ({
                 url: `/posts?_start=${params.start}&_limit=${params.limit}`,
             }),
@@ -28,28 +31,28 @@ export const blogApi = createApi ({
                 params: {
                     _limit: limit
                 }
-            })
+            }),
         }),
-        fetchComments: build.query<any, any>({
+        fetchComments: build.query<IComment[], IParams>({
             query: (params) => ({
                 url: `/comments?_start=${params.start*5}&_limit=${params.limit*5}`,
             }),
         }),
 
-        fetchSinglePost: build.query<any, number> ({
+        fetchSinglePost: build.query<Ipost, number> ({
             query: (id) => ({
                 url: `/posts/${id}`
             }),
         }),
 
-        fetchSingleComment: build.query<any, any>({
+        fetchSingleComment: build.query<IComment, IParams>({
             query: (params) => ({
                 url: `/comments?_start=${params.start}&_limit=${params.limit*5}`,
             }),
         }),
 
 
-        addPost: build.mutation<any, any>({
+        addPost: build.mutation<Ipost, Ipost>({
             query: (post) => ({
                 url: `/posts/`,
                 method: 'POST',
