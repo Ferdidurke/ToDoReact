@@ -2,13 +2,13 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {Ipost, IUser} from "../Post/interfaces/interfaces";
 import {IComment} from "../Post/comment";
 
-interface ListResponce<T> {
-    page: number
-    perPage: number
-    total: number
-    totalPages: number
-    data: T[]
-}
+// interface ListResponce<T> {
+//     page: number
+//     perPage: number
+//     total: number
+//     totalPages: number
+//     data: T[]
+// }
 
 
 export const blogApi = createApi ({
@@ -22,28 +22,32 @@ export const blogApi = createApi ({
             }),
             providesTags: result =>['Post']
         }),
-        fetchAuthors: build.query<any, any>({
+        fetchAuthors: build.query<IUser[], number>({
             query: (limit: number) => ({
                 url: '/users',
                 params: {
                     _limit: limit
-
-
                 }
             })
         }),
         fetchComments: build.query<any, any>({
-            query: (limit: number) => ({
-                url: '/comments',
-                params: {
-                    _limit: limit
+            query: (params) => ({
+                url: `/comments?_start=${params.start*5}&_limit=${params.limit*5}`,
+            }),
+        }),
 
-                }
-            })
+        fetchSinglePost: build.query<any, number> ({
+            query: (id) => ({
+                url: `/posts/${id}`
+            }),
         }),
-        listPosts: build.query<ListResponce<Ipost>, number | void>({
-            query: (page = 1) => `posts?page=${page}`
+
+        fetchSingleComment: build.query<any, any>({
+            query: (params) => ({
+                url: `/comments?_start=${params.start}&_limit=${params.limit*5}`,
+            }),
         }),
+
 
         addPost: build.mutation<any, any>({
             query: (post) => ({

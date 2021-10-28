@@ -1,6 +1,7 @@
 
 export interface Ipost {
     id: number
+    userId: number
     title: string
     date: string
     body: string
@@ -8,6 +9,7 @@ export interface Ipost {
 }
 
 export interface IUser {
+    id: number
     name: string
 }
 

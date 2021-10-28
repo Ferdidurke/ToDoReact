@@ -2,12 +2,11 @@ import React, {ReactElement} from "react";
 import Main from "../Main";
 import './styles.sass'
 import Sidebar from "./Sidebar";
-import PostsContainer from "./PostsContainer";
-import {useDispatch, } from "react-redux";
 
-
-
-
+import {useDispatch} from "react-redux";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import AllPostsPage from "./PostsContainer/AllPostsPage";
+import CurrentPostPage from "./PostsContainer/CurrentPostPage";
 
 
 
@@ -23,7 +22,12 @@ export function Blog(): ReactElement {
             </div>
                 <div className='blog__container'>
                     <Sidebar/>
-                    <PostsContainer />
+                    <Router>
+                        <Switch>
+                            <Route exact path='/blog' component={AllPostsPage}/>
+                            <Route path='/blog/posts/:id' component={CurrentPostPage}/>
+                        </Switch>
+                    </Router>
                 </div>
         </div>
     )

@@ -13,7 +13,6 @@ interface ICommentForm {
 }
 
 const Comment = ({comment}: ICommentForm)  => {
-
     return (
     <div className='comment'>
         <div className='comment-number'>
