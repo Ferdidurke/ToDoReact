@@ -1,21 +1,11 @@
 import React, {ReactElement, useState} from 'react';
 import './styles.sass'
 import {useDispatch} from "react-redux";
-import Comment, {IComment} from "./comment";
-import {Ipost, IUser} from "./interfaces/interfaces";
+import Comment from "./comment";
+import {IComment} from "./interfaces/interfaces";
+import {IPostForm} from "./interfaces/interfaces";
 import {Link} from "react-router-dom";
-
-
-
-
-interface IPostForm {
-    item: Ipost,
-    users: IUser[],
-    comments: IComment[],
-    remove: (post: Ipost) => void | undefined
-    update: (post: Ipost) => void | undefined
-
-}
+import {Box, Button} from "@mui/material";
 
 
 function PostForm ( {item , users, comments, remove, update} : IPostForm) : ReactElement  {
@@ -25,7 +15,6 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
     const addComment = (): void => {
         setNewComment(true)
     }
-
 
     const handleRemove = (e: React.MouseEvent): void => {
         e.preventDefault()
@@ -40,7 +29,6 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
         setNewComment(false)
         setCommentText('')
     }
-
 
     const changeCommentText = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
         setCommentText(e.currentTarget.value)
@@ -57,8 +45,18 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
     }
 
     return (
-            <div className='post' id={item.id.toString()}>
-                <button id={item.id.toString()} onClick={handleRemove} className='blog__button'>DELETE</button>
+            <Box sx={{
+                width: '80%',
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: 'primary.light',
+                padding: '5px',
+                borderRadius: '5px',
+                margin: '10px auto',
+                textDecoration: 'none',
+            }}
+                 id={item.id.toString()}>
+                <Button id={item.id.toString()} onClick={handleRemove} variant='contained'>DELETE</Button>
                 <Link to = {getId()}>postpage</Link>
                 <div className='post-info'>
                     <p className='post-info__author'>Автор:
@@ -76,12 +74,11 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
                     <p className='post-content__text'>Содержание:</p>
                     <p className='post-content__text'>{item.body}</p>
                 </div>
-                <button className='blog__button' onClick={handleExtendedCommentsBlock}>Комментарии</button>
+                <Button variant='contained' onClick={handleExtendedCommentsBlock}>Комментарии</Button>
                 <div className='post-comments__container'>
                     <div className='post-comments__title'>
                         <p className='post-comments__text'>Комментарии:</p>
                     </div>
-
                     <div className='post-comments__content'>
                         {
                             newComment ? (<textarea style={{width: '90%', height: '150px'}}
@@ -94,21 +91,16 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
                                    comments && comments.map((comment: IComment, index: number) => (comment.postId === item.id) ? ( <Comment comment={comment}
                                                                                                                                     key={index}
                                                                                                                                     />) : null)
-
                                 )
                         }
                     </div>
                     <div className='post-comments__button-container'>
                         {
-                            newComment ? (<button style={{width: '100%', height: '100%'}} onClick={submitComment} data-testid='submitCommentBtn' className='blog__button'>Отправить</button>) : <button onClick={addComment} data-testid='addCommentBtn' className='blog__button'>Добавить комментарий</button>
+                            newComment ? (<Button variant='contained' onClick={submitComment} data-testid='submitCommentBtn'>Отправить</Button>) : <Button variant='contained' onClick={addComment} data-testid='addCommentBtn'>Добавить комментарий</Button>
                         }
-
                     </div>
-
-
-
                 </div>
-            </div>
+            </Box>
     );
 }
 

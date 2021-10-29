@@ -1,14 +1,20 @@
 import React, {ReactElement} from 'react';
-import './styles.sass'
+import {Button, Container} from "@mui/material";
 
 function Sidebar(): ReactElement {
 
-
     return (
-            <div className='blog__sidebar'>
-                <button className='blog__button sidebar-btn'>LOGIN</button>
-                <button className='blog__button sidebar-btn'>NEW POST</button>
-            </div>
+            <Container sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '20%',
+                backgroundColor: 'primary.dark',
+                borderRight: '2px gray solid',
+                borderTop: '2px gray solid'
+            }}>
+                <Button variant='contained' sx={{marginTop: '10px'}}>LOGIN</Button>
+                <Button variant='contained' sx={{marginTop: '10px'}}>NEW POST</Button>
+            </Container>
     );
 }
 

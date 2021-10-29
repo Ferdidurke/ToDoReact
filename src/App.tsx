@@ -4,7 +4,6 @@ import './Todos/styles.sass';
 import Todos from "./Todos/Todos";
 import {Blog} from "./Blog/Blog";
 import Main from "./Main";
-import SinglePostPage from "./Blog/PostsContainer/CurrentPostPage";
 
 
 

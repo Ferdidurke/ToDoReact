@@ -1,13 +1,10 @@
-import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
+import {configureStore} from "@reduxjs/toolkit";
 import {todoReducer} from "./todoReducer";
 
 
 import {blogApi} from "../../Blog/services/PostService";
 
-
-
 const persistedState = localStorage.ReduxStorage ? JSON.parse(localStorage.getItem('ReduxStorage')!) : {}
-
 
 
 export const store = configureStore ({

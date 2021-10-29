@@ -1,7 +1,6 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {Ipost, IUser} from "../Post/interfaces/interfaces";
-import {IComment} from "../Post/comment";
-import {createEntityAdapter} from "@reduxjs/toolkit";
+import {IPost, IUser} from "../Post/interfaces/interfaces";
+import {IComment} from "../Post/interfaces/interfaces";
 
 
 export interface IParams {
@@ -10,13 +9,12 @@ export interface IParams {
 }
 
 
-
 export const blogApi = createApi ({
     reducerPath: 'blogAPI',
     baseQuery: fetchBaseQuery ({baseUrl: 'https://jsonplaceholder.typicode.com/'}),
     tagTypes: ['Post', 'Comments'],
     endpoints: (build) => ({
-        fetchPosts: build.query<Ipost[], IParams>({
+        fetchPosts: build.query<IPost[], IParams>({
             query: (params) => ({
                 url: `/posts?_start=${params.start}&_limit=${params.limit}`,
             }),
@@ -37,7 +35,7 @@ export const blogApi = createApi ({
             providesTags: result =>['Comments']
         }),
 
-        fetchSinglePost: build.query<Ipost, number> ({
+        fetchSinglePost: build.query<IPost, number> ({
             query: (id) => ({
                 url: `/posts/${id}`
             }),
@@ -59,7 +57,7 @@ export const blogApi = createApi ({
             invalidatesTags: result => ['Post']
         }),
 
-        deletePost: build.mutation<Ipost, Ipost>({
+        deletePost: build.mutation<IPost, IPost>({
             query: (item) => ({
                 url: `/posts/${item.id}`,
                 method: 'DELETE',

@@ -11,7 +11,6 @@ const handleExtendedDeletedBlock = () => {
 }
 
 
-
 const DeletedTasks: React.FC = () => {
     const { tasks }  = useSelector((state: RootState) => state.todo);
     const dispatch = useDispatch()

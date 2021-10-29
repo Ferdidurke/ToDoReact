@@ -1,5 +1,4 @@
-
-export interface Ipost {
+export interface IPost {
     id: number
     userId: number
     title: string
@@ -13,3 +12,23 @@ export interface IUser {
     name: string
 }
 
+export interface IPostForm {
+    item: IPost,
+    users: IUser[],
+    comments: IComment[],
+    remove: (post: IPost) => void | undefined
+    update: (post: IPost) => void | undefined
+
+}
+
+export interface IComment {
+    postId: number,
+    id: number,
+    name: string
+    email: string
+    body: string
+}
+
+export interface ICommentForm {
+    comment: IComment
+}

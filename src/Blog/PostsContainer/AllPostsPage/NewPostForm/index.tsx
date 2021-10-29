@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './styles.sass'
 import {blogApi} from "../../../services/PostService";
+import {Button, TextField} from "@mui/material";
 
 function NewPostForm() {
     const [addPost] = blogApi.useAddPostMutation()
@@ -45,20 +46,20 @@ function NewPostForm() {
     return (
         <div className='post-form__container'>
             <form className='new-post__form' onSubmit={submitNewPost}>
-                <label>Введите имя:</label><input required
-                                                 value={authorName}
-                                                    onChange={handleChangeAuthorName}></input>
-                <label>Введите заголовок:</label><input required
+                <label>Введите имя:</label><TextField sx={{backgroundColor: 'white'}} variant="filled" label='Имя' required
+                                                    value={authorName}
+                                                    onChange={handleChangeAuthorName}/>
+                <label>Введите заголовок:</label><TextField sx={{backgroundColor: 'white'}} variant="filled" label='Заголовок' required
                                                     value={title}
-                                                    onChange={handleChangeTitle}></input>
+                                                    onChange={handleChangeTitle}/>
 
-                <label>Введите e-mail:</label><input type='email'
-                                                     value={authorEmail}
-                                                     onChange={handleChangeAuthorEmail} required></input>
+                <label>Введите e-mail:</label><TextField sx={{backgroundColor: 'white'}} variant="filled" label='E-mail'   type='email'
+                                                value={authorEmail}
+                                                onChange={handleChangeAuthorEmail} required/>
                 <label>Текст:</label><textarea required
-                                                     value={postText}
-                                                    onChange={handleChangePostText}></textarea>
-                <button className='blog__button' type='submit'>Отправить</button>
+                                                        value={postText}
+                                                        onChange={handleChangePostText}/>
+                <Button variant='contained' type='submit'>Отправить</Button>
             </form>
         </div>
     );

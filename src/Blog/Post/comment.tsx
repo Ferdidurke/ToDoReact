@@ -1,16 +1,6 @@
-import React, {ReactElement} from "react";
+import React from "react";
+import {ICommentForm} from "./interfaces/interfaces";
 
-export interface IComment {
-    postId: number,
-    id: number,
-    name: string
-    email: string
-    body: string
-}
-
-interface ICommentForm {
-    comment: IComment
-}
 
 const Comment = ({comment}: ICommentForm)  => {
     return (

@@ -1,27 +1,24 @@
 import React, {ReactElement, useState} from 'react';
 import PostForm from "../../Post";
 import './styles.sass'
-import {Ipost, IUser} from "../../Post/interfaces/interfaces";
+import {IPost, IUser, IComment} from "../../Post/interfaces/interfaces";
 import {blogApi} from "../../services/PostService";
-import {Pagination} from "../../functions/pagination";
-
-
-import {IComment} from "../../Post/comment";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import NewPostForm from "./NewPostForm";
+import {Box, Button, ButtonGroup, CircularProgress} from "@mui/material";
 
 export interface IAllPostsProps {
-    posts: Ipost[]
+    posts: IPost[]
     users: IUser[]
     comments: IComment[]
     params: {
         start: number,
         limit: number
     }
-    handleRemove(post: Ipost): void
+    handleRemove(post: IPost): void
     handleUpdate(): void
 }
-
-
 
 function AllPostsPage(props: IAllPostsProps): ReactElement {
 
@@ -29,16 +26,12 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
     const { data: users } = blogApi.useFetchAuthorsQuery(10)
     const { data: posts, isLoading, error  } = blogApi.useFetchPostsQuery(params)
     const { data: comments } = blogApi.useFetchCommentsQuery(params)
-    const [addPost] = blogApi.useAddPostMutation()
     const [deletePost] = blogApi.useDeletePostMutation()
     const [addNewPost, setAddNewPost] = useState(false)
-    console.log(users)
 
-    const handleRemove = (item: Ipost) => {
+    const handleRemove = (item: IPost) => {
         deletePost(item)
     }
-
-
 
     const handleAddPost = () => {
         setAddNewPost(true)
@@ -60,55 +53,67 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
         console.log(1)
     }
 
-    const handleAdd = () => {
-        const post = {
-            title: '1111',
-            body: '',
-            id: 1,
-            userId: 1,
-            date: '1111',
-            comments: []
-        }
-        addPost(post)
-    }
-
     return (
 
-            <div className='blog__posts'>
-                <div className='links__container'>
+            <Box className='blog__posts'>
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'primary.dark',
+                    height: '50px',
+                    borderTop: '2px solid gray',
+                    }}>
                         <div className='links__sorting-buttons__container'>
-                            Cортировать по дате:
-                            <button className='blog__button'>-</button>
-                            <button className='blog__button'>+</button>
+                            <p>Cортировать по дате:</p>
+                            <ButtonGroup sx={{marginLeft: '5px'}} variant='contained'>
+                                <Button><ArrowDownwardIcon /></Button>
+                                <Button><ArrowUpwardIcon /></Button>
+                            </ButtonGroup>
                         </div>
                         <div className='links__sorting-buttons__container'>
-                            Cортировать по автору:
-                            <button className='blog__button' data-testid='sortAuthorAsc'>Убывание</button>
-                            <button className='blog__button' data-testid='sortAuthorDesc'>Возрастание</button>
+                            <p>Cортировать по автору:</p>
+                            <ButtonGroup sx={{marginLeft: '5px'}} variant='contained'>
+                                <Button data-testid='sortAuthorAsc'><ArrowDownwardIcon /></Button>
+                                <Button data-testid='sortAuthorDesc'><ArrowUpwardIcon /></Button>
+                            </ButtonGroup>
                         </div>
-
-                        <div className='links__pagination__container'>
-                            <button className="blog__button" onClick={handleAddPost}>NEW POST</button>
-                            {/*<Pagination paginate={paginate}*/}
-                            {/*            totalPosts={totalPosts}*/}
-                            {/*            postsPerPage={params.limit}/>*/}
-                            <button className='blog__button' disabled={(params.start < 10)} onClick={prevPage}>PREV</button>
-                            <div className='page-number__container'><p>{params.start/10+1}/10</p></div>
-                            <button className='blog__button' disabled={(params.start >= 90)} onClick={nextPage}>NEXT</button>
-
-                        </div>
-                </div>
-
+                        <Box className='links__pagination__container'>
+                            <ButtonGroup variant='contained' sx={{marginRight: '10px'}}>
+                                <Button variant='contained' disabled={(params.start < 10)} onClick={prevPage}>PREV</Button>
+                                <Box sx={{
+                                    width: '50px',
+                                    height: '25px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: 'primary.dark',
+                                    padding: '5px',
+                                    color: 'white',
+                                    fontFamily: 'Roboto',
+                                }}>
+                                        <p>{params.start/10+1}/10</p>
+                                </Box>
+                                <Button variant='contained' disabled={(params.start >= 90)} onClick={nextPage}>NEXT</Button>
+                            </ButtonGroup>
+                        </Box>
+                </Box>
                 <div className='posts__container'>
+                    <Button sx={{
+                        width: '300px',
+                        margin: '40px auto',
+                        display: 'block'
+                    }} variant='contained' onClick={handleAddPost}>NEW POST</Button>
                     {
                         addNewPost ? (
                                    <NewPostForm/>   ) : null
                     }
-                    {isLoading && <h1>Идет загрузка</h1>}
+                    {isLoading && (<div style={{display: 'flex', margin: '0 auto', justifyContent: 'center', width: '300px', height: '300px'}}>
+                        <CircularProgress />
+                        </div>)}
                     {error && <h1>Произошла ошибка</h1>}
                     {
-
-                        users && posts && comments && posts.map((item: Ipost, index: number) =>
+                        users && posts && comments && posts.map((item: IPost, index: number) =>
                         <PostForm  remove={handleRemove} update={handleUpdate} key={index}
                                     item={item}
                                     users={users}
@@ -116,8 +121,7 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         )
                     }
                 </div>
-
-            </div>
+            </Box>
 
     );
 }
