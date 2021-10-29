@@ -10,9 +10,6 @@ export interface IParams {
 }
 
 
-const postsAdapter = createEntityAdapter<IUser>({
-    sortComparer: (a, b) => a.name.localeCompare(b.name),
-})
 
 export const blogApi = createApi ({
     reducerPath: 'blogAPI',

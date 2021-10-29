@@ -11,7 +11,6 @@ import CurrentPostPage from "./PostsContainer/CurrentPostPage";
 
 export function Blog(): ReactElement {
 
-    const dispatch = useDispatch()
 
     return (
         <div className='blog'>
