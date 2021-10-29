@@ -27,7 +27,7 @@ export const blogApi = createApi ({
         }),
         fetchAuthors: build.query<IUser[], number>({
             query: (limit: number) => ({
-                url: '/users',
+                url: '/users?_sort=name',
                 params: {
                     _limit: limit
                 }

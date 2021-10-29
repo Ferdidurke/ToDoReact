@@ -26,16 +26,14 @@ export interface IAllPostsProps {
 function AllPostsPage(props: IAllPostsProps): ReactElement {
 
     const [params, setParams] = useState({start: 0, limit: 10})
-    const { data: posts, isLoading, error  } = blogApi.useFetchPostsQuery(params)
     const { data: users } = blogApi.useFetchAuthorsQuery(10)
+    const { data: posts, isLoading, error  } = blogApi.useFetchPostsQuery(params)
     const { data: comments } = blogApi.useFetchCommentsQuery(params)
     const [addPost] = blogApi.useAddPostMutation()
     const [deletePost] = blogApi.useDeletePostMutation()
     const [addNewPost, setAddNewPost] = useState(false)
+    console.log(users)
 
-    const totalPosts = 100
-    const [currentPage, setCurrentPage] = useState(1)
-    const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
     const handleRemove = (item: Ipost) => {
         deletePost(item)
     }
