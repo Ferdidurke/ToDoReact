@@ -2,7 +2,6 @@ import React, {ReactElement} from "react";
 import Main from "../Main";
 import './styles.sass'
 import Sidebar from "./Sidebar";
-
 import {useDispatch} from "react-redux";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import AllPostsPage from "./PostsContainer/AllPostsPage";

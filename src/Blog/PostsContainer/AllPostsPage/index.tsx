@@ -4,9 +4,10 @@ import './styles.sass'
 import {Ipost, IUser} from "../../Post/interfaces/interfaces";
 import {blogApi} from "../../services/PostService";
 import {Pagination} from "../../functions/pagination";
-import { Button } from 'react-bootstrap';
+
 
 import {IComment} from "../../Post/comment";
+import NewPostForm from "./NewPostForm";
 
 export interface IAllPostsProps {
     posts: Ipost[]
@@ -26,15 +27,25 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
 
     const [params, setParams] = useState({start: 0, limit: 10})
     const { data: posts, isLoading, error  } = blogApi.useFetchPostsQuery(params)
-    const { data: users } = blogApi.useFetchAuthorsQuery(params.limit)
+    const { data: users } = blogApi.useFetchAuthorsQuery(10)
     const { data: comments } = blogApi.useFetchCommentsQuery(params)
     const [addPost] = blogApi.useAddPostMutation()
     const [deletePost] = blogApi.useDeletePostMutation()
+    const [addNewPost, setAddNewPost] = useState(false)
+
     const totalPosts = 100
     const [currentPage, setCurrentPage] = useState(1)
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
     const handleRemove = (item: Ipost) => {
         deletePost(item)
+    }
+
+
+
+    const handleAddPost = () => {
+        setAddNewPost(true)
+        setTimeout(() => document.querySelector('.post-form__container')!.classList.toggle('extended__form-container'), 50)
+
     }
 
     const prevPage = () => {
@@ -79,18 +90,22 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         </div>
 
                         <div className='links__pagination__container'>
-                            <button className="blog__button" onClick={handleAdd}>NEW POST</button>
+                            <button className="blog__button" onClick={handleAddPost}>NEW POST</button>
                             {/*<Pagination paginate={paginate}*/}
                             {/*            totalPosts={totalPosts}*/}
                             {/*            postsPerPage={params.limit}/>*/}
                             <button className='blog__button' disabled={(params.start < 10)} onClick={prevPage}>PREV</button>
-                            <p>Страница: {params.start/10+1}</p>
+                            <div className='page-number__container'><p>{params.start/10+1}/10</p></div>
                             <button className='blog__button' disabled={(params.start >= 90)} onClick={nextPage}>NEXT</button>
 
                         </div>
                 </div>
 
                 <div className='posts__container'>
+                    {
+                        addNewPost ? (
+                                   <NewPostForm/>   ) : null
+                    }
                     {isLoading && <h1>Идет загрузка</h1>}
                     {error && <h1>Произошла ошибка</h1>}
                     {

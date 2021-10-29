@@ -17,7 +17,7 @@ const postsAdapter = createEntityAdapter<IUser>({
 export const blogApi = createApi ({
     reducerPath: 'blogAPI',
     baseQuery: fetchBaseQuery ({baseUrl: 'https://jsonplaceholder.typicode.com/'}),
-    tagTypes: ['Post'],
+    tagTypes: ['Post', 'Comments'],
     endpoints: (build) => ({
         fetchPosts: build.query<Ipost[], IParams>({
             query: (params) => ({
@@ -37,6 +37,7 @@ export const blogApi = createApi ({
             query: (params) => ({
                 url: `/comments?_start=${params.start*5}&_limit=${params.limit*5}`,
             }),
+            providesTags: result =>['Comments']
         }),
 
         fetchSinglePost: build.query<Ipost, number> ({
@@ -52,7 +53,7 @@ export const blogApi = createApi ({
         }),
 
 
-        addPost: build.mutation<Ipost, Ipost>({
+        addPost: build.mutation<any, any>({
             query: (post) => ({
                 url: `/posts/`,
                 method: 'POST',
