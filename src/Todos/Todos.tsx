@@ -9,7 +9,7 @@ import {ITask} from "./task/script";
 import {changeStatus} from "../store/redux-toolkit/todoReducer";
 import {useSelector} from "react-redux";
 import {RootState} from "../store/redux-toolkit/store";
-import Main from "../Main";
+import Header from "../Header";
 
 
 export interface TodosProps {
@@ -56,8 +56,8 @@ const handlerDrop = (event: React.DragEvent<HTMLDivElement>): void => {
 
   return (
   <div className='todo__container'>
-      <Main/>
-    <ToDoHeader />
+      <Header/>
+     <ToDoHeader />
       <div className="todo__tasks">
           <UndoneTasks
                        handlerDragEnter={handlerDragEnter}

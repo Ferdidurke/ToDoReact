@@ -12,8 +12,7 @@ function Sidebar(): ReactElement {
                 borderRight: '2px gray solid',
                 borderTop: '2px gray solid'
             }}>
-                <Button variant='contained' sx={{marginTop: '10px'}}>LOGIN</Button>
-                <Button variant='contained' sx={{marginTop: '10px'}}>NEW POST</Button>
+
             </Container>
     );
 }

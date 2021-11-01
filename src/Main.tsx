@@ -1,23 +1,22 @@
 import React, {ReactElement} from "react";
-import {BottomNavigation, BottomNavigationAction} from "@mui/material";
+import {BottomNavigation, BottomNavigationAction, Button, ButtonGroup} from "@mui/material";
 import {Link} from "react-router-dom";
+import RegistrationForm from "./Blog/AuthorisationPage/RegistrationForm";
+import Header from "./Header";
 
 
 export default function Main () : ReactElement {
     return (
-        <BottomNavigation
-        showLabels
-        sx={{backgroundColor: 'primary.dark'}}>
-            <BottomNavigationAction sx={{color: 'white'}} label="MAIN"
-            component={Link}
-                to="/"/>
-            <BottomNavigationAction sx={{color: 'white'}} label="TODOS"
-                                    component={Link}
-                                    to="/todos"/>
+        <div>
+        <Header/>
+            <div className='main__buttons-container'>
+                <ButtonGroup>
+                    <Button data-testid='test_login-btn' variant='contained' sx={{marginTop: '10px', marginRight: '5px'}}>LOGIN</Button>
+                    <Button data-testid='test_register-btn' variant='contained' sx={{marginTop: '10px'}} component={Link} to="/register">REGISTER</Button>
+                </ButtonGroup>
+            </div>
 
-            <BottomNavigationAction sx={{color: 'white'}} label="BLOG"
-                                    component={Link}
-                                    to="/blog"/>
-        </BottomNavigation>
+
+        </div>
     )
 }

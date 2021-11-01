@@ -2,7 +2,8 @@ import {configureStore} from "@reduxjs/toolkit";
 import {todoReducer} from "./todoReducer";
 
 
-import {blogApi} from "../../Blog/services/PostService";
+import {blogApi} from "../../services/PostService";
+import {userApi} from "../../services/UserService";
 
 const persistedState = localStorage.ReduxStorage ? JSON.parse(localStorage.getItem('ReduxStorage')!) : {}
 
@@ -10,9 +11,10 @@ const persistedState = localStorage.ReduxStorage ? JSON.parse(localStorage.getIt
 export const store = configureStore ({
     reducer: {
         todo: todoReducer.reducer,
-        [blogApi.reducerPath]: blogApi.reducer
+        [blogApi.reducerPath]: blogApi.reducer,
+        [userApi.reducerPath]: userApi.reducer
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(blogApi.middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(blogApi.middleware).concat(userApi.middleware),
     preloadedState: persistedState
 
 })

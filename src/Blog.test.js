@@ -1,79 +1,79 @@
 import React from "react";
-import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import {fireEvent, queryByRole, render, screen, waitFor} from "@testing-library/react";
 import '@testing-library/jest-dom'
 import {Provider} from "react-redux";
 import {store} from "./store/redux-toolkit/store";
-import Sidebar from "./Blog/Sidebar";
 import {Blog} from "./Blog/Blog";
 import PostForm from "./Blog/Post";
-import {Pagination} from "./Blog/functions/pagination";
 import Comment from "./Blog/Post/comment";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import Main from "./Main";
+import App from "./App";
 
 
 describe('check for render Blog', () => {
-    it('render sidebar', () => {
+    it('check for render page', () => {
         render(
-            <Provider store={store}>
-                <Sidebar/>
-            </Provider>
+            <BrowserRouter>
+                <Provider store={store}>
+                    <Blog/>
+                </Provider>
+            </BrowserRouter>
         )
-        expect(screen.getByText(/login/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/BLOG/i)).toHaveLength(2)
 
     })
-})
-
-describe('check for render posts', () => {
-    it('render posts in post container', async () => {
-        const {container} = render(
-            <Provider store={store}>
-                <Blog />
-            </Provider>
-        )
-        const postContainer = container.querySelector('.posts__container')
-        await waitFor(() => expect(postContainer.childNodes.length > 5).toBe(true))
-    })
-
 
 })
+
+// describe('check for render posts', () => {
+//     it('render posts in post container', async () => {
+//         const {container} = render(
+//             <BrowserRouter>
+//                 <Provider store={store}>
+//                     <Blog />
+//                 </Provider>
+//             </BrowserRouter>
+//         )
+//     })
+//
+// })
 
 describe('check for render postform', () => {
-    it('render post in postform', () => {
+    it('render post in postform, check for right user name', () => {
         const item = {
             id: 1,
+            userId: 1,
             title: 'title',
             body: 'example',
             comments: []
         }
 
-        const user = {
-            name: 'example name'
-        }
+        const users = [{
+                        id: 1,
+                        name: 'right name'
+                        },
+                    {
+                        id: 2,
+                        name: 'wrong name'
+                    },
+
+        ]
 
         render(
-            <Provider store={store}>
-                <PostForm item={item} user={user}/>
-            </Provider>
+            <BrowserRouter>
+                <Provider store={store}>
+                    <PostForm item={item} users={users}/>
+                </Provider>
+            </BrowserRouter>
         )
         expect(screen.queryByText('example')).toBeInTheDocument()
         expect(screen.queryByText(/title/i)).toBeInTheDocument()
-        expect(screen.queryByText(/example name/i)).toBeInTheDocument()
+        expect(screen.queryByText(/right name/i)).toBeInTheDocument()
 
     })
 })
 
-
-describe('check for create pagination links', () => {
-        const postsPerPage = 1
-        const totalPosts = 20
-        const {container} = render(
-                <Pagination totalPosts={totalPosts}
-                            postsPerPage={postsPerPage}
-                            />
-
-        )
-        const paginationList = container.querySelector('.pagination__list')
-        expect(paginationList.childNodes.length).toBe(20)
-})
 
 describe('check for create comments', ()=> {
     it('check for add textfield', function () {
@@ -87,9 +87,11 @@ describe('check for create comments', ()=> {
         }
 
         render(
-            <Provider store={store}>
-                <PostForm item={item} user={user}/>
-            </Provider>
+            <BrowserRouter>
+                <Provider store={store}>
+                    <PostForm item={item} user={user}/>
+                </Provider>
+            </BrowserRouter>
         )
         fireEvent.click(screen.getByTestId('addCommentBtn'))
 
@@ -103,19 +105,39 @@ describe('check for create comments', ()=> {
 
     });
 
-    it('check for render comment', () => {
-        const comment = {
-            name: 'test for comment text',
-            date: 'EXAMPLE COMMENT TEXT'
-        }
-        render(
 
-                <Comment comment={comment}
-                         counter={0}/>
-
-        )
-        expect(screen.queryByText(/test for comment text/i)).toBeInTheDocument()
-    })
 })
+describe('registration form check', () => {
+    it('should check for render registration form', function () {
+        render(
+            <BrowserRouter>
+                <Provider store={store}>
+                        <App/>
+                </Provider>
+            </BrowserRouter>
+        )
+        fireEvent.click(screen.getByTestId('test_register-btn'))
+        expect(screen.queryByText(/Введите имя/i)).toBeInTheDocument()
+        expect(screen.queryByText(/Введите фамилию/i)).toBeInTheDocument()
+        fireEvent.change(screen.getByTestId('registration-first__name'), {
+            target: {value: 'Ruslan'}
+        })
+        fireEvent.change(screen.getByTestId('registration-last__name'), {
+            target: {value: 'Mamedov'}
+        })
+        fireEvent.change(screen.getByTestId('registration-email'), {
+            target: {value: 'mamedov@gmail.com'}
+        })
+        screen.debug()
+        expect(screen.queryByText('Ruslan').toBeInTheDocument())
+        expect(screen.queryByText('Mamedov').toBeInTheDocument())
+        expect(screen.queryByText('mamedov@gmail.com').toBeInTheDocument())
+        fireEvent.click(screen.getByRole('button'))
+        expect(screen.getByTestId('registration-first__name').value).toBe('')
+        expect(screen.getByTestId('registration-last__name').value).toBe('')
+        expect(screen.getByTestId('registration-email').value).toBe('')
+    });
+})
+
 
 

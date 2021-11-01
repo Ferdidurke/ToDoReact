@@ -2,7 +2,7 @@ import React, {ReactElement, useState} from 'react';
 import PostForm from "../../Post";
 import './styles.sass'
 import {IPost, IUser, IComment} from "../../Post/interfaces/interfaces";
-import {blogApi} from "../../services/PostService";
+import {blogApi} from "../../../services/PostService";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import NewPostForm from "./NewPostForm";

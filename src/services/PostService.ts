@@ -1,6 +1,6 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {IPost, IUser} from "../Post/interfaces/interfaces";
-import {IComment} from "../Post/interfaces/interfaces";
+import {IPost, IUser} from "../Blog/Post/interfaces/interfaces";
+import {IComment} from "../Blog/Post/interfaces/interfaces";
 
 
 export interface IParams {

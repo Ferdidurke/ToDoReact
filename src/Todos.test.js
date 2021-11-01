@@ -13,7 +13,8 @@ import {Task, TaskForm} from "./Todos/task/script";
 import userEvent from '@testing-library/user-event'
 import Todos from "./Todos/Todos";
 import {configureStore} from "@reduxjs/toolkit";
-import {blogApi} from "./Blog/services/PostService";
+import {blogApi} from "./services/PostService";
+import {BrowserRouter} from "react-router-dom";
 
 
 const renderWithRedux = (
@@ -44,9 +45,11 @@ describe('Redux testing', () => {
 describe('check for render Todos/Header', () => {
     it('render Todos', () => {
         render(
-            <Provider store={store}>
-                <Todos/>
-            </Provider>
+            <BrowserRouter>
+                <Provider store={store}>
+                    <Todos/>
+                </Provider>
+            </BrowserRouter>
         )
         expect(screen.getByText(/TO DO LIST/i)).toBeInTheDocument();
 
@@ -200,9 +203,11 @@ describe('check for render items on donetasks', () => {
 describe('check for sort', () => {
     it ('check undone container for task sorting', () => {
         const { container } = render(
-            <Provider store={store}>
-                <Todos/>
-            </Provider>
+            <BrowserRouter>
+                <Provider store={store}>
+                    <Todos/>
+                </Provider>
+            </BrowserRouter>
         )
         fireEvent.change(screen.getByTestId('dateInput'), {
             target: {value: '2021-10-21T16:00'}
@@ -235,9 +240,11 @@ describe('check for sort', () => {
 describe('check for replacing by keyboard event', () => {
     it ('check', () => {
         const { container } = render(
-            <Provider store={store}>
-                <Todos/>
-            </Provider>
+            <BrowserRouter>
+                <Provider store={store}>
+                    <Todos/>
+                </Provider>
+            </BrowserRouter>
         )
 
         fireEvent.click(screen.getByTestId('newTaskButton'))

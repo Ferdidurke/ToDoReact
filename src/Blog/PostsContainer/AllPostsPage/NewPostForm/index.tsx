@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './styles.sass'
-import {blogApi} from "../../../services/PostService";
+import {blogApi} from "../../../../services/PostService";
 import {Button, TextField} from "@mui/material";
 
 function NewPostForm() {

@@ -1,6 +1,6 @@
 import React from "react";
 import PostForm from "../../Post";
-import {blogApi} from "../../services/PostService";
+import {blogApi} from "../../../services/PostService";
 import {IAllPostsProps} from "../AllPostsPage";
 import {IPost} from "../../Post/interfaces/interfaces";
 import {Link, useParams} from "react-router-dom";
@@ -36,7 +36,7 @@ const CurrentPostPage: React.FC<Partial<IAllPostsProps>> = (props) =>{
                 display: 'block',
                 textAlign: 'center'
             }}
-                    variant='contained' component={Link}  to = '/blog'>GO BACK</Button>
+                    variant='contained' component={Link} to = '/blog'>GO BACK</Button>
             {
                 post && users && comments ? (<PostForm remove={handleRemove} update={handleUpdate}
                                                          item={post}
