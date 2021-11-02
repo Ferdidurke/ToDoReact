@@ -4,7 +4,7 @@ import {TaskForm} from "../task/script";
 import {TodosProps} from "../Todos";
 import {ITask} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
-import {sortOnAsc, sortOnDesc, markTaskOnDelete} from "../../store/redux-toolkit/todoReducer";
+import {sortOnAsc, sortOnDesc, markTaskOnDelete} from "../../store/redux-toolkit/reducers/todoReducer";
 import { RootState} from "../../store/redux-toolkit/store";
 
 

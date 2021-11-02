@@ -6,9 +6,17 @@ import Header from "./Header";
 
 
 export default function Main () : ReactElement {
+
+    const isAuthenticated= false
+    if (isAuthenticated) {
+        return (
+            <div>
+                <Header/>
+            </div>
+        )
+    }
     return (
         <div>
-        <Header/>
             <div className='main__buttons-container'>
                 <ButtonGroup>
                     <Button data-testid='test_login-btn' variant='contained' sx={{marginTop: '10px', marginRight: '5px'}}>LOGIN</Button>

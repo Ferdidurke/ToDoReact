@@ -1,9 +1,9 @@
 import {configureStore} from "@reduxjs/toolkit";
-import {todoReducer} from "./todoReducer";
-
-
+import {todoReducer} from "./reducers/todoReducer";
 import {blogApi} from "../../services/PostService";
 import {userApi} from "../../services/UserService";
+import {authReducer} from "./reducers/authReducer";
+
 
 const persistedState = localStorage.ReduxStorage ? JSON.parse(localStorage.getItem('ReduxStorage')!) : {}
 
@@ -11,6 +11,7 @@ const persistedState = localStorage.ReduxStorage ? JSON.parse(localStorage.getIt
 export const store = configureStore ({
     reducer: {
         todo: todoReducer.reducer,
+        auth: authReducer.reducer,
         [blogApi.reducerPath]: blogApi.reducer,
         [userApi.reducerPath]: userApi.reducer
     },

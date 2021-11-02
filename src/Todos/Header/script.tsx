@@ -1,9 +1,9 @@
 import React, {ReactElement, useState} from "react";
 import {ITask, Task} from "../task/script";
 import './styles.sass'
-import {addTask, deadliner} from "../../store/redux-toolkit/todoReducer";
+import {addTask, deadliner} from "../../store/redux-toolkit/reducers/todoReducer";
 import {useDispatch} from "react-redux";
-import {logging} from "../../store/redux-toolkit/todoReducer";
+import {logging} from "../../store/redux-toolkit/reducers/todoReducer";
 
 
 function ToDoHeader () : ReactElement {

@@ -5,7 +5,7 @@ import {TodosProps} from "../Todos";
 import {ITask} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
 import {RootState} from "../../store/redux-toolkit/store";
-import {markTaskOnDelete} from "../../store/redux-toolkit/todoReducer";
+import {markTaskOnDelete} from "../../store/redux-toolkit/reducers/todoReducer";
 
 const DoneTasks: React.FC<Partial<TodosProps>> = (props) => {
     const { tasks } = useSelector((state:RootState) => state.todo);

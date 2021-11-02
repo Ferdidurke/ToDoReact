@@ -6,7 +6,7 @@ import {DeletedTasks} from "./DeletedContainer/script";
 import {UndoneTasks} from "./UndoneContainer/script";
 import {DoneTasks} from "./DoneContainer/script";
 import {ITask} from "./task/script";
-import {changeStatus} from "../store/redux-toolkit/todoReducer";
+import {changeStatus} from "../store/redux-toolkit/reducers/todoReducer";
 import {useSelector} from "react-redux";
 import {RootState} from "../store/redux-toolkit/store";
 import Header from "../Header";

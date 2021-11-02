@@ -2,7 +2,7 @@ import React, {ReactElement, useState} from "react";
 
 import './styles.sass'
 import {useDispatch} from "react-redux";
-import {changeStatus, changeTaskTextField} from "../../store/redux-toolkit/todoReducer";
+import {changeStatus, changeTaskTextField} from "../../store/redux-toolkit/reducers/todoReducer";
 
 export interface ITask {
     id: number

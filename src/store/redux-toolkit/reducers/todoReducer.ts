@@ -1,4 +1,4 @@
-import {ITask} from "../../Todos/task/script";
+import {ITask} from "../../../Todos/task/script";
 import {createSlice} from "@reduxjs/toolkit";
 
 

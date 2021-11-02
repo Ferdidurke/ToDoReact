@@ -8,7 +8,7 @@ import {UndoneTasks} from "./Todos/UndoneContainer/script";
 import {DoneTasks} from "./Todos/DoneContainer/script";
 import {DeletedTasks} from "./Todos/DeletedContainer/script";
 import {createStore} from "redux";
-import {todoReducer} from "./store/redux-toolkit/todoReducer";
+import {todoReducer} from "./store/redux-toolkit/reducers/todoReducer";
 import {Task, TaskForm} from "./Todos/task/script";
 import userEvent from '@testing-library/user-event'
 import Todos from "./Todos/Todos";

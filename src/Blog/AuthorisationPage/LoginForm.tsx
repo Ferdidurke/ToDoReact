@@ -1,11 +1,13 @@
 import React, {useState} from "react";
 import Header from "../../Header";
 import {Button, TextField} from "@mui/material";
+import {userApi} from "../../services/UserService";
 
 export default function LoginForm () {
 
 const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
+const [login] = userApi.useLoginUserMutation()
 
 const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.currentTarget.value)
@@ -21,6 +23,7 @@ const submitLogin = (event: any) => {
             email: email,
             password: password
     }
+        login(user)
         setEmail('')
         setPassword('')
 }

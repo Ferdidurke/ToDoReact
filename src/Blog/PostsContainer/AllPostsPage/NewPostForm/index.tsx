@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import './styles.sass'
 import {blogApi} from "../../../../services/PostService";
 import {Button, TextField} from "@mui/material";
+import {userApi} from "../../../../services/UserService";
 
 function NewPostForm() {
-    const [addPost] = blogApi.useAddPostMutation()
+    const [addPost] = userApi.useAddPostMutation()
     const [authorName, setAuthorName] = useState('')
     const [title, setTitle] = useState('')
     const [authorEmail, setAuthorEmail] = useState('')

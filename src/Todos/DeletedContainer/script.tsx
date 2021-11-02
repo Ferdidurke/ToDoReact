@@ -2,7 +2,7 @@ import './styles.sass'
 import React from "react";
 import {ITask, TaskForm} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
-import {deletingTask} from "../../store/redux-toolkit/todoReducer";
+import {deletingTask} from "../../store/redux-toolkit/reducers/todoReducer";
 import {RootState} from "../../store/redux-toolkit/store";
 
 const handleExtendedDeletedBlock = () => {
