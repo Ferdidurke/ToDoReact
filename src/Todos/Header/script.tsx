@@ -4,6 +4,7 @@ import './styles.sass'
 import {addTask, deadliner} from "../../store/redux-toolkit/reducers/todoReducer";
 import {useDispatch} from "react-redux";
 import {logging} from "../../store/redux-toolkit/reducers/todoReducer";
+import {Button} from "@mui/material";
 
 
 function ToDoHeader () : ReactElement {
@@ -51,9 +52,9 @@ function ToDoHeader () : ReactElement {
             </div>
             <div className="application">
                 <div className="link-container">
-                    <button data-testid = "downloadBtn" className="button download-button" onClick={handleDownloadLogsButton}>
+                    <Button variant='contained' data-testid = "downloadBtn" className="button download-button" onClick={handleDownloadLogsButton}>
                         DOWNLOAD LOGS
-                    </button>
+                    </Button>
                 </div>
                 <div className="new-task__container">
                     <label className="task-form__label">Срок выполнения задачи:</label>
@@ -66,12 +67,12 @@ function ToDoHeader () : ReactElement {
                               value={text}
                               onChange={changeInputTaskText}
                     />
-                    <button data-testid='newTaskButton' className="button new-task__button" onClick={createNewTask}> NEW TASK</button>
+                    <Button variant='contained' data-testid='newTaskButton' className="button new-task__button" onClick={createNewTask}> NEW TASK</Button>
                 </div>
                 <div className="link-container">
-                    <button className="button download-button" onClick={handleDownloadTasksListButton}>
+                    <Button variant='contained' className="button download-button" onClick={handleDownloadTasksListButton}>
                         DOWNLOAD TASKS
-                    </button>
+                    </Button>
                 </div>
             </div>
 

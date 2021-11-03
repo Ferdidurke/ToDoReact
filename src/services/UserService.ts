@@ -23,7 +23,6 @@ export const userApi = createApi({
             invalidatesTags: result => ['User']
         }),
 
-
         registerUser: build.mutation<any, any>({
             query: (user) => ({
                 url: `/api/auth/register`,
@@ -35,7 +34,6 @@ export const userApi = createApi({
             }),
             invalidatesTags: result => ['User']
         }),
-
         loginUser: build.mutation<any, any>({
             query: (user) => ({
                 url: `/api/auth/login`,

@@ -1,30 +1,26 @@
 import React, {ReactElement} from "react";
 import {BottomNavigation, BottomNavigationAction, Button, ButtonGroup} from "@mui/material";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import RegistrationForm from "./Blog/AuthorisationPage/RegistrationForm";
 import Header from "./Header";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "./store/redux-toolkit/store";
+import {logout} from "./store/redux-toolkit/reducers/authReducer";
+import {Login} from "@mui/icons-material";
+import LoginForm from "./Blog/AuthorisationPage/LoginForm";
+import {use} from "msw/lib/types/utils/internal/requestHandlerUtils";
 
 
 export default function Main () : ReactElement {
-
-    const isAuthenticated= false
+    const { isAuthenticated } = useSelector((state:RootState) => state.auth)
+    const history = useHistory()
     if (isAuthenticated) {
-        return (
-            <div>
-                <Header/>
-            </div>
-        )
+        history.push('/blog')
     }
     return (
         <div>
-            <div className='main__buttons-container'>
-                <ButtonGroup>
-                    <Button data-testid='test_login-btn' variant='contained' sx={{marginTop: '10px', marginRight: '5px'}}>LOGIN</Button>
-                    <Button data-testid='test_register-btn' variant='contained' sx={{marginTop: '10px'}} component={Link} to="/register">REGISTER</Button>
-                </ButtonGroup>
-            </div>
-
-
+            <Header/>
+            <LoginForm/>
         </div>
     )
 }

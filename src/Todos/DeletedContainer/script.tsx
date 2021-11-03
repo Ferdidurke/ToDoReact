@@ -4,6 +4,7 @@ import {ITask, TaskForm} from "../task/script";
 import {useSelector, useDispatch} from "react-redux";
 import {deletingTask} from "../../store/redux-toolkit/reducers/todoReducer";
 import {RootState} from "../../store/redux-toolkit/store";
+import {Button} from "@mui/material";
 
 const handleExtendedDeletedBlock = () => {
     const block: HTMLDivElement | null = document.querySelector('.deleted__tasks__container')
@@ -29,7 +30,7 @@ const DeletedTasks: React.FC = () => {
     return (
        <>
        <div className="deleted__tasks__button-container">
-       <button data-testid ='extendedBtn' className="button deleted-tasks__button" onClick={handleExtendedDeletedBlock}>Open</button>
+       <Button variant='contained' data-testid ='extendedBtn' className="button deleted-tasks__button" onClick={handleExtendedDeletedBlock}>Open</Button>
        </div>
         <div className="deleted__tasks__container">
             {

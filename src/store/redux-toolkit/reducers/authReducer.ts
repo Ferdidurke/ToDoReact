@@ -3,9 +3,16 @@ import {action} from "typesafe-actions";
 import {userApi} from "../../../services/UserService";
 
 
-const initialState = {
+interface IAuthUser {
+    token: string | null
+    isAuthenticated: boolean,
+    isLoading: boolean,
+    user: null | any
+}
+
+const initialState: IAuthUser = {
     token: localStorage.getItem('token'),
-    isAuthenticated: null,
+    isAuthenticated: false,
     isLoading: false,
     user: null
 }
@@ -14,30 +21,30 @@ export const authReducer = createSlice({
     name: 'authReducer',
     initialState,
     reducers: {
-        login: (state, action) => {
-            state.user = action.payload
-            state.isAuthenticated = true
-        },
-        logout: (state, action) => {
-            state.user = null
+        logout: (state) => {
             state.isAuthenticated = false
-        },
+            state.token = null
+
+        }
     },
     extraReducers: (builder) => {
         builder.addMatcher(
-            userApi.endpoints.loginUser.matchFulfilled,
-            (state, { payload }) => {
-
+            userApi.endpoints.loginUser.matchPending,
+            (state) => {
+              state.isLoading = true
+        }),
+        builder.addMatcher(
+            userApi.endpoints.loginUser.matchFulfilled, (state, { payload }) => {
                 state.token = payload.token
                 state.user = {
                     firstName: payload.firstName,
                     lastName: payload.lastName,
                 }
-                console.log(current(state))
+                state.isAuthenticated = true
+                state.isLoading = false
             }
         )
     },
-
 })
 
-export const {login, logout} = authReducer.actions
+export const {logout} = authReducer.actions

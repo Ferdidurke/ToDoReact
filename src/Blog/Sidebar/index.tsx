@@ -1,5 +1,6 @@
 import React, {ReactElement} from 'react';
 import {Button, Container} from "@mui/material";
+import UserCard from "../UserBox";
 
 function Sidebar(): ReactElement {
 
@@ -12,7 +13,7 @@ function Sidebar(): ReactElement {
                 borderRight: '2px gray solid',
                 borderTop: '2px gray solid'
             }}>
-
+                <UserCard />
             </Container>
     );
 }

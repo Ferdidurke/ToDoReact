@@ -58,10 +58,10 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
             <Box className='blog__posts'>
                 <Box sx={{
                     display: 'flex',
+                    flexWrap: 'wrap',
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: 'primary.dark',
-                    height: '50px',
                     borderTop: '2px solid gray',
                     }}>
                         <div className='links__sorting-buttons__container'>

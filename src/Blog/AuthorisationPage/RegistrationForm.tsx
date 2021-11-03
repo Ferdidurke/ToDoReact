@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import './styles.sass'
 
 import {Button, TextField} from "@mui/material";
-import Header from "../../Header";
 import {userApi} from "../../services/UserService";
+import Header from "../../Header";
+
 
 function RegistrationForm() {
     const [userFirstName, setUserFirstName] = useState('')
@@ -40,13 +41,11 @@ function RegistrationForm() {
         setUserLastName('')
         setUserEmail('')
         setPassword('')
-        console.log(user)
         registerNewUser(user)
     }
 
     return (
         <div>
-        <Header/>
             <div className='registration-form__container'>
                 <form className='registration__form' onSubmit={submitRegister}>
                     <label>Введите имя:</label><TextField inputProps={{'data-testid': 'registration-first__name'}}  sx={{backgroundColor: 'white'}} variant="filled" label='Имя' required

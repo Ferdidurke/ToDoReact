@@ -50,7 +50,7 @@ export const blogApi = createApi ({
 
         addPost: build.mutation<any, any>({
             query: (post) => ({
-                url: `/posts/`,
+                url: `/api/blog/posts`,
                 method: 'POST',
                 body: JSON.stringify(post),
             }),

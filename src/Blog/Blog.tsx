@@ -19,9 +19,7 @@ export function Blog(): ReactElement {
         <div className='blog'>
             <Header/>
             <div className='blog__head'>
-                <div className='header__button-container'>
-                    <Button variant='contained' sx={{marginTop: '10px', marginRight: '5px'}}>LOGIN</Button>
-                    <Button variant='contained' sx={{marginTop: '10px'}} component={Link} to="/register">REGISTER</Button>
+                <div className='header__user-container'>
                 </div>
                 <h1 className='blog-header'>BLOG</h1>
             </div>
