@@ -1,6 +1,7 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {IPost, IUser} from "../Blog/Post/interfaces/interfaces";
 import {IComment} from "../Blog/Post/interfaces/interfaces";
+import {RootState} from "../store/redux-toolkit/store";
 
 
 export interface IParams {
@@ -11,59 +12,68 @@ export interface IParams {
 
 export const blogApi = createApi ({
     reducerPath: 'blogAPI',
-    baseQuery: fetchBaseQuery ({baseUrl: 'https://jsonplaceholder.typicode.com/'}),
+    baseQuery: fetchBaseQuery ({
+        baseUrl: 'http://localhost:5000/',
+        prepareHeaders: (headers, { getState }) => {
+            const token = (getState() as RootState).auth.token
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`)
+            }
+            return headers
+        }}),
     tagTypes: ['Post', 'Comments'],
     endpoints: (build) => ({
         fetchPosts: build.query<IPost[], IParams>({
             query: (params) => ({
-                url: `/posts?_start=${params.start}&_limit=${params.limit}`,
+                url: `/api/blog/posts`,
             }),
             providesTags: result =>['Post']
         }),
-        fetchAuthors: build.query<IUser[], number>({
-            query: (limit: number) => ({
-                url: '/users?_sort=name',
-                params: {
-                    _limit: limit
-                }
+        fetchAuthors: build.query<IUser[], any>({
+            query: (params) => ({
+                url: '/api/users',
             }),
         }),
         fetchComments: build.query<IComment[], IParams>({
             query: (params) => ({
-                url: `/comments?_start=${params.start*5}&_limit=${params.limit*5}`,
+                url: `/api/blog/comments`,
             }),
             providesTags: result =>['Comments']
         }),
-
         fetchSinglePost: build.query<IPost, number> ({
             query: (id) => ({
                 url: `/posts/${id}`
             }),
         }),
-
-        fetchSingleComment: build.query<IComment, IParams>({
-            query: (params) => ({
-                url: `/comments?_start=${params.start}&_limit=${params.limit*5}`,
-            }),
-        }),
-
-
         addPost: build.mutation<any, any>({
             query: (post) => ({
                 url: `/api/blog/posts`,
                 method: 'POST',
-                body: JSON.stringify(post),
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: post,
             }),
             invalidatesTags: result => ['Post']
         }),
-
         deletePost: build.mutation<IPost, IPost>({
             query: (item) => ({
-                url: `/posts/${item.id}`,
+                url: `/api/blog/posts`,
                 method: 'DELETE',
                 body: item
             }),
             invalidatesTags: result => ['Post']
+        }),
+        addComment: build.mutation<any, any>({
+            query: (comment) => ({
+                url: `/api/blog/comments`,
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: comment,
+            }),
+            invalidatesTags: result => ['Comments']
         }),
 
     })

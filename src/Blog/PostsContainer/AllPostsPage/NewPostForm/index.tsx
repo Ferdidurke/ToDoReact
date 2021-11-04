@@ -2,16 +2,14 @@ import React, {useState} from 'react';
 import './styles.sass'
 import {blogApi} from "../../../../services/PostService";
 import {Button, TextField} from "@mui/material";
-import {userApi} from "../../../../services/UserService";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/redux-toolkit/store";
 
 function NewPostForm() {
-    const [addPost] = userApi.useAddPostMutation()
+    const [addPost] = blogApi.useAddPostMutation()
     const { user } = useSelector((state: RootState)=> state.auth)
     const [title, setTitle] = useState('')
     const [postText, setPostText] = useState('')
-
 
     const handleChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(event.currentTarget.value)
@@ -24,10 +22,11 @@ function NewPostForm() {
     const submitNewPost = (event: any) => {
         event.preventDefault()
         const post = {
+            userId: user.id,
             author: `${user.firstName} ${user.lastName}`,
             title: title,
             body: postText,
-            date: new Date().toLocaleString()
+            date: new Date()
         }
         addPost(post)
         setPostText('')

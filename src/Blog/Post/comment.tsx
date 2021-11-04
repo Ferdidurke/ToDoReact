@@ -10,7 +10,7 @@ const Comment = ({comment}: ICommentForm)  => {
         </div>
         <div className='comment-container'>
                 <div className='comment-author'>
-                    Автор: {comment.name}
+                    Автор: {comment.author}
                 </div>
                 <div className='comment-body'>
                     Текст комментария: {comment.body}

@@ -16,7 +16,7 @@ const CurrentPostPage: React.FC<Partial<IAllPostsProps>> = (props) =>{
     }
 
     const { data: post } = blogApi.useFetchSinglePostQuery(Number(id))
-    const { data: users } = blogApi.useFetchAuthorsQuery(10)
+    const { data: users } = blogApi.useFetchAuthorsQuery(5)
     const { data: comments } = blogApi.useFetchCommentsQuery(params)
     const [deletePost] = blogApi.useDeletePostMutation()
 
@@ -38,10 +38,11 @@ const CurrentPostPage: React.FC<Partial<IAllPostsProps>> = (props) =>{
             }}
                     variant='contained' component={Link} to = '/blog'>GO BACK</Button>
             {
-                post && users && comments ? (<PostForm remove={handleRemove} update={handleUpdate}
+                post && users ? (<PostForm remove={handleRemove} update={handleUpdate}
                                                          item={post}
                                                          users={users}
-                                                         comments={comments}/>) : null
+                                                         comments={comments}
+                                                         />) : null
             }
         </Box>
     );

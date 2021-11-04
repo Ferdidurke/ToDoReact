@@ -23,6 +23,7 @@ export const authReducer = createSlice({
     reducers: {
         logout: (state) => {
             state.isAuthenticated = false
+            state.user = null
             state.token = null
 
         }
@@ -37,6 +38,7 @@ export const authReducer = createSlice({
             userApi.endpoints.loginUser.matchFulfilled, (state, { payload }) => {
                 state.token = payload.token
                 state.user = {
+                    id: payload.userId,
                     firstName: payload.firstName,
                     lastName: payload.lastName,
                 }

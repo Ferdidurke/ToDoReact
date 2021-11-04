@@ -23,12 +23,13 @@ export interface IAllPostsProps {
 function AllPostsPage(props: IAllPostsProps): ReactElement {
 
     const [params, setParams] = useState({start: 0, limit: 10})
-    const { data: users } = blogApi.useFetchAuthorsQuery(10)
+    const { data: users } = blogApi.useFetchAuthorsQuery(5)
     const { data: posts, isLoading, error  } = blogApi.useFetchPostsQuery(params)
     const { data: comments } = blogApi.useFetchCommentsQuery(params)
     const [deletePost] = blogApi.useDeletePostMutation()
     const [addNewPost, setAddNewPost] = useState(false)
-
+    console.log(posts)
+    console.log(users)
     const handleRemove = (item: IPost) => {
         deletePost(item)
     }
@@ -113,11 +114,12 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         </div>)}
                     {error && <h1>Произошла ошибка</h1>}
                     {
-                        users && posts && comments && posts.map((item: IPost, index: number) =>
+                        posts && users && posts.map((item: IPost, index: number) =>
                         <PostForm  remove={handleRemove} update={handleUpdate} key={index}
                                     item={item}
                                     users={users}
-                                    comments={comments}/>
+                                    comments={comments}
+                                    />
                         )
                     }
                 </div>

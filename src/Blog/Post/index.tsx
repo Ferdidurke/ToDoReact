@@ -1,16 +1,20 @@
 import React, {ReactElement, useState} from 'react';
 import './styles.sass'
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Comment from "./comment";
 import {IComment} from "./interfaces/interfaces";
 import {IPostForm} from "./interfaces/interfaces";
 import {Link} from "react-router-dom";
 import {Box, Button} from "@mui/material";
+import {RootState} from "../../store/redux-toolkit/store";
+import {blogApi} from "../../services/PostService";
 
 
 function PostForm ( {item , users, comments, remove, update} : IPostForm) : ReactElement  {
     const [newComment, setNewComment] = useState(false)
     const [commentText, setCommentText] = useState('')
+    const [sendComment] = blogApi.useAddCommentMutation()
+    const { user } = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch()
     const addComment = (): void => {
         setNewComment(true)
@@ -23,9 +27,13 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
     }
 
     const submitComment = (): void => {
-        const id: number = item.id
-        const text: string = commentText
-        const date: string = new Date().toLocaleString()
+        const comment = {
+            userId: user.id,
+            postId: item._id,
+            author: `${user.firstName} ${user.lastName}`,
+            body: commentText
+        }
+        sendComment(comment)
         setNewComment(false)
         setCommentText('')
     }
@@ -35,7 +43,7 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
     }
 
     const getId = () => {
-        const id = `/blog/posts/${item.id}`
+        const id = `/blog/posts/${item._id}`
         return id
     }
 
@@ -45,7 +53,8 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
     }
 
     return (
-            <Box sx={{
+            <Box
+                sx={{
                 width: '80%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -55,16 +64,16 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
                 margin: '10px auto',
                 textDecoration: 'none',
             }}
-                 id={item.id.toString()}>
-                <Button id={item.id.toString()} onClick={handleRemove} variant='contained'>DELETE</Button>
+            id={item._id.toString()}>
+                <Button id={item._id.toString()} onClick={handleRemove} variant='contained'>DELETE</Button>
                 <Link to = {getId()}>postpage</Link>
                 <div className='post-info'>
                     <p className='post-info__author'>Автор:
                         {
-                            users && users.map((user, index) => (user.id === item.userId) ? (user.name) : null)
+                            users && users.map((user, index) => (user._id === item.userId) ? (` ${user.firstName} ${user.lastName}`) : null)
                         }
                     </p>
-                    <p className='post-info__date'>Дата создания: </p>
+                    <p className='post-info__date'>Дата создания: {item.date.toLocaleString()}</p>
                 </div>
                 <div className='post-title'>
                     <p className='post-title__text'>Заголовок:</p>
@@ -86,9 +95,9 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
                                                  value={commentText}
                                                  onChange={changeCommentText}
                                                  >
-                                    </textarea>) :
+                                    </textarea>):
                                 (
-                                   comments && comments.map((comment: IComment, index: number) => (comment.postId === item.id) ? ( <Comment comment={comment}
+                                   comments && comments.map((comment: IComment, index: number) => (comment.postId === item._id) ? ( <Comment comment={comment}
                                                                                                                                     key={index}
                                                                                                                                     />) : null)
                                 )

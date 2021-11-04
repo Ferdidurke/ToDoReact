@@ -1,21 +1,22 @@
 export interface IPost {
-    id: number
+    _id: number | string
     userId: number
     title: string
-    date: string
+    date: string | Date
     body: string
     comments: string[]
 }
 
 export interface IUser {
-    id: number
-    name: string
+    _id: number | string,
+    firstName: string,
+    lastName: string,
 }
 
 export interface IPostForm {
     item: IPost,
     users: IUser[],
-    comments: IComment[],
+    comments: IComment[] | undefined,
     remove: (post: IPost) => void | undefined
     update: (post: IPost) => void | undefined
 
@@ -24,7 +25,7 @@ export interface IPostForm {
 export interface IComment {
     postId: number,
     id: number,
-    name: string
+    author: string
     email: string
     body: string
 }
