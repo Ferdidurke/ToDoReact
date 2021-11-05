@@ -5,9 +5,14 @@ import Comment from "./comment";
 import {IComment} from "./interfaces/interfaces";
 import {IPostForm} from "./interfaces/interfaces";
 import {Link} from "react-router-dom";
-import {Box, Button} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Box, Button, CardActions} from "@mui/material";
 import {RootState} from "../../store/redux-toolkit/store";
 import {blogApi} from "../../services/PostService";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Card from "@mui/material/Card";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 function PostForm ( {item , users, comments, remove, update} : IPostForm) : ReactElement  {
@@ -53,64 +58,81 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
     }
 
     return (
-            <Box
-                sx={{
-                width: '80%',
-                display: 'flex',
-                flexDirection: 'column',
-                backgroundColor: 'primary.light',
-                padding: '5px',
-                borderRadius: '5px',
-                margin: '10px auto',
-                textDecoration: 'none',
-            }}
-            id={item._id.toString()}>
-                <Button id={item._id.toString()} onClick={handleRemove} variant='contained'>DELETE</Button>
-                <Link to = {getId()}>postpage</Link>
-                <div className='post-info'>
-                    <p className='post-info__author'>Автор:
+        <div>
+            <Card sx={{ maxWidth: '90%',
+                margin: '10px auto',}}
+                id={item._id.toString()}>
+                <CardContent>
+                    <Button sx={{
+                        float: 'right'
+                    }}
+                        id={item._id.toString()} onClick={handleRemove} size='large'><DeleteIcon/></Button>
+                    <Link to = {getId()}>postpage</Link>
+                        <Typography sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end'
+                        }} gutterBottom variant="subtitle1" component="div">
+                            Date: {item.date}
+                        </Typography>
+                        <Typography sx={{
+                                        marginBottom: '20px'
+                        }}
+                        gutterBottom variant="h4" component="div">
+                            {item.title}
+                        </Typography>
+
+                        <Typography sx={{
+                            marginBottom: '20px'
+                        }} gutterBottom
+                        variant="subtitle2" component="div">
+
                         {
                             users && users.map((user, index) => (user._id === item.userId) ? (` ${user.firstName} ${user.lastName}`) : null)
                         }
-                    </p>
-                    <p className='post-info__date'>Дата создания: {item.date.toLocaleString()}</p>
-                </div>
-                <div className='post-title'>
-                    <p className='post-title__text'>Заголовок:</p>
-                    <p className='post-title__text'>{item.title}</p>
-                </div>
-                <div className='post-content'>
-                    <p className='post-content__text'>Содержание:</p>
-                    <p className='post-content__text'>{item.body}</p>
-                </div>
-                <Button variant='contained' onClick={handleExtendedCommentsBlock}>Комментарии</Button>
-                <div className='post-comments__container'>
-                    <div className='post-comments__title'>
-                        <p className='post-comments__text'>Комментарии:</p>
-                    </div>
-                    <div className='post-comments__content'>
-                        {
-                            newComment ? (<textarea style={{width: '90%', height: '150px'}}
-                                                 placeholder='Введите текст комментария'
-                                                 value={commentText}
-                                                 onChange={changeCommentText}
-                                                 >
-                                    </textarea>):
-                                (
-                                   comments && comments.map((comment: IComment, index: number) => (comment.postId === item._id) ? ( <Comment comment={comment}
-                                                                                                                                    key={index}
-                                                                                                                                    />) : null)
-                                )
-                        }
-                    </div>
-                    <div className='post-comments__button-container'>
-                        {
-                            newComment ? (<Button variant='contained' onClick={submitComment} data-testid='submitCommentBtn'>Отправить</Button>) : <Button variant='contained' onClick={addComment} data-testid='addCommentBtn'>Добавить комментарий</Button>
-                        }
-                    </div>
-                </div>
-            </Box>
-    );
+
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {item.body}
+                    </Typography>
+                </CardContent>
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography>Comments</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Typography>
+                            {
+                                                newComment ? (<textarea style={{width: '90%', height: '150px'}}
+                                                                     placeholder='Введите текст комментария'
+                                                                     value={commentText}
+                                                                     onChange={changeCommentText}
+                                                                     >
+                                                        </textarea>):
+                                                    (
+                                                       comments && comments.map((comment: IComment, index: number) => (comment.postId === item._id) ? ( <Comment comment={comment}
+                                                                                                                                                        key={index}
+                                                                                                                                                        />) : null)
+                                                    )
+                            }
+                            <div className='post-comments__button-container'>
+                                    <CardActions>
+                                        {
+                                            newComment ? (<Button size='small' onClick={submitComment}
+                                                                  data-testid='submitCommentBtn'>Send</Button>) : (
+                                                <Button size='small' onClick={addComment} data-testid='addCommentBtn'>Add Comment</Button>)
+                                        }
+                                    </CardActions>
+                            </div>
+                        </Typography>
+                    </AccordionDetails>
+                </Accordion>
+            </Card>
+        </div>
+    )
 }
 
 export default PostForm;

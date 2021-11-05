@@ -23,10 +23,11 @@ export interface IPostForm {
 }
 
 export interface IComment {
-    postId: number,
+    postId: number | string
+    userId: number | string
     id: number,
+    date: Date | string
     author: string
-    email: string
     body: string
 }
 

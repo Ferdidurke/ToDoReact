@@ -11,7 +11,7 @@ const CurrentPostPage: React.FC<Partial<IAllPostsProps>> = (props) =>{
     const { id } = useParams<{id?: string}>()
 
     const params = {
-        start: Number(id)-1,
+        skip: Number(id)-1,
         limit: 1
     }
 

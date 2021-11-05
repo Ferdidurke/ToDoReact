@@ -13,16 +13,22 @@ export interface IAllPostsProps {
     users: IUser[]
     comments: IComment[]
     params: {
-        start: number,
+        skip: number,
         limit: number
     }
     handleRemove(post: IPost): void
     handleUpdate(): void
 }
 
+
+export interface IParams {
+    skip: number,
+    limit: number
+}
+
 function AllPostsPage(props: IAllPostsProps): ReactElement {
 
-    const [params, setParams] = useState({start: 0, limit: 10})
+    const [params, setParams] = useState({skip: 0, limit: 2})
     const { data: users } = blogApi.useFetchAuthorsQuery(5)
     const { data: posts, isLoading, error  } = blogApi.useFetchPostsQuery(params)
     const { data: comments } = blogApi.useFetchCommentsQuery(params)
@@ -41,13 +47,13 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
     }
 
     const prevPage = () => {
-        const counter = params.start - 10
-        setParams({start: counter, limit: 10})
+        const counter = params.skip - 1
+        setParams({skip: counter, limit: 2})
     }
 
     const nextPage = () => {
-        const counter = params.start + 10
-        setParams({start: counter, limit: 10})
+        const counter = params.skip + 1
+        setParams({skip: counter, limit: 2})
     }
 
     const handleUpdate = () => {
@@ -66,14 +72,14 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                     borderTop: '2px solid gray',
                     }}>
                         <div className='links__sorting-buttons__container'>
-                            <p>Cортировать по дате:</p>
+                            <p>Sort on date:</p>
                             <ButtonGroup sx={{marginLeft: '5px'}} variant='contained'>
                                 <Button><ArrowDownwardIcon /></Button>
                                 <Button><ArrowUpwardIcon /></Button>
                             </ButtonGroup>
                         </div>
                         <div className='links__sorting-buttons__container'>
-                            <p>Cортировать по автору:</p>
+                            <p>Sort on author:</p>
                             <ButtonGroup sx={{marginLeft: '5px'}} variant='contained'>
                                 <Button data-testid='sortAuthorAsc'><ArrowDownwardIcon /></Button>
                                 <Button data-testid='sortAuthorDesc'><ArrowUpwardIcon /></Button>
@@ -81,7 +87,7 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         </div>
                         <Box className='links__pagination__container'>
                             <ButtonGroup variant='contained' sx={{marginRight: '10px'}}>
-                                <Button variant='contained' disabled={(params.start < 10)} onClick={prevPage}>PREV</Button>
+                                <Button variant='contained' disabled={(params.skip < 10)} onClick={prevPage}>PREV</Button>
                                 <Box sx={{
                                     width: '50px',
                                     height: '25px',
@@ -93,9 +99,9 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                                     color: 'white',
                                     fontFamily: 'Roboto',
                                 }}>
-                                        <p>{params.start/10+1}/10</p>
+                                        <p>{params.skip/10+1}/10</p>
                                 </Box>
-                                <Button variant='contained' disabled={(params.start >= 90)} onClick={nextPage}>NEXT</Button>
+                                <Button variant='contained' disabled={(params.skip >= 90)} onClick={nextPage}>NEXT</Button>
                             </ButtonGroup>
                         </Box>
                 </Box>

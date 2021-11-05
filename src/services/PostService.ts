@@ -2,18 +2,15 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {IPost, IUser} from "../Blog/Post/interfaces/interfaces";
 import {IComment} from "../Blog/Post/interfaces/interfaces";
 import {RootState} from "../store/redux-toolkit/store";
+import {IParams} from "../Blog/PostsContainer/AllPostsPage";
 
-
-export interface IParams {
-    start: number,
-    limit: number
-}
-
+const isProd = process.env.NODE_ENV === 'production'
+const baseURL = isProd ? process.env.REACT_APP_BASE_URL : process.env.REACT_APP_LOCAL_URL
 
 export const blogApi = createApi ({
     reducerPath: 'blogAPI',
     baseQuery: fetchBaseQuery ({
-        baseUrl: 'http://localhost:5000/',
+        baseUrl: baseURL,
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as RootState).auth.token
             if (token) {
@@ -25,7 +22,8 @@ export const blogApi = createApi ({
     endpoints: (build) => ({
         fetchPosts: build.query<IPost[], IParams>({
             query: (params) => ({
-                url: `/api/blog/posts`,
+                url: `/api/blog/posts?skip=${params.skip}&limit=${params.limit}`,
+
             }),
             providesTags: result =>['Post']
         }),

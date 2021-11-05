@@ -37,13 +37,13 @@ function NewPostForm() {
     return (
         <div className='post-form__container'>
             <form className='new-post__form' onSubmit={submitNewPost}>
-                <label>Введите заголовок:</label><TextField sx={{backgroundColor: 'white'}} variant="filled" label='Заголовок' required
+                <label>Title:</label><TextField sx={{backgroundColor: 'white'}} variant="filled" label='Title' required
                                                     value={title}
                                                     onChange={handleChangeTitle}/>
-                <label>Текст:</label><textarea required
+                <label>Body:</label><textarea required
                                                         value={postText}
                                                         onChange={handleChangePostText}/>
-                <Button variant='contained' type='submit'>Отправить</Button>
+                <Button variant='contained' type='submit'>Send</Button>
             </form>
         </div>
     );
