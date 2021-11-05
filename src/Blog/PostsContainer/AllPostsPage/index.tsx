@@ -28,14 +28,14 @@ export interface IParams {
 
 function AllPostsPage(props: IAllPostsProps): ReactElement {
 
-    const [params, setParams] = useState({skip: 0, limit: 2})
+    const [params, setParams] = useState({skip: 0, limit: 5})
     const { data: users } = blogApi.useFetchAuthorsQuery(5)
-    const { data: posts, isLoading, error  } = blogApi.useFetchPostsQuery(params)
+    const { data: postsData, isLoading, error  } = blogApi.useFetchPostsQuery(params)
     const { data: comments } = blogApi.useFetchCommentsQuery(params)
     const [deletePost] = blogApi.useDeletePostMutation()
     const [addNewPost, setAddNewPost] = useState(false)
-    console.log(posts)
-    console.log(users)
+
+
     const handleRemove = (item: IPost) => {
         deletePost(item)
     }
@@ -47,17 +47,21 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
     }
 
     const prevPage = () => {
-        const counter = params.skip - 1
-        setParams({skip: counter, limit: 2})
+        const page = params.skip - 5
+        setParams({skip: page, limit: 5})
     }
 
     const nextPage = () => {
-        const counter = params.skip + 1
-        setParams({skip: counter, limit: 2})
+        const page = params.skip + 5
+        setParams({skip: page, limit: 5})
     }
 
     const handleUpdate = () => {
         console.log(1)
+    }
+
+    const paginateCounter = () => {
+        return Math.ceil((params.skip/10+1) /  (postsData.counter/params.limit))
     }
 
     return (
@@ -87,7 +91,7 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         </div>
                         <Box className='links__pagination__container'>
                             <ButtonGroup variant='contained' sx={{marginRight: '10px'}}>
-                                <Button variant='contained' disabled={(params.skip < 10)} onClick={prevPage}>PREV</Button>
+                                <Button variant='contained' disabled={(params.skip < 5)} onClick={prevPage}>PREV</Button>
                                 <Box sx={{
                                     width: '50px',
                                     height: '25px',
@@ -99,9 +103,9 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                                     color: 'white',
                                     fontFamily: 'Roboto',
                                 }}>
-                                        <p>{params.skip/10+1}/10</p>
+                                        <p>{paginateCounter()}</p>
                                 </Box>
-                                <Button variant='contained' disabled={(params.skip >= 90)} onClick={nextPage}>NEXT</Button>
+                                <Button variant='contained' disabled={(params.skip >= postsData.counter-params.limit)} onClick={nextPage}>NEXT</Button>
                             </ButtonGroup>
                         </Box>
                 </Box>
@@ -120,7 +124,7 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         </div>)}
                     {error && <h1>Произошла ошибка</h1>}
                     {
-                        posts && users && posts.map((item: IPost, index: number) =>
+                        postsData && users && postsData.posts.map((item: IPost, index: number) =>
                         <PostForm  remove={handleRemove} update={handleUpdate} key={index}
                                     item={item}
                                     users={users}

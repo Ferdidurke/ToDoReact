@@ -20,7 +20,7 @@ export const blogApi = createApi ({
         }}),
     tagTypes: ['Post', 'Comments'],
     endpoints: (build) => ({
-        fetchPosts: build.query<IPost[], IParams>({
+        fetchPosts: build.query<any, IParams>({
             query: (params) => ({
                 url: `/api/blog/posts?skip=${params.skip}&limit=${params.limit}`,
 
