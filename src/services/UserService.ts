@@ -6,9 +6,12 @@ export interface IParams {
     limit: number
 }
 
+const isProd = process.env.NODE_ENV === 'production'
+const baseURL = isProd ? process.env.REACT_APP_BASE_URL : process.env.REACT_APP_LOCAL_URL
+
 export const userApi = createApi({
     reducerPath: 'userApi',
-    baseQuery: fetchBaseQuery ({baseUrl: 'http://localhost:5000'}),
+    baseQuery: fetchBaseQuery ({baseUrl: baseURL}),
     tagTypes: ['User'],
     endpoints: (build) => ({
         registerUser: build.mutation<any, any>({
