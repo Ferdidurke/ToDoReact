@@ -4,8 +4,7 @@ import {IComment} from "../Blog/Post/interfaces/interfaces";
 import {RootState} from "../store/redux-toolkit/store";
 import {IParams} from "../Blog/PostsContainer/AllPostsPage";
 
-const isProd = process.env.NODE_ENV === 'production'
-const baseURL = isProd ? process.env.REACT_APP_BASE_URL : process.env.REACT_APP_LOCAL_URL
+const baseURL = process.env.REACT_APP_BASE_URL
 
 export const blogApi = createApi ({
     reducerPath: 'blogAPI',

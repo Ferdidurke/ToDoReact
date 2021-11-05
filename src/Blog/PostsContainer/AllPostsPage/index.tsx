@@ -61,7 +61,7 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
     }
 
     const paginateCounter = () => {
-        return Math.ceil((params.skip/10+1) /  (postsData.counter/params.limit))
+        return
     }
 
     return (
@@ -103,9 +103,13 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                                     color: 'white',
                                     fontFamily: 'Roboto',
                                 }}>
-                                        <p>{paginateCounter()}</p>
+                                        <p>{ Math.ceil(params.skip/10+1)} / {Math.ceil(postsData && postsData.counter/params.limit)}</p>
                                 </Box>
-                                <Button variant='contained' disabled={(params.skip >= postsData.counter-params.limit)} onClick={nextPage}>NEXT</Button>
+                                {
+                                    postsData ? (<Button variant='contained'
+                                                         disabled={(params.skip >= postsData.counter - params.limit)}
+                                                         onClick={nextPage}>NEXT</Button>) : null
+                                }
                             </ButtonGroup>
                         </Box>
                 </Box>
@@ -135,7 +139,8 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                 </div>
             </Box>
 
-    );
+        );
+
 }
 
 export default AllPostsPage;
