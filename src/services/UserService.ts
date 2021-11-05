@@ -8,6 +8,7 @@ export interface IParams {
 
 const isProd = process.env.NODE_ENV === 'production'
 const baseURL = isProd ? process.env.REACT_APP_BASE_URL : process.env.REACT_APP_LOCAL_URL
+console.log(baseURL)
 
 export const userApi = createApi({
     reducerPath: 'userApi',
