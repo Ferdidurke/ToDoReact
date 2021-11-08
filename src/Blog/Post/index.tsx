@@ -60,7 +60,7 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
     return (
         <div>
             <Card sx={{ maxWidth: '90%',
-                margin: '10px auto',}}
+                margin: '10px auto'}}
                 id={item._id.toString()}>
                 <CardContent>
                     <Button sx={{
@@ -72,7 +72,7 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
                             display: 'flex',
                             justifyContent: 'flex-end'
                         }} gutterBottom variant="subtitle1" component="div">
-                            Date: {item.date}
+                            Date: {new Date(item.date).toLocaleString()}
                         </Typography>
                         <Typography sx={{
                                         marginBottom: '20px'

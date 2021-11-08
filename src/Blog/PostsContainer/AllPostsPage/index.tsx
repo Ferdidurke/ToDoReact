@@ -7,28 +7,21 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import NewPostForm from "./NewPostForm";
 import {Box, Button, ButtonGroup, CircularProgress} from "@mui/material";
+import {IParams} from "../../../services/UserService";
 
 export interface IAllPostsProps {
     posts: IPost[]
     users: IUser[]
     comments: IComment[]
-    params: {
-        skip: number,
-        limit: number
-    }
+    params: IParams
     handleRemove(post: IPost): void
     handleUpdate(): void
 }
 
 
-export interface IParams {
-    skip: number,
-    limit: number
-}
-
 function AllPostsPage(props: IAllPostsProps): ReactElement {
 
-    const [params, setParams] = useState({skip: 0, limit: 5})
+    const [params, setParams] = React.useState<Partial<IParams>> ({ skip: 0, limit: 5 })
     const { data: users } = blogApi.useFetchAuthorsQuery(5)
     const { data: postsData, isLoading, error  } = blogApi.useFetchPostsQuery(params)
     const { data: comments } = blogApi.useFetchCommentsQuery(params)
@@ -47,14 +40,31 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
     }
 
     const prevPage = () => {
-        const page = params.skip - 5
-        setParams({skip: page, limit: 5})
+        const page = params.skip as number - 5
+        setParams({ skip: page, limit: 5, sort: params.sort })
     }
 
     const nextPage = () => {
-        const page = params.skip + 5
-        setParams({skip: page, limit: 5})
+        const page = params.skip as number + 5
+        setParams({ skip: page, limit: 5, sort: params.sort })
     }
+
+    const sortOnAuthorAsc = () => {
+        setParams({ limit: params.limit, skip: params.skip, sort: { author: 'asc' } })
+    }
+
+    const sortOnAuthorDesc = () => {
+        setParams({ limit: params.limit, skip: params.skip, sort: { author: 'desc' } })
+    }
+
+    const sortOnDateAsc = () => {
+        setParams({ limit: params.limit, skip: params.skip, sort: { date: 'asc' } })
+    }
+
+    const sortOnDateDesc = () => {
+        setParams({ limit: params.limit, skip: params.skip, sort: { date: 'desc'} })
+    }
+
 
     const handleUpdate = () => {
         console.log(1)
@@ -78,39 +88,41 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         <div className='links__sorting-buttons__container'>
                             <p>Sort on date:</p>
                             <ButtonGroup sx={{marginLeft: '5px'}} variant='contained'>
-                                <Button><ArrowDownwardIcon /></Button>
-                                <Button><ArrowUpwardIcon /></Button>
+                                <Button onClick={ sortOnDateAsc }><ArrowDownwardIcon /></Button>
+                                <Button onClick={ sortOnDateDesc }><ArrowUpwardIcon /></Button>
                             </ButtonGroup>
                         </div>
                         <div className='links__sorting-buttons__container'>
                             <p>Sort on author:</p>
                             <ButtonGroup sx={{marginLeft: '5px'}} variant='contained'>
-                                <Button data-testid='sortAuthorAsc'><ArrowDownwardIcon /></Button>
-                                <Button data-testid='sortAuthorDesc'><ArrowUpwardIcon /></Button>
+                                <Button data-testid='sortAuthorAsc' onClick={ sortOnAuthorAsc }><ArrowDownwardIcon /></Button>
+                                <Button data-testid='sortAuthorDesc' onClick={ sortOnAuthorDesc }><ArrowUpwardIcon /></Button>
                             </ButtonGroup>
                         </div>
                         <Box className='links__pagination__container'>
-                            <ButtonGroup variant='contained' sx={{marginRight: '10px'}}>
-                                <Button variant='contained' disabled={(params.skip < 5)} onClick={prevPage}>PREV</Button>
-                                <Box sx={{
-                                    width: '50px',
-                                    height: '25px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'primary.dark',
-                                    padding: '5px',
-                                    color: 'white',
-                                    fontFamily: 'Roboto',
-                                }}>
-                                        <p>{ Math.ceil(params.skip/10+1)} / {Math.ceil(postsData && postsData.counter/params.limit)}</p>
-                                </Box>
-                                {
-                                    postsData ? (<Button variant='contained'
-                                                         disabled={(params.skip >= postsData.counter - params.limit)}
-                                                         onClick={nextPage}>NEXT</Button>) : null
-                                }
-                            </ButtonGroup>
+                            {
+                                postsData ? (
+                                    <ButtonGroup variant='contained' sx={{ marginRight: '10px' }}>
+                                        <Button variant='contained' disabled={ (params.skip as number) < 5 }
+                                                onClick={prevPage}>PREV</Button>
+                                        <Box sx={{
+                                            width: '50px',
+                                            height: '25px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            backgroundColor: 'primary.dark',
+                                            padding: '5px',
+                                            color: 'white',
+                                            fontFamily: 'Roboto',
+                                        }}>
+                                            <p>{ Math.ceil(params.skip as number / 5 + 1) } / { Math.ceil(postsData.counter / (params.limit as number)) }</p>
+                                        </Box>
+                                        <Button variant='contained'
+                                                                 disabled={ (params.skip as number) >= postsData.counter - (params.limit as number) }
+                                                                 onClick={ nextPage }>NEXT</Button>)
+                                    </ButtonGroup>) : null
+                            }
                         </Box>
                 </Box>
                 <div className='posts__container'>
@@ -123,10 +135,10 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         addNewPost ? (
                                    <NewPostForm/>   ) : null
                     }
-                    {isLoading && (<div style={{display: 'flex', margin: '0 auto', justifyContent: 'center', width: '300px', height: '300px'}}>
+                    { isLoading && (<div style={{ display: 'flex', margin: '0 auto', justifyContent: 'center', width: '300px', height: '300px' }}>
                         <CircularProgress />
-                        </div>)}
-                    {error && <h1>Произошла ошибка</h1>}
+                        </div>) }
+                    { error && <h1>Произошла ошибка</h1> }
                     {
                         postsData && users && postsData.posts.map((item: IPost, index: number) =>
                         <PostForm  remove={handleRemove} update={handleUpdate} key={index}

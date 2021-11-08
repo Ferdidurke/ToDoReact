@@ -20,7 +20,7 @@ const Comment = ({comment}: ICommentForm)  => {
                     float: 'right'
                                 }}
                 variant="body2" color="text.secondary">
-                    {comment.date}
+                    {new Date (comment.date).toLocaleString()}
                 </Typography>
                 <Typography gutterBottom variant="h5" component="div">
                     {comment.author}

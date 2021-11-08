@@ -2,7 +2,7 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {IPost, IUser} from "../Blog/Post/interfaces/interfaces";
 import {IComment} from "../Blog/Post/interfaces/interfaces";
 import {RootState} from "../store/redux-toolkit/store";
-import {IParams} from "../Blog/PostsContainer/AllPostsPage";
+import {IParams} from "./UserService";
 
 const baseURL = process.env.REACT_APP_BASE_URL
 
@@ -13,7 +13,7 @@ export const blogApi = createApi ({
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as RootState).auth.token
             if (token) {
-                headers.set('Authorization', `Bearer ${token}`)
+                headers.set('Authorization', `Bearer ${ token }`)
             }
             return headers
         }}),
@@ -21,7 +21,12 @@ export const blogApi = createApi ({
     endpoints: (build) => ({
         fetchPosts: build.query<any, IParams>({
             query: (params) => ({
-                url: `/api/blog/posts?skip=${params.skip}&limit=${params.limit}`,
+                url: `/api/blog/posts`,
+                params: {
+                    limit: params.limit,
+                    skip: params.skip,
+                    sort: JSON.stringify(params.sort) || '{"date":"desc"}'
+                }
 
             }),
             providesTags: result =>['Post']
