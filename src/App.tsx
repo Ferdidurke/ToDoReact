@@ -4,8 +4,7 @@ import './Todos/styles.sass';
 import Todos from "./Todos/Todos";
 import {Blog} from "./Blog/Blog";
 import Main from "./Main";
-import RegistrationForm from "./Blog/AuthorisationPage/RegistrationForm";
-import LoginForm from "./Blog/AuthorisationPage/LoginForm";
+import RegistrationForm from "./AuthorisationPage/RegistrationForm";
 import {RootState} from "./store/redux-toolkit/store";
 import {useSelector} from "react-redux";
 
@@ -13,7 +12,6 @@ import {useSelector} from "react-redux";
 
 function App (): ReactElement {
     const { isAuthenticated } = useSelector((state: RootState) => state.auth)
-    const history = useHistory()
 
     if (isAuthenticated) {
         return (
@@ -31,9 +29,8 @@ function App (): ReactElement {
     return (
         <Router>
             <Switch>
-                <Route path='/' component={Main}/>
-                <Route path='/register' component={RegistrationForm}/>
-                <Route path='/login' component={LoginForm}/>
+                <Route exact path='/' component={Main}/>
+                <Route exact path='/register' component={RegistrationForm}/>
                 <Redirect to = '/'/>
             </Switch>
         </Router>

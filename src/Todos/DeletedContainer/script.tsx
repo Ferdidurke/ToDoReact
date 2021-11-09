@@ -9,6 +9,9 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {todoApi} from "../../services/TaskService";
+import {TodosProps} from "../Todos";
+import {logApi} from "../../services/LogService";
 
 const handleExtendedDeletedBlock = () => {
     const block: HTMLDivElement | null = document.querySelector('.deleted__tasks__container')
@@ -16,25 +19,34 @@ const handleExtendedDeletedBlock = () => {
 }
 
 
-const DeletedTasks: React.FC = () => {
-    const { tasks }  = useSelector((state: RootState) => state.todo);
-    const dispatch = useDispatch()
-    const markTaskToDelete = (id: number) => {
-        // const index: number = tasks.findIndex((item: ITask) => id === item._id)
-        // if (index !== -1 && tasks[index].isMarkToDelete) {
-        //     const confirmation: boolean = window.confirm('Are you right?')
-        //     if (confirmation) {
-        //         const taskOnDelete: HTMLElement | null = document.getElementById(tasks[index]._id.toString())
-        //         taskOnDelete!.classList.toggle('deleted')
-                // setTimeout(() => {}, 300)
+const DeletedTasks: React.FC<Partial<TodosProps>> = (props) => {
+    const todoparams = {
+        sort : {
+            deadlineDate: 'desc'
+        }
+    }
 
-            //}
-    console.log(1)
+    const { data: tasks } = todoApi.useFetchTasksQuery(todoparams)
+    const [deleteTask] = todoApi.useDeleteTaskMutation()
+    const [sendLog] = logApi.useAddLogEventMutation()
+
+    const markTaskToDelete = (id: string) => {
+         const confirmation: boolean = window.confirm('Are you right?')
+            if (confirmation) {
+                const taskOnDelete: HTMLElement | null = document.getElementById(id)
+                taskOnDelete!.classList.toggle('deleted')
+                deleteTask(id)
+                const log = `Task with id:${id} deleted at ${new Date().toLocaleString()}`
+                console.log(log)
+                sendLog({ body: log })
+                //setTimeout(() => {}, 300)
+            }
         }
 
 
     return (
-        <>
+
+        <div>
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -47,14 +59,16 @@ const DeletedTasks: React.FC = () => {
                             tasks && tasks.map((item: ITask) =>
                                 item.isMarkToDelete ? (
                                     <TaskForm key={item._id} item={item}
-                                              markTaskToDelete={markTaskToDelete}/>
+                                              markTaskToDelete={markTaskToDelete}
+
+                                              />
                                 ) : null
                             )
                         }
                     </div>
                 </AccordionDetails>
             </Accordion>
-        </>
+        </div>
     )
 }
 

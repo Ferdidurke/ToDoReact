@@ -1,13 +1,13 @@
 import React, {ReactElement} from "react";
 import {BottomNavigation, BottomNavigationAction, Button, ButtonGroup} from "@mui/material";
 import {Link, useHistory} from "react-router-dom";
-import RegistrationForm from "./Blog/AuthorisationPage/RegistrationForm";
+import RegistrationForm from "./AuthorisationPage/RegistrationForm";
 import Header from "./Header";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/redux-toolkit/store";
 import {logout} from "./store/redux-toolkit/reducers/authReducer";
 import {Login} from "@mui/icons-material";
-import LoginForm from "./Blog/AuthorisationPage/LoginForm";
+import LoginForm from "./AuthorisationPage/LoginForm";
 import {use} from "msw/lib/types/utils/internal/requestHandlerUtils";
 
 

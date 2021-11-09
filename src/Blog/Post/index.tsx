@@ -1,11 +1,11 @@
 import React, {ReactElement, useState} from 'react';
 import './styles.sass'
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import Comment from "./comment";
 import {IComment} from "./interfaces/interfaces";
 import {IPostForm} from "./interfaces/interfaces";
 import {Link} from "react-router-dom";
-import {Accordion, AccordionDetails, AccordionSummary, Box, Button, CardActions} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Button, CardActions} from "@mui/material";
 import {RootState} from "../../store/redux-toolkit/store";
 import {blogApi} from "../../services/PostService";
 import CardContent from "@mui/material/CardContent";
@@ -15,17 +15,16 @@ import Card from "@mui/material/Card";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-function PostForm ( {item , users, comments, remove, update} : IPostForm) : ReactElement  {
+function PostForm ({ item , users, comments, remove, update } : IPostForm) : ReactElement  {
     const [newComment, setNewComment] = useState(false)
     const [commentText, setCommentText] = useState('')
     const [sendComment] = blogApi.useAddCommentMutation()
     const { user } = useSelector((state: RootState) => state.auth)
-    const dispatch = useDispatch()
     const addComment = (): void => {
         setNewComment(true)
     }
 
-    const handleRemove = (e: React.MouseEvent): void => {
+    const handleRemovePost = (e: React.MouseEvent): void => {
         e.preventDefault()
         remove(item)
 
@@ -47,61 +46,59 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
         setCommentText(e.currentTarget.value)
     }
 
-    const getId = () => {
+    const getId = (): string => {
         const id = `/blog/posts/${item._id}`
         return id
     }
 
-    const handleExtendedCommentsBlock = (e: React.MouseEvent) => {
-        const targetBlock = (e.target as any).nextSibling
-        targetBlock!.classList.toggle('extended__container')
-    }
 
     return (
         <div>
             <Card sx={{ maxWidth: '90%',
-                margin: '10px auto'}}
+                margin: '10px auto' }}
                 id={item._id.toString()}>
                 <CardContent>
-                    <Button sx={{
-                        float: 'right'
-                    }}
-                        id={item._id.toString()} onClick={handleRemove} size='large'><DeleteIcon/></Button>
+                    <Button sx={{ float: 'right' }}
+                            id={item._id.toString()}
+                            onClick={handleRemovePost}
+                            size='large'>
+                                    <DeleteIcon/>
+                            </Button>
                     <Link to = {getId()}>postpage</Link>
                         <Typography sx={{
                             display: 'flex',
                             justifyContent: 'flex-end'
-                        }} gutterBottom variant="subtitle1" component="div">
-                            Date: {new Date(item.date).toLocaleString()}
-                        </Typography>
-                        <Typography sx={{
-                                        marginBottom: '20px'
                         }}
-                        gutterBottom variant="h4" component="div">
-                            {item.title}
+                                    gutterBottom
+                                    variant="subtitle1"
+                                    component="div">
+                                                Date: {new Date(item.date).toLocaleString()}
                         </Typography>
-
-                        <Typography sx={{
-                            marginBottom: '20px'
-                        }} gutterBottom
-                        variant="subtitle2" component="div">
+                        <Typography sx={{ marginBottom: '20px' }}
+                                    gutterBottom
+                                    variant="h4"
+                                    component="div">{item.title}
+                        </Typography>
+                        <Typography sx={{ marginBottom: '20px' }}
+                                    gutterBottom
+                                    variant="subtitle2"
+                                    component="div">
 
                         {
-                            users && users.map((user, index) => (user._id === item.userId) ? (` ${user.firstName} ${user.lastName}`) : null)
+                            users && users.map((user) => (user._id === item.userId) ? (` ${user.firstName} ${user.lastName}`) : null)
                         }
 
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {item.body}
+                    <Typography variant="body2"
+                                color="text.secondary">{item.body}
                     </Typography>
                 </CardContent>
                 <Accordion>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
                     >
-                        <Typography>Comments</Typography>
+                        <Typography>Comments
+                        </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
@@ -121,9 +118,13 @@ function PostForm ( {item , users, comments, remove, update} : IPostForm) : Reac
                             <div className='post-comments__button-container'>
                                     <CardActions>
                                         {
-                                            newComment ? (<Button size='small' onClick={submitComment}
-                                                                  data-testid='submitCommentBtn'>Send</Button>) : (
-                                                <Button size='small' onClick={addComment} data-testid='addCommentBtn'>Add Comment</Button>)
+                                            newComment ? (<Button size='small'
+                                                                  onClick={submitComment}
+                                                                  data-testid='submitCommentBtn'>Send
+                                                           </Button>) : (<Button size='small'
+                                                                                  onClick={addComment}
+                                                                                  data-testid='addCommentBtn'>Add Comment
+                                                                          </Button>)
                                         }
                                     </CardActions>
                             </div>

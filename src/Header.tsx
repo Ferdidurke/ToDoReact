@@ -4,7 +4,7 @@ import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/redux-toolkit/store";
 import {logout} from "./store/redux-toolkit/reducers/authReducer";
-import UserCard from "./Blog/UserBox";
+import UserCard from "./Blog/UserCard";
 
 export default function Header () {
     const { isAuthenticated } = useSelector((state: RootState) => state.auth)

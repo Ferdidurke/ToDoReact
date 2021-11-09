@@ -7,13 +7,28 @@ import {useSelector, useDispatch} from "react-redux";
 import {RootState} from "../../store/redux-toolkit/store";
 
 import {Box, Typography} from "@mui/material";
+import {IToDoParams, todoApi} from "../../services/TaskService";
+import {logApi} from "../../services/LogService";
 
 const DoneTasks: React.FC<Partial<TodosProps>> = (props) => {
-    const { tasks } = useSelector((state:RootState) => state.todo);
-    const dispatch = useDispatch()
-    const markTaskToDelete = (id: number): void => {
-        console.log(1)
+    const todoparams = {
+        sort : {
+            deadlineDate: 'desc'
+        }
     }
+
+    const { data: tasks } = todoApi.useFetchTasksQuery(todoparams)
+
+    const [patchMarkedToDeleteTask] = todoApi.useChangeTaskFieldsMutation()
+    const [sendLog] = logApi.useAddLogEventMutation()
+
+    const markTaskToDelete = (id: string): void => {
+        patchMarkedToDeleteTask({ id: id, isMarkToDelete: true })
+        const log = `Task with id:${id} replace in deleted container at ${new Date().toLocaleString()}`
+        console.log(log)
+        sendLog({ body: log })
+    }
+
 
     return (
         <div className="done-tasks">
@@ -39,7 +54,8 @@ const DoneTasks: React.FC<Partial<TodosProps>> = (props) => {
                     tasks && tasks.map((item: ITask) =>
                         (item.isChecked && !item.isMarkToDelete)? (
                             <TaskForm key={item._id} item={item}
-                                      markTaskToDelete={markTaskToDelete}/>
+                                      markTaskToDelete={markTaskToDelete}
+                                      />
                         ) : null
                     )
                 }

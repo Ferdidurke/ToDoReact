@@ -1,39 +1,58 @@
 import './styles.sass'
-import React, {useState} from "react";
+import React from "react";
 import {TaskForm} from "../task/script";
 import {TodosProps} from "../Todos";
 import {ITask} from "../task/script";
-import {useSelector, useDispatch} from "react-redux";
-
-import { RootState} from "../../store/redux-toolkit/store";
 import {Box, Button, Typography} from "@mui/material";
 import {ArrowDownward, ArrowUpward} from "@mui/icons-material";
 import {todoApi} from "../../services/TaskService";
 import {IToDoParams} from "../../services/TaskService";
+import {logApi} from "../../services/LogService";
 
 
 const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
     const [todoparams, setTodoParams] = React.useState<IToDoParams> ({ sort : { deadlineDate: 'desc' } })
     const { data: tasks } = todoApi.useFetchTasksQuery(todoparams)
+    const [changeTaskFields] = todoApi.useChangeTaskFieldsMutation()
+    const [sendLog] = logApi.useAddLogEventMutation()
 
-    const markTaskToDelete = () => {
-        console.log(1)
+    const markTaskToDelete = (id: string): void => {
+        changeTaskFields({ id: id, isMarkToDelete: true })
+        const log = `Task with id:${id} replace in deleted container at ${new Date().toLocaleString()}`
+        console.log(log)
+        sendLog({ body: log })
     }
 
+
     const sortOnAsc = () => {
-        console.log(1)
         setTodoParams({ sort : { deadlineDate: 'asc' } })
+
     }
 
     const sortOnDesc = () => {
-        console.log(2)
         setTodoParams({ sort : { deadlineDate: 'desc' } })
     }
 
+    const changeDeadlineColor = () => {
+        tasks && tasks.forEach(function (item) {
+            const deadlineTime: number = Date.parse(item.deadlineDate)
+            const currentTime: number = Date.now()
+            if (item.isChecked) {
+                changeTaskFields({ id: item._id, deadlineColor: '' })
+            } else {
+                if (deadlineTime - currentTime < 3600000 && deadlineTime - currentTime > 0) {
+                changeTaskFields({ id: item._id, deadlineColor: 'yellow' })
+            }
+                if (deadlineTime - currentTime < 0) {
+                 changeTaskFields({ id: item._id, deadlineColor: 'red' })
+                }
+            }
+        })
+    }
 
-    // const markTaskToDelete = (id: number): void => {
-    //     dispatch(markTaskOnDelete(id))
-    // }
+    //setInterval(changeDeadlineColor, 30000)
+
+
 
 
     return (
@@ -64,7 +83,8 @@ const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
                     tasks && tasks.map((item: ITask) =>
                         (!item.isChecked && !item.isMarkToDelete) ? (
                             <TaskForm key={item._id} item={item}
-                                      markTaskToDelete={markTaskToDelete}/>
+                                      markTaskToDelete={markTaskToDelete}
+                                      />
                          ) : null
                     )
                 }

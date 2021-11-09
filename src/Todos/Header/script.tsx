@@ -1,6 +1,7 @@
 import React, {ReactElement, useState} from "react";
 import './styles.sass'
 import {Button, ButtonGroup} from "@mui/material";
+import UserCard from "../../Blog/UserCard";
 
 
 function ToDoHeader () : ReactElement {
@@ -24,15 +25,19 @@ function ToDoHeader () : ReactElement {
 
     return (
         <>
-            <div className="application">
-                <ButtonGroup>
-                    <Button variant='contained' size='small' data-testid = "downloadBtn" className="button download-button" onClick={handleDownloadLogsButton}>
-                        DOWNLOAD LOGS
-                    </Button>
-                    <Button variant='contained' size='small' className="button download-button" onClick={handleDownloadTasksListButton}>
-                        DOWNLOAD TASKS
-                    </Button>
-                </ButtonGroup>
+            <div className='header__user-container'>
+                <div className="application">
+                    <ButtonGroup sx={{height: 35,
+                                        marginTop: '10px'}}>
+                        <Button variant='contained' size='small' data-testid = "downloadBtn" className="button download-button" onClick={handleDownloadLogsButton}>
+                            DOWNLOAD LOGS
+                        </Button>
+                        <Button variant='contained' size='small' className="button download-button" onClick={handleDownloadTasksListButton}>
+                            DOWNLOAD TASKS
+                        </Button>
+                    </ButtonGroup>
+                </div>
+                <UserCard/>
             </div>
 
         </>

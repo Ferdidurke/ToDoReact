@@ -25,7 +25,6 @@ export const authReducer = createSlice({
             state.isAuthenticated = false
             state.user = null
             state.token = null
-
         }
     },
     extraReducers: (builder) => {

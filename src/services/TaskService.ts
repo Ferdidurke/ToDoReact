@@ -8,7 +8,8 @@ const baseURL = process.env.REACT_APP_BASE_URL
 
 export interface IToDoParams {
     sort: {
-        deadlineDate: string
+        deadlineDate?: string
+        deletedDate?: string
     }
 }
 
@@ -24,7 +25,7 @@ export const todoApi = createApi({
             }
             return headers
         }}),
-    tagTypes: ['Task'],
+    tagTypes: ['Task', 'Logs'],
     endpoints: (build) => ({
         fetchTasks: build.query<ITask[], IToDoParams>({
             query: (todoParams) => ({
@@ -46,14 +47,23 @@ export const todoApi = createApi({
             }),
             invalidatesTags: result => ['Task']
         }),
-        changeStatus: build.mutation<any, any>({
-            query: (id) => ({
-                url: `/api/todo`,
+        changeTaskFields: build.mutation<any, any>({
+            query: ({id, ...patch}) => ({
+                url: `/api/todo/${id}`,
                 method: 'PATCH',
-                body: id,
+                body: patch,
+            }),
+            invalidatesTags: result => ['Task']
+        }),
+        deleteTask: build.mutation<any, any>({
+            query: (id) => ({
+                url: `/api/todo/`,
+                method: 'DELETE',
+                body: { id: id },
             }),
             invalidatesTags: result => ['Task']
         })
     })
 
 })
+

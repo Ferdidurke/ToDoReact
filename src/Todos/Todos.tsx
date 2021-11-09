@@ -14,7 +14,8 @@ import {IToDoParams, todoApi} from "../services/TaskService";
 
 
 export interface TodosProps {
-    logging(text: string): void
+    tasks: any[]
+    logging(logText: string): any
     createNewTask(task: ITask): void
     sortTasksOnAsc(): void
     sortTasksOnDesc(): void
@@ -26,14 +27,17 @@ export interface TodosProps {
     handlerDrop(event: React.DragEvent<HTMLDivElement>): void
 }
 
-export const logging = (text: any) => {
-        console.log()
-        // state.logs.push()
-}
+
 
 function Todos (): ReactElement {
+    const todoparams = {
+        sort : {
+            deadlineDate: 'desc'
+        }
+    }
+    const [changeTaskFields] = todoApi.useChangeTaskFieldsMutation()
 
-    const dispatch = useDispatch()
+    const { data: tasks } = todoApi.useFetchTasksQuery(todoparams)
 
 
 const handlerDragEnter = (event: React.DragEvent<HTMLDivElement>): void => {
@@ -44,18 +48,24 @@ const handlerDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
     event.preventDefault()
 }
 
-const handlerDrop = (event: React.DragEvent<HTMLDivElement>): void => {
+const handlerDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
-    const id = Number(event.dataTransfer.getData('id'))
-    // const index: number = tasks.findIndex((item: {id: number}) => item.id === id)
-    // if (tasks[index].isChecked && event.currentTarget.className==='undone-tasks__container')
-    //     {
-    //     dispatch(changeStatus(id))
-    //     }
-    // if (!tasks[index].isChecked && event.currentTarget.className==='done-tasks__container')
-    //     {
-    //     dispatch(changeStatus(id))
-    //     }
+    const id: string = event.dataTransfer.getData('id')
+    if (tasks) {
+        const index: number = tasks.findIndex((item) => item._id === id)
+        if (tasks[index].isChecked && event.currentTarget.className==='undone-tasks__container')
+        {
+            const id = tasks[index]._id
+            changeTaskFields({ id: id, isChecked: false })
+        }
+        if (!tasks[index].isChecked && event.currentTarget.className==='done-tasks__container')
+        {
+            const id = tasks[index]._id
+            changeTaskFields({ id: id, isChecked: true })
+        }
+    }
+
+
 }
 
 
@@ -69,6 +79,8 @@ const handlerDrop = (event: React.DragEvent<HTMLDivElement>): void => {
                        handlerDragEnter={handlerDragEnter}
                        handlerDragOver={handlerDragOver}
                        handlerDrop={handlerDrop}
+
+
           />
 
           <NewTaskForm/>
@@ -77,10 +89,13 @@ const handlerDrop = (event: React.DragEvent<HTMLDivElement>): void => {
                        handlerDragEnter={handlerDragEnter}
                        handlerDragOver={handlerDragOver}
                        handlerDrop={handlerDrop}
+
+
                        />
       </div>
 
-    <DeletedTasks />
+    <DeletedTasks
+       />
   </div>
   )
 }
