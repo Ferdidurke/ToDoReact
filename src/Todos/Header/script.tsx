@@ -1,26 +1,36 @@
-import React, {ReactElement, useState} from "react";
+import React, {ReactElement} from "react";
 import './styles.sass'
 import {Button, ButtonGroup} from "@mui/material";
 import UserCard from "../../Blog/UserCard";
+import {baseURL} from "../../services/TaskService";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/redux-toolkit/store";
 
 
 function ToDoHeader () : ReactElement {
+    const { token } = useSelector((state: RootState) => state.auth)
 
+    const downloadFiles = async (key: string, name: string): Promise<void> => {
+        fetch(`${ baseURL }api/todo/download/${name}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${ token as string }`
+            }
+        }).then(res => res.blob())
+            .then(blob => {
+                const a = document.createElement('a');
+                a.download = `${name}.txt`;
+                a.href = URL.createObjectURL(blob);
+                a.click()
+                a.remove()
+                URL.revokeObjectURL(a.href);
+            });
 
-    const downloadFiles = (key: string, name: string): void => {
-        const tasks: any = JSON.parse(localStorage.getItem(`ReduxStorage`)!)
-        const a = document.createElement('a');
-        a.download = `${name}.txt`;
-        const downloadFile = JSON.stringify(tasks[key])
-        const blob = new Blob([downloadFile], {type: 'text/plain'})
-        a.href = URL.createObjectURL(blob);
-        a.click()
-        URL.revokeObjectURL(a.href);
     }
 
 
-    const handleDownloadLogsButton = (): void => downloadFiles('logs', 'logs')
-    const handleDownloadTasksListButton = (): void => downloadFiles('tasks', 'tasks')
+    const handleDownloadLogsButton = (): Promise<void> => downloadFiles('logs', 'logs')
+    const handleDownloadTasksListButton = (): Promise<void> => downloadFiles('tasks', 'tasks')
 
 
     return (

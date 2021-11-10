@@ -1,5 +1,5 @@
 import React, {ReactElement} from 'react';
-import {BrowserRouter as Router, Switch, Route, Redirect, useHistory} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import './Todos/styles.sass';
 import Todos from "./Todos/Todos";
 import {Blog} from "./Blog/Blog";

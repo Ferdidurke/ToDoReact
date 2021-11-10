@@ -4,12 +4,17 @@ import {ITask} from "../Todos/task/script";
 import {RootState} from "../store/redux-toolkit/store";
 
 
-const baseURL = process.env.REACT_APP_BASE_URL
+export const baseURL = process.env.REACT_APP_BASE_URL
 
 export interface IToDoParams {
-    sort: {
+    sort?: {
         deadlineDate?: string
         deletedDate?: string
+    }
+    filter: {
+        userId : string
+        isChecked?: boolean
+        isMarkToDelete?: boolean
     }
 }
 
@@ -27,11 +32,32 @@ export const todoApi = createApi({
         }}),
     tagTypes: ['Task', 'Logs'],
     endpoints: (build) => ({
-        fetchTasks: build.query<ITask[], IToDoParams>({
-            query: (todoParams) => ({
+        fetchUndoneTasks: build.query<ITask[], IToDoParams>({
+            query: (params) => ({
                 url: `/api/todo`,
                 params: {
-                    sort: JSON.stringify(todoParams.sort)
+                    filter: JSON.stringify(params.filter),
+                    sort: JSON.stringify(params.sort)
+                }
+            }),
+            providesTags: result =>['Task']
+        }),
+        fetchDoneTasks: build.query<ITask[], IToDoParams>({
+            query: (params) => ({
+                url: `/api/todo`,
+                params: {
+                    filter: JSON.stringify(params.filter),
+                    sort: JSON.stringify(params.sort)
+                }
+            }),
+            providesTags: result =>['Task']
+        }),
+        fetchDeletedTasks: build.query<ITask[], IToDoParams>({
+            query: (params) => ({
+                url: `/api/todo`,
+                params: {
+                    filter: JSON.stringify(params.filter),
+                    sort: JSON.stringify(params.sort)
                 }
             }),
             providesTags: result =>['Task']

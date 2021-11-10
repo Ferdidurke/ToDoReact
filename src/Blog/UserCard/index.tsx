@@ -1,16 +1,17 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/redux-toolkit/store";
-import {Avatar, Box, Card, CardHeader, Icon, IconButton} from "@mui/material";
+import {Avatar, Card, CardHeader, IconButton} from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
 import {logout} from "../../store/redux-toolkit/reducers/authReducer";
+import {IUser} from "../Post/interfaces/interfaces";
 
-function UserCard(props: any) {
-    const { user } = useSelector((state: RootState)=> state.auth)
+function UserCard() {
+    const { user }  = useSelector((state: RootState)=> state.auth)
     const dispatch = useDispatch()
 
-    const userLetter = user.firstName.slice(0,1)
-    const userFullName = `${user.firstName} ${user.lastName}`
+    const userLetter = (user as IUser).firstName.slice(0,1)
+    const userFullName = `${ (user as IUser).firstName } ${ (user as IUser).lastName }`
     return (
         <Card sx={{ maxWidth: 250,
                     borderRadius: '10px',

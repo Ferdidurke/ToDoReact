@@ -1,5 +1,4 @@
 import {configureStore} from "@reduxjs/toolkit";
-import {todoReducer} from "./reducers/todoReducer";
 import {blogApi} from "../../services/PostService";
 import {userApi} from "../../services/UserService";
 import {authReducer} from "./reducers/authReducer";
@@ -18,7 +17,7 @@ export const store = configureStore ({
         [todoApi.reducerPath]: todoApi.reducer,
         [logApi.reducerPath]: logApi.reducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(blogApi.middleware).concat(userApi.middleware).concat(todoApi.middleware).concat(logApi.middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat([blogApi.middleware, userApi.middleware, todoApi.middleware, logApi.middleware]),
     preloadedState: persistedState
 
 })

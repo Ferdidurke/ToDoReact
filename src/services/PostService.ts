@@ -36,15 +36,15 @@ export const blogApi = createApi ({
                 url: '/api/users',
             }),
         }),
-        fetchComments: build.query<IComment[], IParams>({
-            query: (params) => ({
-                url: `/api/blog/comments`,
+        fetchComments: build.query<IComment[], string>({
+            query: (id) => ({
+                url: `/api/blog/comments/${id}`,
             }),
             providesTags: result =>['Comments']
         }),
-        fetchSinglePost: build.query<IPost, number> ({
+        fetchSinglePost: build.query<IPost, string> ({
             query: (id) => ({
-                url: `/posts/${id}`
+                url: `/api/blog/posts/${id}`
             }),
         }),
         addPost: build.mutation<any, any>({
@@ -58,7 +58,7 @@ export const blogApi = createApi ({
             }),
             invalidatesTags: result => ['Post']
         }),
-        deletePost: build.mutation<IPost, IPost>({
+        deletePost: build.mutation<any, any>({
             query: (item) => ({
                 url: `/api/blog/posts`,
                 method: 'DELETE',

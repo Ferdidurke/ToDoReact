@@ -1,9 +1,11 @@
 import React, {ReactElement, useState} from 'react';
 import './styles.sass'
 import {Button, CircularProgress, TextField} from "@mui/material";
-import {userApi} from "../services/UserService";
+import {IUserRegister, userApi} from "../services/UserService";
 import Header from "../Header";
 import {useHistory} from "react-router-dom";
+
+
 
 
 function RegistrationForm(): ReactElement {
@@ -30,9 +32,9 @@ function RegistrationForm(): ReactElement {
         setPassword(event.currentTarget.value)
     }
 
-    const submitRegister = (event: any) => {
+    const submitRegister = (event: React.FormEvent) => {
         event.preventDefault()
-        const user = {
+        const user: IUserRegister = {
             firstName: userFirstName,
             lastName: userLastName,
             email: userEmail,

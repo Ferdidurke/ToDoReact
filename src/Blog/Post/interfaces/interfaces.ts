@@ -1,6 +1,7 @@
 export interface IPost {
-    _id: number | string
+    _id: string
     userId: number
+    author: string
     title: string
     date: string | Date
     body: string
@@ -15,11 +16,6 @@ export interface IUser {
 
 export interface IPostForm {
     item: IPost,
-    users: IUser[],
-    comments: IComment[] | undefined,
-    remove: (post: IPost) => void | undefined
-    update: (post: IPost) => void | undefined
-
 }
 
 export interface IComment {

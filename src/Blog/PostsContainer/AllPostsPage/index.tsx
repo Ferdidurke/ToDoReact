@@ -1,7 +1,7 @@
 import React, {ReactElement, useState} from 'react';
 import PostForm from "../../Post";
 import './styles.sass'
-import {IPost, IUser, IComment} from "../../Post/interfaces/interfaces";
+import {IPost} from "../../Post/interfaces/interfaces";
 import {blogApi} from "../../../services/PostService";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -9,29 +9,16 @@ import NewPostForm from "./NewPostForm";
 import {Box, Button, ButtonGroup, CircularProgress} from "@mui/material";
 import {IParams} from "../../../services/UserService";
 
-export interface IAllPostsProps {
-    posts: IPost[]
-    users: IUser[]
-    comments: IComment[]
-    params: IParams
-    handleRemove(post: IPost): void
-    handleUpdate(): void
-}
 
 
-function AllPostsPage(props: IAllPostsProps): ReactElement {
+
+function AllPostsPage(): ReactElement {
 
     const [params, setParams] = React.useState<Partial<IParams>> ({ skip: 0, limit: 5 })
-    const { data: users } = blogApi.useFetchAuthorsQuery(5)
     const { data: postsData, isLoading, error  } = blogApi.useFetchPostsQuery(params)
-    const { data: comments } = blogApi.useFetchCommentsQuery(params)
-    const [deletePost] = blogApi.useDeletePostMutation()
+
     const [addNewPost, setAddNewPost] = useState(false)
 
-
-    const handleRemove = (item: IPost) => {
-        deletePost(item)
-    }
 
     const handleAddPost = () => {
         setAddNewPost(true)
@@ -65,14 +52,6 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
         setParams({ limit: params.limit, skip: params.skip, sort: { date: 'desc'} })
     }
 
-
-    const handleUpdate = () => {
-        console.log(1)
-    }
-
-    const paginateCounter = () => {
-        return
-    }
 
     return (
 
@@ -130,7 +109,7 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         width: '300px',
                         margin: '40px auto',
                         display: 'block'
-                    }} variant='contained' onClick={handleAddPost}>NEW POST</Button>
+                    }} variant='contained' onClick={ handleAddPost }>NEW POST</Button>
                     {
                         addNewPost ? (
                                    <NewPostForm/>   ) : null
@@ -140,11 +119,9 @@ function AllPostsPage(props: IAllPostsProps): ReactElement {
                         </div>) }
                     { error && <h1>Произошла ошибка</h1> }
                     {
-                        postsData && users && postsData.posts.map((item: IPost, index: number) =>
-                        <PostForm  remove={handleRemove} update={handleUpdate} key={index}
+                        postsData && postsData.posts.map((item: IPost, index: number) =>
+                        <PostForm   key={index}
                                     item={item}
-                                    users={users}
-                                    comments={comments}
                                     />
                         )
                     }

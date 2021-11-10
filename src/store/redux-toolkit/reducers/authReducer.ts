@@ -1,9 +1,8 @@
-import {createSlice, current} from "@reduxjs/toolkit";
-import {action} from "typesafe-actions";
+import {createSlice} from "@reduxjs/toolkit";
 import {userApi} from "../../../services/UserService";
 
 
-interface IAuthUser {
+export interface IAuthUser {
     token: string | null
     isAuthenticated: boolean,
     isLoading: boolean,

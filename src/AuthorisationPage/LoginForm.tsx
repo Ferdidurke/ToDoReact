@@ -1,19 +1,16 @@
-import React, {useState} from "react";
+import React, {ReactElement, useState} from "react";
 import {Button, CircularProgress, TextField} from "@mui/material";
 import {userApi} from "../services/UserService";
-import {useSelector} from "react-redux";
-import {RootState} from "../store/redux-toolkit/store";
 import {useHistory} from "react-router-dom";
 
 
 
 
-export default function LoginForm () {
+export default function LoginForm (): ReactElement {
 const history = useHistory()
 const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
 const [login, { isLoading, isError, error } ] = userApi.useLoginUserMutation()
-const { user } = useSelector((state: RootState) => state.auth)
 
 
 const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -29,7 +26,7 @@ const handleRegister = (): void => {
 }
 
 
-const submitLogin = (event: any) => {
+const submitLogin = (event: React.FormEvent) => {
         event.preventDefault()
     const user = {
             email: email,

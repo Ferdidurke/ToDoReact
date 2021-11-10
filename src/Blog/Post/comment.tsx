@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactElement} from "react";
 import {ICommentForm} from "./interfaces/interfaces";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 
 
-const Comment = ({ comment }: ICommentForm)  => {
+const Comment = ({ comment }: ICommentForm) : ReactElement  => {
     return (
     <>
     <Card sx={{ width: '90%',
@@ -16,14 +16,17 @@ const Comment = ({ comment }: ICommentForm)  => {
         <CardActionArea>
             <CardContent>
                 <Typography sx={{ float: 'right' }}
-                variant="body2" color="text.secondary">
-                    { new Date (comment.date).toLocaleString() }
+                            variant="body2"
+                            color="text.secondary"
+                            component="div"> { new Date (comment.date).toLocaleString() }
                 </Typography>
-                <Typography gutterBottom variant="h5" component="div">
-                    { comment.author }
+                <Typography gutterBottom
+                            variant="h5"
+                            component="div"> { comment.author }
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    { comment.body }
+                <Typography variant="body2"
+                            color="text.secondary"
+                            component="div"> { comment.body }
                 </Typography>
             </CardContent>
         </CardActionArea>

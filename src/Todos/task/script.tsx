@@ -19,7 +19,7 @@ export interface ITask {
     userId: string
     taskText: string
     deadlineDate: string
-    createDate: string
+    createDate: string | Date
     isChecked: boolean
     deadlineColor: string
     isMarkToDelete: boolean
@@ -37,17 +37,12 @@ function Task (this: ITask, userId: string, taskText : string, taskDeadline : st
     this.userId = userId
     this.taskText = taskText;
     this.deadlineDate = taskDeadline;
-    this.createDate = dateFormat();
     this.isChecked = false;
     this.deadlineColor = '';
     this.isMarkToDelete = false;
     this.deletedDate = '';
 }
 
-
-function dateFormat(date:Date | string = new Date()): string {
-    return date ? date.toLocaleString() : new Date().toLocaleString()
-}
 
 
 function TaskForm (props: ITaskForm): ReactElement {
@@ -57,15 +52,16 @@ function TaskForm (props: ITaskForm): ReactElement {
     const [textValue, setTextValue] = useState(props.item.taskText)
     const [sendLog] = logApi.useAddLogEventMutation()
 
+
     const changeTaskStatus = () => {
         const id = props.item._id
         let isChecked = props.item.isChecked
         let log = ''
         if (!isChecked) {
-            log = (`Task with id:${id} moved to done at ${new Date().toLocaleString()}`)
+            log = (`Task with id:${ id } moved to done at ${ new Date().toLocaleString() }`)
         }
         if (isChecked) {
-            log = (`Task with id:${id} moved to do at ${new Date().toLocaleString()}`)
+            log = (`Task with id:${ id } moved to do at ${ new Date().toLocaleString() }`)
         }
         console.log(log)
         sendLog({ body: log })
@@ -81,7 +77,7 @@ function TaskForm (props: ITaskForm): ReactElement {
        setTextValue(e.target.value)
     }
 
-    const doneTaskTextChange = (e: React.ChangeEvent): void => {
+    const doneTaskTextChange = () : void => {
         changeTaskFields({ id: props.item._id, taskText: textValue })
         setInput(false)
     }
@@ -145,10 +141,10 @@ function TaskForm (props: ITaskForm): ReactElement {
                                                                             <CircularProgress />
                                          </div>)
                                 : ( <>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant="body2" color="text.secondary" component="div">
                                         Сreate Date: { new Date(props.item.createDate).toLocaleString() }
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant="body2" color="text.secondary" component="div">
                                     Deadline Date: { new Date(props.item.deadlineDate).toLocaleString() }
                                 </Typography>
                                     {
@@ -167,7 +163,8 @@ function TaskForm (props: ITaskForm): ReactElement {
                                                          tabIndex={0}
                                                          id={ props.item._id }
                                                          onDoubleClick={ createInputForText }
-                                                         onFocus={ createInputForText }>
+                                                         onFocus={ createInputForText }
+                                                         component="div">
                                                 { props.item.taskText }
                                             </Typography>)
                                     }

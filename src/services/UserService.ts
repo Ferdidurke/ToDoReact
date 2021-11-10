@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {IPost} from "../Blog/Post/interfaces/interfaces";
+
 
 export interface IParams {
     skip?: number,
@@ -11,6 +11,16 @@ export interface IParams {
 }
 
 
+export interface IUserRegister {
+    firstName: string
+    lastName: string
+    email: string
+    password: string
+}
+
+
+
+
 const baseURL = process.env.REACT_APP_BASE_URL
 
 
@@ -19,7 +29,7 @@ export const userApi = createApi({
     baseQuery: fetchBaseQuery ({ baseUrl: baseURL }),
     tagTypes: ['User'],
     endpoints: (build) => ({
-        registerUser: build.mutation<any, any>({
+        registerUser: build.mutation<IUserRegister, IUserRegister>({
             query: (user) => ({
                 url: `/api/auth/register`,
                 method: 'POST',
