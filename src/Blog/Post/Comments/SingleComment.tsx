@@ -1,12 +1,12 @@
 import React, {ReactElement} from "react";
-import {ICommentForm} from "./interfaces/interfaces";
+import {ICommentForm} from "../interfaces/interfaces";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 
 
-const Comment = ({ comment }: ICommentForm) : ReactElement  => {
+const SingleComment = ({ comment }: ICommentForm) : ReactElement  => {
     return (
     <>
     <Card sx={{ width: '90%',
@@ -39,4 +39,4 @@ const Comment = ({ comment }: ICommentForm) : ReactElement  => {
 
 
 
-export default Comment
+export default SingleComment

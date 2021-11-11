@@ -1,5 +1,5 @@
 import React, {ReactElement, useState} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ITask, Task} from "../task/script";
 import './styles.sass'
 import {Button, CircularProgress, TextField} from "@mui/material";
@@ -7,6 +7,7 @@ import {AddCircleOutline} from "@mui/icons-material";
 import {RootState} from "../../store/redux-toolkit/store";
 import {todoApi} from "../../services/TaskService";
 import {logApi} from "../../services/LogService";
+
 
 
 
@@ -21,7 +22,7 @@ export function NewTaskForm () : ReactElement {
     const createNewTask = (): void => {
         const task: ITask = new (Task as any)(user.id, text || '...', deadlineDate)
         addNewTask(task)
-        const log = (`Create new task with at ${new Date().toLocaleString()}. Deadline date: ${new Date(deadlineDate).toLocaleString()}`)
+        const log = (`Create new task with at ${ new Date().toLocaleString() }. Deadline date: ${ new Date(deadlineDate).toLocaleString() }`)
         console.log(log)
         sendLog({ body: log })
         setTaskText('')

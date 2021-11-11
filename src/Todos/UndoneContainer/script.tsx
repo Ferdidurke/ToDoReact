@@ -6,34 +6,38 @@ import {ITask} from "../task/script";
 import {Box, Button, Typography} from "@mui/material";
 import {ArrowDownward, ArrowUpward} from "@mui/icons-material";
 import {todoApi} from "../../services/TaskService";
-import {IToDoParams} from "../../services/TaskService";
 import {logApi} from "../../services/LogService";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/redux-toolkit/store";
+import {
+    changeStatus,
+    deadliner,
+    markTaskOnDelete,
+    setRequestParams
+} from "../../store/redux-toolkit/reducers/todoReducer";
+import {checkToken} from "../../CheckAuthToken/CheckAuthToken";
 
 
 const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
     const { id: userId } = useSelector((state: RootState)=> state.auth.user)
-    const [params, setParams] = React.useState<IToDoParams>({
-                                                                    sort: {
-                                                                        deadlineDate: 'asc'
-                                                                    },
-                                                                    filter: {
-                                                                        userId: userId,
-                                                                        isChecked: false,
-                                                                        isMarkToDelete: false
-                                                                    } })
-
-
-    const { data: tasks } = todoApi.useFetchUndoneTasksQuery(params)
+    const { tasks } = useSelector((state: RootState) => state.todo)
+    const dispatch = useDispatch()
+    checkToken()
     const [changeTaskFields] = todoApi.useChangeTaskFieldsMutation()
+    const [changeTaskColour] = todoApi.useChangeTaskColourMutation()
     const [sendLog] = logApi.useAddLogEventMutation()
-    console.log(`undone`)
+
     useEffect(() => {
         changeDeadlineColor()
     }, [tasks])
 
     const markTaskToDelete = (id: string): void => {
+
+        const index: number = tasks.findIndex((item: ITask) => item._id === id)
+        if (index !== -1 && !tasks[index].isMarkToDelete) {
+                dispatch(markTaskOnDelete(index))
+        }
+
         changeTaskFields({ id: id, isMarkToDelete: true })
         const log = `Task with id:${id} replace in deleted container at ${ new Date().toLocaleString() }`
         console.log(log)
@@ -42,51 +46,58 @@ const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
 
 
     const sortOnAsc = (): void => {
-        setParams({
-            sort: {
-                deadlineDate: 'asc'
-            },
-            filter: {
-                userId: userId,
-                isChecked: false,
-                isMarkToDelete: false
-            } })
+        dispatch(setRequestParams( { deadlineDate: 'asc' } ))
 }
 
     const sortOnDesc = (): void => {
-        setParams({
-            sort: {
-                deadlineDate: 'desc'
-            },
-            filter: {
-                userId: userId,
-                isChecked: false,
-                isMarkToDelete: false
-            } })
+        dispatch(setRequestParams( { deadlineDate: 'desc' }  ))
 }
 
     const changeDeadlineColor = () => {
-        tasks && tasks.forEach(function (item) {
+
+        const changingTasks: Array<any> = []
+        tasks && tasks.forEach(function (item, index) {
             const deadlineTime: number = Date.parse(item.deadlineDate)
             const currentTime: number = Date.now()
-            if (deadlineTime - currentTime < 3600000 && deadlineTime - currentTime > 0) {
-                changeTaskFields({id: item._id, deadlineColor: 'yellow'})
+            if (item.isChecked && (item.deadlineColor === 'red' || item.deadlineColor === 'yellow')) {
+                dispatch(deadliner({ index: index, deadlineColor: '' }))
+                const currentTask = { id: item._id, deadlineColor: '' }
+                changingTasks.push(currentTask)
             }
-            if (deadlineTime - currentTime < 0) {
-                changeTaskFields({id: item._id, deadlineColor: 'red'})
+
+            if (deadlineTime - currentTime < 3600000 && deadlineTime - currentTime > 0 && item.deadlineColor === '' && !item.isChecked) {
+                dispatch(deadliner({ index: index, deadlineColor: 'yellow' }))
+                const currentTask = { id: item._id, deadlineColor: 'yellow' }
+                changingTasks.push(currentTask)
             }
+            if (deadlineTime - currentTime < 0 && (item.deadlineColor === '' || item.deadlineColor === 'yellow') && !item.isChecked) {
+                dispatch(deadliner({ index: index, deadlineColor: 'red' }))
+                const currentTask = { id: item._id, deadlineColor: 'red' }
+                changingTasks.push(currentTask)
+            }
+
         })
+        changeTaskColour({ update: changingTasks })
     }
 
 
+
+
     const handlerDrop = (event: React.DragEvent<HTMLDivElement>) => {
+
         event.preventDefault()
         const id: string = event.dataTransfer.getData('id')
-        console.log(id)
-        const droppableTask: ChildNode | null = document.getElementById(id)!.lastChild!.firstChild!.firstChild
-        const isTaskChecked = (droppableTask as HTMLInputElement).checked
-        if (isTaskChecked) {
-            changeTaskFields({ id: id, isChecked: false })
+        const index: number = tasks.findIndex((item) => item._id === id)
+        if (!tasks[index].isMarkToDelete) {
+            dispatch(changeStatus(index))
+
+            const droppableTask: ChildNode | null = document.getElementById(id)!.lastChild!.firstChild!.firstChild
+            const isTaskChecked = (droppableTask as HTMLInputElement).checked
+            if (isTaskChecked) {
+                changeTaskFields({id: id, isChecked: false})
+                const log = (`Task with id:${ id } moved to undone at ${ new Date().toLocaleString() }`)
+                sendLog({ body: log })
+            }
         }
     }
 
@@ -109,8 +120,8 @@ const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
                 </Typography>
                 </Box>
                 <div className="sorting-buttons__container">
-                    <Button size="small" className="asc-button" data-testid="ascSortButton" onClick={sortOnAsc}> <ArrowDownward/> </Button>
-                    <Button size="small" className="desc-button" data-testid="descSortButton" onClick={sortOnDesc}> <ArrowUpward/> </Button>
+                    <Button size="small" className="asc-button" data-testid="ascSortButton" onClick={ sortOnAsc }> <ArrowDownward/> </Button>
+                    <Button size="small" className="desc-button" data-testid="descSortButton" onClick={ sortOnDesc }> <ArrowUpward/> </Button>
                 </div>
             </div>
             <div className="undone-tasks__container"
@@ -119,12 +130,12 @@ const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
                  onDrop={ handlerDrop }>
 
                 {
-                    tasks && tasks.map((item: ITask) =>
+                    tasks && tasks.map((item: ITask) => (!item.isChecked && !item.isMarkToDelete) ?
                          (
                             <TaskForm key={ item._id } item={ item }
                                       markTaskToDelete={ markTaskToDelete }
                                       />
-                         )
+                         ) : null
                     )
                 }
             </div>

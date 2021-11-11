@@ -6,6 +6,12 @@ import {UndoneTasks} from "./UndoneContainer/script";
 import {DoneTasks} from "./DoneContainer/script";
 import Header from "../Header";
 import {NewTaskForm} from "./NewTaskContainer";
+import {todoApi} from "../services/TaskService";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../store/redux-toolkit/store";
+import {logout} from "../store/redux-toolkit/reducers/authReducer";
+
+
 
 
 export interface TodosProps {
@@ -15,7 +21,20 @@ export interface TodosProps {
 
 
 
+
 function Todos (): ReactElement {
+    const dispatch = useDispatch()
+    const { reqParams: params } = useSelector((state: RootState) => state.todo)
+
+    const { error }: any = todoApi.useFetchTasksQuery(params, {
+        refetchOnMountOrArgChange: true
+    })
+
+    if (error && error.status === 401) {
+        console.log((error as any).status)
+        dispatch(logout())
+    }
+
 
 const handlerDragEnter = (event: React.DragEvent<HTMLDivElement>): void => {
     event.preventDefault()
@@ -24,6 +43,8 @@ const handlerDragEnter = (event: React.DragEvent<HTMLDivElement>): void => {
 const handlerDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
     event.preventDefault()
 }
+
+
 
 
   return (

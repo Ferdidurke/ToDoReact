@@ -16,7 +16,6 @@ function AllPostsPage(): ReactElement {
 
     const [params, setParams] = React.useState<Partial<IParams>> ({ skip: 0, limit: 5 })
     const { data: postsData, isLoading, error  } = blogApi.useFetchPostsQuery(params)
-
     const [addNewPost, setAddNewPost] = useState(false)
 
 

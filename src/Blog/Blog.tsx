@@ -6,10 +6,12 @@ import CurrentPostPage from "./PostsContainer/CurrentPostPage";
 import Header from "../Header";
 import UserCard from "./UserCard";
 
+import {checkToken} from "../CheckAuthToken/CheckAuthToken";
+
 
 
 export function Blog(): ReactElement {
-
+    checkToken()
 
     return (
         <div className='blog'>
@@ -23,8 +25,8 @@ export function Blog(): ReactElement {
                 <div className='blog__container'>
                     <Router>
                         <Switch>
-                            <Route exact path='/blog' component={AllPostsPage}/>
-                            <Route path='/blog/posts/:id' component={CurrentPostPage}/>
+                            <Route exact path='/blog' component={ AllPostsPage }/>
+                            <Route path='/blog/posts/:id' component={ CurrentPostPage }/>
                         </Switch>
                     </Router>
                 </div>

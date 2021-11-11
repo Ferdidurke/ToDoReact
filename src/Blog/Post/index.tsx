@@ -1,58 +1,36 @@
 import React, {ReactElement, useState} from 'react';
 import './styles.sass'
 import {useSelector} from "react-redux";
-import Comment from "./comment";
+import SingleComment from "./Comments/SingleComment";
 import {IComment} from "./interfaces/interfaces";
 import {IPostForm} from "./interfaces/interfaces";
 import {Link, useHistory} from "react-router-dom";
 import {Accordion, AccordionDetails, AccordionSummary, Button, CardActionArea, CardActions} from "@mui/material";
-import {RootState} from "../../store/redux-toolkit/store";
 import {blogApi} from "../../services/PostService";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Card from "@mui/material/Card";
 import DeleteIcon from '@mui/icons-material/Delete';
+import CommentsBlock from "./Comments/CommentsBlock";
+import {use} from "msw/lib/types/utils/internal/requestHandlerUtils";
 
 
 function PostForm ({ item } : IPostForm) : ReactElement  {
-    const [newComment, setNewComment] = useState(false)
-    const [commentText, setCommentText] = useState('')
-    const [sendComment] = blogApi.useAddCommentMutation()
+    const [expandedAccordion, setExpandedAccordion] = React.useState(false)
     const [deletePost] = blogApi.useDeletePostMutation()
-    const { data: comments } = blogApi.useFetchCommentsQuery(item._id)
-    const { user } = useSelector((state: RootState) => state.auth)
-    const history = useHistory()
-
-
-
-    const addComment = (): void => {
-        setNewComment(true)
-    }
-
-
+    console.log(item._id)
 
     const handleRemovePost = (e: React.MouseEvent): void => {
         e.preventDefault()
         deletePost(item)
-
     }
 
-    const submitComment = (): void => {
-        const comment = {
-            userId: user.id,
-            postId: item._id,
-            author: `${user.firstName} ${user.lastName}`,
-            body: commentText
-        }
-        sendComment(comment)
-        setNewComment(false)
-        setCommentText('')
+
+    const openCommentsBlock = (): void => {
+        setExpandedAccordion(true)
     }
 
-    const changeCommentText = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-        setCommentText(e.currentTarget.value)
-    }
 
     const getId = (): string => {
         const id = `/blog/posts/${item._id}`
@@ -65,7 +43,7 @@ function PostForm ({ item } : IPostForm) : ReactElement  {
             <Card sx={{ maxWidth: '90%',
                 margin: '10px auto' }}
                 id={ item._id.toString() }>
-                <CardActionArea component={Link} to={ getId() }>
+                <CardActionArea component={Link} to={ getId }>
                     <CardContent>
                         <Button sx={{ float: 'right' }}
                                 id={ item._id.toString() }
@@ -80,7 +58,7 @@ function PostForm ({ item } : IPostForm) : ReactElement  {
                                         gutterBottom
                                         variant="subtitle1"
                                         component="div">
-                                                    Date: { new Date(item.date).toLocaleString() }
+                                                    { new Date(item.date).toLocaleString() }
                             </Typography>
                             <Typography sx={{ marginBottom: '20px' }}
                                         gutterBottom
@@ -99,8 +77,9 @@ function PostForm ({ item } : IPostForm) : ReactElement  {
                         </Typography>
                     </CardContent>
                 </CardActionArea>
-                <Accordion>
+                <Accordion id={item._id} expanded={expandedAccordion}>
                     <AccordionSummary
+                        onClick={ openCommentsBlock }
                         expandIcon={ <ExpandMoreIcon /> }
                     >
                         <Typography
@@ -108,33 +87,10 @@ function PostForm ({ item } : IPostForm) : ReactElement  {
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography>
+                        <Typography component="div">
                             {
-                                                newComment ? (<textarea style={{ width: '90%', height: '150px' }}
-                                                                     placeholder='Введите текст комментария'
-                                                                     value={ commentText }
-                                                                     onChange={ changeCommentText }
-                                                                     >
-                                                        </textarea>):
-                                                    (
-                                                       comments && comments.map((comment: IComment, index: number) => (comment.postId === item._id) ? ( <Comment comment={ comment }
-                                                                                                                                                        key={ index }
-                                                                                                                                                        />) : null)
-                                                    )
+                                expandedAccordion ? ( <CommentsBlock _id={item._id}/> ) : null
                             }
-                            <div className='post-comments__button-container'>
-                                    <CardActions>
-                                        {
-                                            newComment ? (<Button size='small'
-                                                                  onClick={submitComment}
-                                                                  data-testid='submitCommentBtn'>Send
-                                                           </Button>) : (<Button size='small'
-                                                                                  onClick={addComment}
-                                                                                  data-testid='addCommentBtn'>Add Comment
-                                                                          </Button>)
-                                        }
-                                    </CardActions>
-                            </div>
                         </Typography>
                     </AccordionDetails>
                 </Accordion>

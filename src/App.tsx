@@ -6,12 +6,17 @@ import {Blog} from "./Blog/Blog";
 import Main from "./Main";
 import RegistrationForm from "./AuthorisationPage/RegistrationForm";
 import {RootState} from "./store/redux-toolkit/store";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import jwtDecode from "jwt-decode";
+import {logout} from "./store/redux-toolkit/reducers/authReducer";
+
 
 
 
 function App (): ReactElement {
     const { isAuthenticated } = useSelector((state: RootState) => state.auth)
+
+
 
     if (isAuthenticated) {
         return (

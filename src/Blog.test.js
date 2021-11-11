@@ -5,7 +5,7 @@ import {Provider} from "react-redux";
 import {store} from "./store/redux-toolkit/store";
 import {Blog} from "./Blog/Blog";
 import PostForm from "./Blog/Post";
-import Comment from "./Blog/Post/comment";
+import SingleComment from "./Blog/Post/Comments/SingleComment";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Main from "./Main";
 import App from "./App";

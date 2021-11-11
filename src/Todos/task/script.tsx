@@ -1,6 +1,6 @@
 import React, {ReactElement, useState} from "react";
 import './styles.sass'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import CardHeader from "@mui/material/CardHeader";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,6 +12,7 @@ import Card from "@mui/material/Card";
 import {RootState} from "../../store/redux-toolkit/store";
 import {todoApi} from "../../services/TaskService";
 import {logApi} from "../../services/LogService";
+import {changeStatus} from "../../store/redux-toolkit/reducers/todoReducer";
 
 
 export interface ITask {
@@ -47,14 +48,20 @@ function Task (this: ITask, userId: string, taskText : string, taskDeadline : st
 
 function TaskForm (props: ITaskForm): ReactElement {
     const { user } = useSelector((state: RootState) => state.auth)
+    const { tasks } = useSelector((state: RootState) => state.todo)
     const [changeTaskFields, { isLoading: isChangeLoading } ] = todoApi.useChangeTaskFieldsMutation()
     const [input, setInput] = useState(false)
     const [textValue, setTextValue] = useState(props.item.taskText)
     const [sendLog] = logApi.useAddLogEventMutation()
+    const dispatch = useDispatch()
+
 
 
     const changeTaskStatus = () => {
         const id = props.item._id
+        const index: number = tasks.findIndex((item) => item._id === id)
+        dispatch(changeStatus(index))
+
         let isChecked = props.item.isChecked
         let log = ''
         if (!isChecked) {

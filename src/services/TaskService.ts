@@ -1,20 +1,16 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {ITask} from "../Todos/task/script";
-
 import {RootState} from "../store/redux-toolkit/store";
 
 
 export const baseURL = process.env.REACT_APP_BASE_URL
 
 export interface IToDoParams {
-    sort?: {
-        deadlineDate?: string
-        deletedDate?: string
+    sort: {
+        deadlineDate: string
     }
     filter: {
-        userId : string
-        isChecked?: boolean
-        isMarkToDelete?: boolean
+        userId : null | string
     }
 }
 
@@ -32,27 +28,7 @@ export const todoApi = createApi({
         }}),
     tagTypes: ['Task', 'Logs'],
     endpoints: (build) => ({
-        fetchUndoneTasks: build.query<ITask[], IToDoParams>({
-            query: (params) => ({
-                url: `/api/todo`,
-                params: {
-                    filter: JSON.stringify(params.filter),
-                    sort: JSON.stringify(params.sort)
-                }
-            }),
-            providesTags: result =>['Task']
-        }),
-        fetchDoneTasks: build.query<ITask[], IToDoParams>({
-            query: (params) => ({
-                url: `/api/todo`,
-                params: {
-                    filter: JSON.stringify(params.filter),
-                    sort: JSON.stringify(params.sort)
-                }
-            }),
-            providesTags: result =>['Task']
-        }),
-        fetchDeletedTasks: build.query<ITask[], IToDoParams>({
+        fetchTasks: build.query<ITask[], IToDoParams>({
             query: (params) => ({
                 url: `/api/todo`,
                 params: {
@@ -74,12 +50,20 @@ export const todoApi = createApi({
             invalidatesTags: result => ['Task']
         }),
         changeTaskFields: build.mutation<any, any>({
-            query: ({id, ...patch}) => ({
-                url: `/api/todo/${id}`,
+            query: ({ id, ...patch }) => ({
+                url: `/api/todo/${ id }`,
                 method: 'PATCH',
                 body: patch,
             }),
-            invalidatesTags: result => ['Task']
+            //invalidatesTags: result => ['Task']
+        }),
+        changeTaskColour: build.mutation<any, any>({
+            query: (patch) => ({
+                url: `/api/todo/`,
+                method: 'PATCH',
+                body: patch,
+            }),
+            //invalidatesTags: result => ['Task']
         }),
         deleteTask: build.mutation<any, any>({
             query: (id) => ({
@@ -87,7 +71,7 @@ export const todoApi = createApi({
                 method: 'DELETE',
                 body: { id: id },
             }),
-            invalidatesTags: result => ['Task']
+            //invalidatesTags: result => ['Task']
         })
     })
 

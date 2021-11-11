@@ -6,6 +6,7 @@ export interface IPost {
     date: string | Date
     body: string
     comments: string[]
+
 }
 
 export interface IUser {

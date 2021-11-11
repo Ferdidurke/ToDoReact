@@ -3,61 +3,52 @@ import './styles.sass'
 import React, {useEffect} from "react";
 import {TodosProps} from "../Todos";
 import {ITask} from "../task/script";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/redux-toolkit/store";
 import {Box, Typography} from "@mui/material";
 import {IToDoParams, todoApi} from "../../services/TaskService";
 import {logApi} from "../../services/LogService";
+import {changeStatus, markTaskOnDelete} from "../../store/redux-toolkit/reducers/todoReducer";
+import {checkToken} from "../../CheckAuthToken/CheckAuthToken";
 
 const DoneTasks: React.FC<Partial<TodosProps>> = (props) => {
-    const { id: userId } = useSelector((state: RootState)=> state.auth.user)
-    const params: IToDoParams = {
-                                    sort: {
-                                            deadlineDate: 'asc'
-                                    },
-                                    filter: {
-                                            userId: userId,
-                                            isChecked: true,
-                                            isMarkToDelete: false
-                                    }
-                                }
 
-
-    const { data: tasks } = todoApi.useFetchUndoneTasksQuery(params)
+    const { tasks } = useSelector((state: RootState) => state.todo)
     const [changeTaskFields] = todoApi.useChangeTaskFieldsMutation()
     const [patchMarkedToDeleteTask] = todoApi.useChangeTaskFieldsMutation()
     const [sendLog] = logApi.useAddLogEventMutation()
-    console.log(`done`)
-    useEffect(() => {
-        changeDeadlineColor()
-    }, [tasks])
+    const dispatch = useDispatch()
+    checkToken()
+
 
     const markTaskToDelete = (id: string): void => {
+        const index: number = tasks.findIndex((item: ITask) => item._id === id)
+        if (index !== -1 && !tasks[index].isMarkToDelete) {
+            dispatch(markTaskOnDelete(index))
+        }
+
         patchMarkedToDeleteTask({ id: id, isMarkToDelete: true })
         const log = `Task with id:${ id } replace in deleted container at ${ new Date().toLocaleString() }`
         console.log(log)
         sendLog({ body: log })
     }
 
-    const changeDeadlineColor = () => {
-        tasks && tasks.forEach(function (item) {
-            if (item.deadlineColor === 'yellow' || item.deadlineColor === 'red') {
-                changeTaskFields({ id: item._id, deadlineColor: '' })
-            }
-        })
-    }
 
 
     const handlerDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    const id: string = event.dataTransfer.getData('id')
-        console.log(id)
-        const droppableTask: any = document.getElementById(id)!.lastChild!.firstChild!.firstChild
-        const isTaskChecked = droppableTask.checked
-        if (!isTaskChecked) {
-            changeTaskFields({ id: id, isChecked: true })
+        event.preventDefault()
+        const id: string = event.dataTransfer.getData('id')
+        const index: number = tasks.findIndex((item) => item._id === id)
+        if (!tasks[index].isMarkToDelete) {
+            dispatch(changeStatus(index))
+            const droppableTask: any = document.getElementById(id)!.lastChild!.firstChild!.firstChild
+            const isTaskChecked = droppableTask.checked
+            if (!isTaskChecked) {
+                changeTaskFields({ id: id, isChecked: true })
+                const log = (`Task with id:${ id } moved to done at ${ new Date().toLocaleString() }`)
+                sendLog({ body: log })
+            }
         }
-
     }
 
 
@@ -82,12 +73,12 @@ const DoneTasks: React.FC<Partial<TodosProps>> = (props) => {
             onDragOver={ props.handlerDragOver }
             onDrop={ handlerDrop }>
                 {
-                    tasks && tasks.map((item: ITask) =>
+                    tasks && tasks.map((item: ITask) => (item.isChecked && !item.isMarkToDelete) ?
                         (
                             <TaskForm key={ item._id } item={ item }
                                       markTaskToDelete={ markTaskToDelete }
                                       />
-                        )
+                        ) : null
                     )
                 }
             </div>
