@@ -1,5 +1,4 @@
 import React, {ReactElement} from 'react';
-import './styles.sass';
 import {ToDoHeader} from "./Header/script";
 import {DeletedTasks} from "./DeletedContainer/script";
 import {UndoneTasks} from "./UndoneContainer/script";
@@ -11,7 +10,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/redux-toolkit/store";
 import {logout} from "../store/redux-toolkit/reducers/authReducer";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
-import {UseQueryStateResult} from "@reduxjs/toolkit/dist/query/react/buildHooks";
 
 
 

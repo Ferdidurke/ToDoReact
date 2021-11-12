@@ -1,5 +1,5 @@
 import './styles.sass'
-import React, {useState} from "react";
+import React from "react";
 import {ITask, TaskForm} from "../task/script";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';

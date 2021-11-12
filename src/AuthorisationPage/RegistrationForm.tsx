@@ -76,25 +76,25 @@ function RegistrationForm(): ReactElement {
                                                                         value={ userFirstName }
                                                                         onChange={ handleChangeUserFirstName }/>
                         <label>Enter your last name:</label><TextField sx={{ backgroundColor: 'white' }}
-                                                                       variant="filled"
-                                                                       label='Lastname'
-                                                                       required
-                                                                       inputProps={{ 'data-testid': 'registration-last__name' }}
-                                                                       value={ userLastName }
-                                                                       onChange={ handleChangeUserLastName }/>
+                                                                        variant="filled"
+                                                                        label='Lastname'
+                                                                        required
+                                                                        inputProps={{ 'data-testid': 'registration-last__name' }}
+                                                                        value={ userLastName }
+                                                                        onChange={ handleChangeUserLastName }/>
                         <label>Enter your e-mail:</label><TextField sx={{ backgroundColor: 'white' }}
-                                                                    variant="filled"
-                                                                    label='E-mail'
-                                                                    type='email'
-                                                                    inputProps={{ 'data-testid': 'registration-email' }}
-                                                                    value={ userEmail }
-                                                                    onChange={ handleChangeUserEmail } required/>
+                                                                        variant="filled"
+                                                                        label='E-mail'
+                                                                        type='email'
+                                                                        inputProps={{ 'data-testid': 'registration-email' }}
+                                                                        value={ userEmail }
+                                                                        onChange={ handleChangeUserEmail } required/>
                         <label>Enter your password:</label><TextField sx={{ backgroundColor: 'white' }}
-                                                                      variant="filled"
-                                                                      label='Password'
-                                                                      type='password' required
-                                                                      value={ password }
-                                                                      onChange={ handleChangePassword }/>
+                                                                        variant="filled"
+                                                                        label='Password'
+                                                                        type='password' required
+                                                                        value={ password }
+                                                                        onChange={ handleChangePassword }/>
                         <Button variant='contained' type='submit'>Sign Up!</Button>
                     </form>)
                     }

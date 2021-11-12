@@ -1,6 +1,7 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 
 
+
 export interface IParams {
     skip?: number,
     limit?: number,
@@ -38,9 +39,9 @@ export const userApi = createApi({
                 },
                 body: user,
             }),
-            invalidatesTags: result => ['User']
+            invalidatesTags: ['User']
         }),
-        loginUser: build.mutation<any, any>({
+        loginUser: build.mutation<any, Partial<IUserRegister>>({
             query: (user) => ({
                 url: `/api/auth/login`,
                 method: 'POST',
@@ -49,7 +50,7 @@ export const userApi = createApi({
                 },
                 body: user,
             }),
-            invalidatesTags: result => ['User']
+            invalidatesTags: ['User']
         }),
     })
 

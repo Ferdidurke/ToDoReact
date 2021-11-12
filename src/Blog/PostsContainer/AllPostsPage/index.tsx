@@ -8,22 +8,22 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import NewPostForm from "./NewPostForm";
 import {Box, Button, ButtonGroup, CircularProgress} from "@mui/material";
 import {IParams} from "../../../services/UserService";
-import {logout} from "../../../store/redux-toolkit/reducers/authReducer";
-import {useDispatch} from "react-redux";
-import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {useSelector} from "react-redux";
+
+import {RootState} from "../../../store/redux-toolkit/store";
 
 
 
 
 function AllPostsPage(): ReactElement {
-    const dispatch = useDispatch()
-    const [params, setParams] = React.useState<Partial<IParams>> ({ skip: 0, limit: 5 })
-    const { data: postsData, isLoading, error  } = blogApi.useFetchPostsQuery(params)
-    const [addNewPost, setAddNewPost] = useState(false)
 
-    if (error && (error as FetchBaseQueryError).status === 401) {
-        dispatch(logout())
-    }
+    const [params, setParams] = React.useState<Partial<IParams>> ({ skip: 0, limit: 5 })
+    const { data: postsData, isFetching, error  } = blogApi.useFetchPostsQuery(params, {
+        refetchOnMountOrArgChange: true
+    })
+    const [addNewPost, setAddNewPost] = useState(false)
+    const { isAuthenticated } = useSelector((state: RootState) => state.auth)
+
 
 
 
@@ -70,17 +70,18 @@ function AllPostsPage(): ReactElement {
                     alignItems: 'center',
                     backgroundColor: 'primary.dark',
                     borderTop: '2px solid gray',
+                    marginBottom: '15px'
                     }}>
                         <div className='links__sorting-buttons__container'>
                             <p>Sort on date:</p>
-                            <ButtonGroup sx={{marginLeft: '5px'}} variant='contained'>
+                            <ButtonGroup sx={{ marginLeft: '5px' }} variant='contained'>
                                 <Button onClick={ sortOnDateAsc }><ArrowDownwardIcon /></Button>
                                 <Button onClick={ sortOnDateDesc }><ArrowUpwardIcon /></Button>
                             </ButtonGroup>
                         </div>
                         <div className='links__sorting-buttons__container'>
                             <p>Sort on author:</p>
-                            <ButtonGroup sx={{marginLeft: '5px'}} variant='contained'>
+                            <ButtonGroup sx={{ marginLeft: '5px' }} variant='contained'>
                                 <Button data-testid='sortAuthorAsc' onClick={ sortOnAuthorAsc }><ArrowDownwardIcon /></Button>
                                 <Button data-testid='sortAuthorDesc' onClick={ sortOnAuthorDesc }><ArrowUpwardIcon /></Button>
                             </ButtonGroup>
@@ -112,24 +113,26 @@ function AllPostsPage(): ReactElement {
                         </Box>
                 </Box>
                 <div className='posts__container'>
-                    <Button sx={{
-                        width: '300px',
-                        margin: '40px auto',
-                        display: 'block'
-                    }} variant='contained' onClick={ handleAddPost }>NEW POST</Button>
                     {
-                        addNewPost ? (
-                                   <NewPostForm/>   ) : null
+                        isAuthenticated && <Button sx={{
+                            width: '300px',
+                            margin: '40px auto',
+                            display: 'block'
+                        }} variant='contained' onClick={handleAddPost}>NEW POST</Button>
                     }
-                    { isLoading && (<div style={{ display: 'flex', margin: '0 auto', justifyContent: 'center', width: '300px', height: '300px' }}>
-                        <CircularProgress />
-                        </div>) }
+                            {
+                                addNewPost ? (
+                                <NewPostForm/>   ) : null
+                            }
+
                     { error && <h1>Произошла ошибка</h1> }
                     {
-                        postsData && postsData.posts.map((item: IPost, index: number) =>
+                        isFetching ? (<div style={{ display: 'flex', margin: '0 auto', justifyContent: 'center', width: '300px', height: '300px' }}>
+                            <CircularProgress />
+                        </div>) : (postsData && postsData.posts.map((item: IPost, index: number) =>
                         <PostForm   key={index}
                                     item={item}
-                                    />
+                                    />)
                         )
                     }
                 </div>

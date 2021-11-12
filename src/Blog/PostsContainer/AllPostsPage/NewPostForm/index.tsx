@@ -48,7 +48,9 @@ function NewPostForm() {
                         </div>)
                     : (<div className='post-form__container'>
                         <form className='new-post__form' onSubmit={submitNewPost}>
-                            <label>Title:</label><TextField sx={{backgroundColor: 'white'}} variant="filled" label='Title'
+                            <label>Title:</label><TextField sx={{backgroundColor: 'white'}}
+                                                            variant="filled"
+                                                            label='Title'
                                                             required
                                                             value={title}
                                                             onChange={handleChangeTitle}/>

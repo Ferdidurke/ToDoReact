@@ -1,12 +1,12 @@
 import React, {ReactElement} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
-import './Todos/styles.sass';
 import Todos from "./Todos/Todos";
 import {Blog} from "./Blog/Blog";
 import Main from "./Main";
 import RegistrationForm from "./AuthorisationPage/RegistrationForm";
 import {RootState} from "./store/redux-toolkit/store";
 import {useSelector} from "react-redux";
+
 
 
 
@@ -24,7 +24,7 @@ function App (): ReactElement {
                     <Route exact path='/' component={Main}/>
                     <Route path='/todos' component={Todos}/>
                     <Route exact path='/blog' component={Blog}/>
-                    <Redirect to = '/'/>
+                    <Redirect to = '/blog'/>
                 </Switch>
             </Router>
         )
@@ -34,6 +34,7 @@ function App (): ReactElement {
         <Router>
             <Switch>
                 <Route exact path='/' component={Main}/>
+                <Route exact path='/blog' component={Blog}/>
                 <Route exact path='/register' component={RegistrationForm}/>
                 <Redirect to = '/'/>
             </Switch>

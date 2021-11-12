@@ -1,5 +1,5 @@
 import './styles.sass'
-import React, {ReactElement, useEffect} from "react";
+import React, {useEffect} from "react";
 import {TaskForm} from "../task/script";
 import {TodosProps} from "../Todos";
 import {ITask} from "../task/script";
@@ -21,7 +21,6 @@ import {logout} from "../../store/redux-toolkit/reducers/authReducer";
 
 
 const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
-    const { id: userId } = useSelector((state: RootState)=> state.auth.user)
     const { tasks } = useSelector((state: RootState) => state.todo)
     const dispatch = useDispatch()
     const [changeTaskFields, { error: changeFieldsError }] = todoApi.useChangeTaskFieldsMutation()
@@ -43,7 +42,7 @@ const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
                 dispatch(markTaskOnDelete(index))
         }
 
-        changeTaskFields({ id: id, isMarkToDelete: true })
+        changeTaskFields({ _id: id, isMarkToDelete: true })
         const log = `Task with id:${id} replace in deleted container at ${ new Date().toLocaleString() }`
         console.log(log)
         sendLog({ body: log })
@@ -99,7 +98,7 @@ const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
             const droppableTask: ChildNode | null = document.getElementById(id)!.lastChild!.firstChild!.firstChild
             const isTaskChecked = (droppableTask as HTMLInputElement).checked
             if (isTaskChecked) {
-                changeTaskFields({id: id, isChecked: false})
+                changeTaskFields({ _id: id, isChecked: false })
                 const log = (`Task with id:${ id } moved to undone at ${ new Date().toLocaleString() }`)
                 sendLog({ body: log })
             }

@@ -14,14 +14,14 @@ export default function Header (): ReactElement {
         <>
         <BottomNavigation
             showLabels
-            sx={{backgroundColor: 'primary.dark'}}>
-            <BottomNavigationAction sx={{color: 'white'}} label="TODOS"
+            sx={{ backgroundColor: 'primary.dark' }}>
+            <BottomNavigationAction sx={{ color: 'white' }} label="TODOS"
                                     component={Link}
                                     to="/todos"/>
-            <BottomNavigationAction sx={{color: 'white'}} label="BLOG"
+            <BottomNavigationAction sx={{ color: 'white' }} label="BLOG"
                                     component={Link}
                                     to="/blog"/>
-            <BottomNavigationAction sx={{color: 'white'}} label="LOGOUT"
+            <BottomNavigationAction sx={{ color: 'white' }} label="LOGOUT"
                                     component={Link}
                                     onClick={()=>dispatch(logout())}
                                     to="/"/>
@@ -33,11 +33,14 @@ export default function Header (): ReactElement {
     return (
         <BottomNavigation
             showLabels
-            sx={{backgroundColor: 'primary.dark'}}>
-            <BottomNavigationAction sx={{color: 'white'}} label="LOGIN"
+            sx={{ backgroundColor: 'primary.dark' }}>
+            <BottomNavigationAction sx={{ color: 'white' }} label="BLOG"
                                     component={Link}
-                                    to="/login"/>
-            <BottomNavigationAction sx={{color: 'white'}} label="REGISTER"
+                                    to="/blog"/>
+            <BottomNavigationAction sx={{ color: 'white' }} label="LOGIN"
+                                    component={Link}
+                                    to="/"/>
+            <BottomNavigationAction sx={{ color: 'white' }} label="REGISTER"
                                     component={Link}
                                     to="/register"/>
         </BottomNavigation>

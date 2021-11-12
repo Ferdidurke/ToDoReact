@@ -2,7 +2,7 @@ import {ITask} from "../../../Todos/task/script";
 import {createSlice} from "@reduxjs/toolkit";
 import {userApi} from "../../../services/UserService";
 import {IToDoParams, todoApi} from "../../../services/TaskService";
-import {action} from "typesafe-actions";
+
 
 
 export const initialState = {
@@ -13,7 +13,7 @@ export const initialState = {
             deadlineDate: 'asc',
         },
         filter: {
-            userId: null
+            userId: localStorage.ReduxStorage ? JSON.parse(localStorage.getItem('ReduxStorage')!).auth.user.id : null
         },
     },
     isLoading: false
@@ -31,11 +31,16 @@ export const todoReducer = createSlice({
             state.tasks = [...state.tasks]
         },
 
-        markTaskOnDelete: (state, action) => {
-            const index = action.payload
-            state.tasks[index].isMarkToDelete = true
-            state.tasks[index].deletedDate = new Date().toLocaleString()
-            state.tasks = [...state.tasks]
+        changeTaskText: (state, action) => {
+            const index: number = state.tasks.findIndex((item: ITask) => item._id === action.payload.id)
+            if (index !== -1) {
+                    state.tasks[index].taskText = action.payload.taskText
+            }
+        },
+
+
+        deadliner: (state, action) => {
+            state.tasks[action.payload.index].deadlineColor = action.payload.deadlineColor
 
         },
 
@@ -44,14 +49,19 @@ export const todoReducer = createSlice({
             state.tasks.splice(index, 1)
         },
 
-        setRequestParams: (state, action) => {
-            console.log(action.payload)
-            state.reqParams.sort = action.payload
-        },
-        deadliner: (state, action) => {
-            state.tasks[action.payload.index].deadlineColor = action.payload.deadlineColor
+        markTaskOnDelete: (state, action) => {
+            const index = action.payload
+            state.tasks[index].isMarkToDelete = true
+            state.tasks[index].deletedDate = new Date().toLocaleString()
+            state.tasks = [...state.tasks]
 
         },
+
+
+        setRequestParams: (state, action) => {
+            state.reqParams.sort = action.payload
+        },
+
 
 
     },
@@ -135,5 +145,5 @@ export const todoReducer = createSlice({
 //
 //
 export default todoReducer.reducer
-export const {setRequestParams, changeStatus, markTaskOnDelete, deleteTaskFromDeletedBlock, deadliner} = todoReducer.actions
+export const {setRequestParams, changeTaskText, changeStatus, markTaskOnDelete, deleteTaskFromDeletedBlock, deadliner} = todoReducer.actions
 

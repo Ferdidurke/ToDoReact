@@ -2,7 +2,6 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {ITask} from "../Todos/task/script";
 import {RootState} from "../store/redux-toolkit/store";
 
-
 export const baseURL = process.env.REACT_APP_BASE_URL
 
 export interface IToDoParams {
@@ -13,6 +12,8 @@ export interface IToDoParams {
         userId : null | string
     }
 }
+
+
 
 
 export const todoApi = createApi({
@@ -36,7 +37,7 @@ export const todoApi = createApi({
                     sort: JSON.stringify(params.sort)
                 }
             }),
-            providesTags: result =>['Task']
+            providesTags: ['Task']
         }),
         addNewTask: build.mutation<ITask, ITask>({
             query: (task) => ({
@@ -47,31 +48,31 @@ export const todoApi = createApi({
                 },
                 body: task,
             }),
-            invalidatesTags: result => ['Task']
+            invalidatesTags: ['Task']
         }),
-        changeTaskFields: build.mutation<any, any>({
-            query: ({ id, ...patch }) => ({
-                url: `/api/todo/${ id }`,
+        changeTaskFields: build.mutation<ITask, Partial<ITask>>({
+            query: ({ _id, ...patch }) => ({
+                url: `/api/todo/${ _id }`,
                 method: 'PATCH',
                 body: patch,
             }),
-            //invalidatesTags: result => ['Task']
+
         }),
-        changeTaskColour: build.mutation<any, any>({
+        changeTaskColour: build.mutation<ITask, any>({
             query: (patch) => ({
                 url: `/api/todo/`,
                 method: 'PATCH',
                 body: patch,
             }),
-            //invalidatesTags: result => ['Task']
+
         }),
-        deleteTask: build.mutation<any, any>({
+        deleteTask: build.mutation<ITask, string>({
             query: (id) => ({
                 url: `/api/todo/`,
                 method: 'DELETE',
                 body: { id: id },
             }),
-            //invalidatesTags: result => ['Task']
+
         })
     })
 

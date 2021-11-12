@@ -21,7 +21,6 @@ export const authReducer = createSlice({
     initialState,
     reducers: {
         logout: (state) => {
-            console.log('loggen out')
             state.isAuthenticated = false
             state.user = null
             state.token = null
@@ -32,7 +31,7 @@ export const authReducer = createSlice({
             userApi.endpoints.loginUser.matchPending,
             (state) => {
               state.isLoading = true
-        }),
+        })
         builder.addMatcher(
             userApi.endpoints.loginUser.matchFulfilled, (state, { payload }) => {
                 state.token = payload.token

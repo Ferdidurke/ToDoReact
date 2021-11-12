@@ -13,7 +13,7 @@ function CommentsBlock(props: Partial<IPost> ): ReactElement {
     const [newComment, setNewComment] = useState(false)
     const [commentText, setCommentText] = useState('')
     const [sendComment, { error: mutationCommetsError }] = blogApi.useAddCommentMutation()
-    const { user } = useSelector((state: RootState) => state.auth)
+    const { user, isAuthenticated } = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch()
 
     if ((fetchCommentsError || mutationCommetsError) && ((fetchCommentsError as FetchBaseQueryError).status === 401 || (mutationCommetsError as FetchBaseQueryError).status === 401)) {
@@ -45,7 +45,7 @@ function CommentsBlock(props: Partial<IPost> ): ReactElement {
         <div>
 
             {
-                isLoading ? (<div style={{ display: 'flex', margin: '0 auto', justifyContent: 'center', width: '300px', height: '300px' }}>
+                isLoading ? (<div style={{ display: 'flex', margin: '0 auto', justifyContent: 'center', width: '300px', height: '150px' }}>
                         <CircularProgress />
                     </div>) :
 
@@ -68,19 +68,24 @@ function CommentsBlock(props: Partial<IPost> ): ReactElement {
                                     )
                                 )
                         }
-                        <div className='post-comments__button-container'>
-                            <CardActions>
-                                {
-                                    newComment ? (<Button size='small'
-                                                          onClick={submitComment}
-                                                          data-testid='submitCommentBtn'>Send
-                                    </Button>) : (<Button size='small'
-                                                          onClick={addComment}
-                                                          data-testid='addCommentBtn'>Add Comment
-                                    </Button>)
-                                }
-                            </CardActions>
-                        </div>
+                        {
+                            isAuthenticated && (
+                                <div className='post-comments__button-container'>
+                                    <CardActions>
+                                        {
+                                            newComment ? (<Button size='small'
+                                                                  onClick={submitComment}
+                                                                  data-testid='submitCommentBtn'>Send
+                                            </Button>) : (<Button size='small'
+                                                                  onClick={addComment}
+                                                                  data-testid='addCommentBtn'>Add Comment
+                                            </Button>)
+                                        }
+                                    </CardActions>
+                                </div>
+                            )
+                        }
+
                     </div>)
             }
 

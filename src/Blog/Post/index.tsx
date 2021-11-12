@@ -1,9 +1,9 @@
-import React, {ReactElement, useState} from 'react';
+import React, {ReactElement} from 'react';
 import './styles.sass'
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {IPostForm} from "./interfaces/interfaces";
 import {Link} from "react-router-dom";
-import {Accordion, AccordionDetails, AccordionSummary, Button, CardActionArea, CardActions} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Button, CardActionArea} from "@mui/material";
 import {blogApi} from "../../services/PostService";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -13,11 +13,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CommentsBlock from "./Comments/CommentsBlock";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {logout} from "../../store/redux-toolkit/reducers/authReducer";
+import {RootState} from "../../store/redux-toolkit/store";
 
 
 function PostForm ({ item } : IPostForm) : ReactElement  {
     const [expandedAccordion, setExpandedAccordion] = React.useState(false)
     const [deletePost, { error }] = blogApi.useDeletePostMutation()
+    const { user } = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch()
 
     if (error && (error as FetchBaseQueryError).status === 401) {
@@ -48,12 +50,17 @@ function PostForm ({ item } : IPostForm) : ReactElement  {
                 id={ item._id.toString() }>
                 <CardActionArea component={Link} to={ getId }>
                     <CardContent>
-                        <Button sx={{ float: 'right' }}
-                                id={ item._id.toString() }
-                                onClick={ handleRemovePost }
-                                size='large'>
-                                        <DeleteIcon/>
-                                </Button>
+                        {
+                            user && (<Button sx={{ float: 'right' }}
+                                    id={ item._id.toString() }
+                                    onClick={ handleRemovePost }
+                                    size='large'
+                                    disabled={item.userId !== user.id}>
+                                            <DeleteIcon/>
+                                    </Button>)
+                        }
+
+
                             <Typography sx={{
                                 display: 'flex',
                                 justifyContent: 'flex-end'
@@ -80,7 +87,7 @@ function PostForm ({ item } : IPostForm) : ReactElement  {
                         </Typography>
                     </CardContent>
                 </CardActionArea>
-                <Accordion id={item._id} expanded={expandedAccordion}>
+                <Accordion id={item._id}>
                     <AccordionSummary
                         onClick={ openCommentsBlock }
                         expandIcon={ <ExpandMoreIcon /> }

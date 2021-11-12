@@ -6,7 +6,9 @@ import {RootState} from "../store/redux-toolkit/store";
 
 const baseURL = process.env.REACT_APP_BASE_URL
 
-
+export interface ILog {
+    body: string
+}
 
 export const logApi = createApi({
     reducerPath: 'logApi',
@@ -21,13 +23,13 @@ export const logApi = createApi({
         }}),
     tagTypes: ['Logs'],
     endpoints: (build) => ({
-        fetchLogs: build.query<any, any>({
+        fetchLogs: build.query<ILog[], ILog>({
             query: () => ({
                 url: `/api/logs`,
             }),
-            providesTags: result =>['Logs']
+            providesTags: ['Logs']
         }),
-        addLogEvent: build.mutation<any, any>({
+        addLogEvent: build.mutation<ILog, ILog>({
             query: (log) => ({
                 url: `/api/logs`,
                 method: 'POST',
@@ -36,7 +38,7 @@ export const logApi = createApi({
                 },
                 body: log,
             }),
-            invalidatesTags: result => ['Logs']
+            invalidatesTags: ['Logs']
         }),
     })
 

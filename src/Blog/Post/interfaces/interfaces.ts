@@ -1,6 +1,12 @@
+export interface IPostData {
+    posts: IPost[]
+    counter: number
+}
+
+
 export interface IPost {
     _id: string
-    userId: number
+    userId: string
     author: string
     title: string
     date: string | Date
@@ -22,7 +28,7 @@ export interface IPostForm {
 export interface IComment {
     postId: number | string
     userId: number | string
-    id: number,
+    _id: string,
     date: Date | string
     author: string
     body: string

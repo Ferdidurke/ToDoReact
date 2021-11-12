@@ -1,6 +1,6 @@
 import {TaskForm} from "../task/script";
 import './styles.sass'
-import React, {useEffect} from "react";
+import React from "react";
 import {TodosProps} from "../Todos";
 import {ITask} from "../task/script";
 import {useDispatch, useSelector} from "react-redux";
@@ -34,7 +34,7 @@ const DoneTasks: React.FC<Partial<TodosProps>> = (props) => {
             dispatch(markTaskOnDelete(index))
         }
 
-        patchMarkedToDeleteTask({ id: id, isMarkToDelete: true })
+        patchMarkedToDeleteTask({ _id: id, isMarkToDelete: true })
         const log = `Task with id:${ id } replace in deleted container at ${ new Date().toLocaleString() }`
         console.log(log)
         sendLog({ body: log })
@@ -51,7 +51,7 @@ const DoneTasks: React.FC<Partial<TodosProps>> = (props) => {
             const droppableTask: any = document.getElementById(id)!.lastChild!.firstChild!.firstChild
             const isTaskChecked = droppableTask.checked
             if (!isTaskChecked) {
-                changeTaskFields({ id: id, isChecked: true })
+                changeTaskFields({ _id: id, isChecked: true })
                 const log = (`Task with id:${ id } moved to done at ${ new Date().toLocaleString() }`)
                 sendLog({ body: log })
             }

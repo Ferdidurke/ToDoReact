@@ -24,11 +24,11 @@ export const store = configureStore ({
 
 })
 
-console.log(store.getState())
+
 
 
 store.subscribe(()=>{
-    localStorage.setItem('ReduxStorage', JSON.stringify(store.getState().auth))
+    localStorage.setItem('ReduxStorage', JSON.stringify( { auth: store.getState().auth }))
 })
 
 export type RootState = ReturnType<typeof store.getState>;

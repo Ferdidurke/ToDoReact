@@ -11,7 +11,7 @@ import Card from "@mui/material/Card";
 import {RootState} from "../../store/redux-toolkit/store";
 import {todoApi} from "../../services/TaskService";
 import {logApi} from "../../services/LogService";
-import {changeStatus} from "../../store/redux-toolkit/reducers/todoReducer";
+import {changeStatus, changeTaskText} from "../../store/redux-toolkit/reducers/todoReducer";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {logout} from "../../store/redux-toolkit/reducers/authReducer";
 
@@ -112,7 +112,7 @@ function TaskForm (props: ITaskForm): ReactElement {
         console.log(log)
         sendLog({ body: log })
         isChecked = !isChecked
-        changeTaskFields({ id: id, isChecked: isChecked })
+        changeTaskFields({ _id: id, isChecked: isChecked })
     }
 
     const createInputForText = (event: React.FocusEvent | React.MouseEvent| any): void => {
@@ -124,7 +124,8 @@ function TaskForm (props: ITaskForm): ReactElement {
     }
 
     const doneTaskTextChange = () : void => {
-        changeTaskFields({ id: props.item._id, taskText: textValue })
+        changeTaskFields({ _id: props.item._id, taskText: textValue })
+        dispatch(changeTaskText({ id: props.item._id, taskText: textValue }))
         setInput(false)
     }
 
@@ -197,7 +198,11 @@ function TaskForm (props: ITaskForm): ReactElement {
                                             Deadline Date: { new Date(props.item.deadlineDate).toLocaleString() }
                                         </Typography>
                                             {
-                                                input ? (<TextField variant="filled" label="Set task text" autoFocus data-testid="testInput"
+                                                input ? (<TextField variant="filled" label="Set task text" autoFocus
+                                                                    inputProps={{
+                                                                        'data-testid': 'testInput',
+                                                                        'type': 'input'
+                                                                    }}
                                                                    id={ props.item._id }
                                                                    value={ textValue }
                                                                    onChange={ changeTaskTextOnInput }
@@ -208,6 +213,7 @@ function TaskForm (props: ITaskForm): ReactElement {
                                                         overflow: 'hidden',
                                                         textOverflow: 'ellipsis'
                                                     }}
+                                                                 data-testid='testTaskText'
                                                                  title={ props.item.taskText }
                                                                  tabIndex={0}
                                                                  id={ props.item._id }

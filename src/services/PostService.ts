@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {IPost, IUser} from "../Blog/Post/interfaces/interfaces";
+import {IPost, IPostData, IUser} from "../Blog/Post/interfaces/interfaces";
 import {IComment} from "../Blog/Post/interfaces/interfaces";
 import {RootState} from "../store/redux-toolkit/store";
 import {IParams} from "./UserService";
@@ -19,7 +19,7 @@ export const blogApi = createApi ({
         }}),
     tagTypes: ['Post', 'Comments'],
     endpoints: (build) => ({
-        fetchPosts: build.query<any, IParams>({
+        fetchPosts: build.query<IPostData, IParams>({
             query: (params) => ({
                 url: `/api/blog/posts`,
                 params: {
@@ -29,10 +29,10 @@ export const blogApi = createApi ({
                 }
 
             }),
-            providesTags: result =>['Post']
+            providesTags: ['Post']
         }),
-        fetchAuthors: build.query<IUser[], any>({
-            query: (params) => ({
+        fetchAuthors: build.query<IUser[], number>({
+            query: () => ({
                 url: '/api/users',
             }),
         }),
@@ -40,14 +40,14 @@ export const blogApi = createApi ({
             query: (id) => ({
                 url: `/api/blog/comments/${id}`,
             }),
-            providesTags: result =>['Comments']
+            providesTags: ['Comments']
         }),
         fetchSinglePost: build.query<IPost, string> ({
             query: (id) => ({
                 url: `/api/blog/posts/${id}`
             }),
         }),
-        addPost: build.mutation<any, any>({
+        addPost: build.mutation<IPost, Partial<IPost>>({
             query: (post) => ({
                 url: `/api/blog/posts`,
                 method: 'POST',
@@ -56,17 +56,17 @@ export const blogApi = createApi ({
                 },
                 body: post,
             }),
-            invalidatesTags: result => ['Post']
+            invalidatesTags: ['Post']
         }),
-        deletePost: build.mutation<any, any>({
-            query: (item) => ({
+        deletePost: build.mutation<IPost, Partial<IPost>>({
+            query: (post) => ({
                 url: `/api/blog/posts`,
                 method: 'DELETE',
-                body: item
+                body: post
             }),
-            invalidatesTags: result => ['Post']
+            invalidatesTags: ['Post']
         }),
-        addComment: build.mutation<any, any>({
+        addComment: build.mutation<IComment, Partial<IComment>>({
             query: (comment) => ({
                 url: `/api/blog/comments`,
                 method: 'POST',
@@ -75,7 +75,15 @@ export const blogApi = createApi ({
                 },
                 body: comment,
             }),
-            invalidatesTags: result => ['Comments']
+            invalidatesTags: ['Comments']
+        }),
+        deleteComment: build.mutation<IComment, Partial<IComment>>({
+            query: (comment) => ({
+                url: `/api/blog/comments`,
+                method: 'DELETE',
+                body: comment,
+            }),
+            invalidatesTags: ['Comments']
         }),
 
     })
