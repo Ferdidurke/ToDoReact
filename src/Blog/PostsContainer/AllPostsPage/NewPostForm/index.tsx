@@ -29,7 +29,6 @@ function NewPostForm() {
             body: postText,
             date: new Date()
         }
-        console.log(isLoading)
         addPost(post)
 
         setPostText('')

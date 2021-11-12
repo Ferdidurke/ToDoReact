@@ -1,5 +1,5 @@
 import './styles.sass'
-import React from "react";
+import React, {useState} from "react";
 import {ITask, TaskForm} from "../task/script";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -32,16 +32,18 @@ const DeletedTasks: React.FC<Partial<TodosProps>> = () => {
         const confirmation: boolean = window.confirm('Are you right?')
             if (confirmation) {
                 const index: number = tasks.findIndex((item: ITask) => item._id === id)
-                dispatch(deleteTaskFromDeletedBlock(index))
-
-                const taskOnDelete: HTMLElement | null = document.getElementById(id)
-                taskOnDelete!.classList.toggle('deleted')
+                setTimeout(()=> dispatch(deleteTaskFromDeletedBlock(index)), 300)
                 deleteTaskFromServer(id)
                 const log = `Task with id:${id} deleted at ${new Date().toLocaleString()}`
                 console.log(log)
                 sendLog({ body: log })
             }
         }
+
+
+
+
+
 
 
     return (
@@ -58,9 +60,11 @@ const DeletedTasks: React.FC<Partial<TodosProps>> = () => {
                         {
                             tasks && tasks.map((item: ITask) => (item.isMarkToDelete) ?
                                 (
-                                    <TaskForm key={item._id} item={item}
-                                              markTaskToDelete={deleteTaskOnRedux}
-                                              />
+
+                                        <TaskForm key={item._id} item={item}
+                                                  markTaskToDelete={deleteTaskOnRedux}
+                                                  />
+
                                 ) : null
                             )
                         }

@@ -10,7 +10,7 @@ export interface IAuthUser {
 }
 
 const initialState: IAuthUser = {
-    token: localStorage.getItem('token'),
+    token: '',
     isAuthenticated: false,
     isLoading: false,
     user: null

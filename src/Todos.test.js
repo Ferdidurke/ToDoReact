@@ -15,6 +15,10 @@ import Todos from "./Todos/Todos";
 import {configureStore} from "@reduxjs/toolkit";
 import {blogApi} from "./services/PostService";
 import {BrowserRouter} from "react-router-dom";
+import {authReducer} from "./store/redux-toolkit/reducers/authReducer";
+import {userApi} from "./services/UserService";
+import {todoApi} from "./services/TaskService";
+import {logApi} from "./services/LogService";
 
 
 const renderWithRedux = (
@@ -22,8 +26,12 @@ const renderWithRedux = (
     {
         store = configureStore({
             reducer: {
+                auth: authReducer.reducer,
                 todo: todoReducer.reducer,
                 [blogApi.reducerPath]: blogApi.reducer,
+                [userApi.reducerPath]: userApi.reducer,
+                [todoApi.reducerPath]: todoApi.reducer,
+                [logApi.reducerPath]: logApi.reducer,
             },
         })
     } = {} ) => {

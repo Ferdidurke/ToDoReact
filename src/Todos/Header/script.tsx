@@ -9,9 +9,10 @@ import {RootState} from "../../store/redux-toolkit/store";
 
 function ToDoHeader () : ReactElement {
     const { token } = useSelector((state: RootState) => state.auth)
+    const { id: userId } = useSelector( (state: RootState) => state.auth.user)
 
     const downloadFiles = async (key: string, name: string): Promise<void> => {
-        fetch(`${ baseURL }api/todo/download/${name}`, {
+        fetch(`${ baseURL }api/todo/download/${name}/?userId=${userId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${ token as string }`

@@ -6,9 +6,8 @@ import {Blog} from "./Blog/Blog";
 import Main from "./Main";
 import RegistrationForm from "./AuthorisationPage/RegistrationForm";
 import {RootState} from "./store/redux-toolkit/store";
-import {useDispatch, useSelector} from "react-redux";
-import jwtDecode from "jwt-decode";
-import {logout} from "./store/redux-toolkit/reducers/authReducer";
+import {useSelector} from "react-redux";
+
 
 
 

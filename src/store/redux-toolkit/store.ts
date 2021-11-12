@@ -28,7 +28,7 @@ console.log(store.getState())
 
 
 store.subscribe(()=>{
-    localStorage.setItem('ReduxStorage', JSON.stringify(store.getState()))
+    localStorage.setItem('ReduxStorage', JSON.stringify(store.getState().auth))
 })
 
 export type RootState = ReturnType<typeof store.getState>;
