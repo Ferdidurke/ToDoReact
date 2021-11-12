@@ -1,17 +1,24 @@
 import React, {ReactElement, useState} from 'react';
 import {blogApi} from "../../../services/PostService";
 import {Button, CardActions, CircularProgress} from "@mui/material";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/redux-toolkit/store";
 import {IComment, IPost} from "../interfaces/interfaces";
 import SingleComment from "./SingleComment";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {logout} from "../../../store/redux-toolkit/reducers/authReducer";
 
 function CommentsBlock(props: Partial<IPost> ): ReactElement {
-    const { data: comments, isLoading } = blogApi.useFetchCommentsQuery(props._id as string)
+    const { data: comments, isLoading, error: fetchCommentsError } = blogApi.useFetchCommentsQuery(props._id as string)
     const [newComment, setNewComment] = useState(false)
     const [commentText, setCommentText] = useState('')
-    const [sendComment] = blogApi.useAddCommentMutation()
+    const [sendComment, { error: mutationCommetsError }] = blogApi.useAddCommentMutation()
     const { user } = useSelector((state: RootState) => state.auth)
+    const dispatch = useDispatch()
+
+    if ((fetchCommentsError || mutationCommetsError) && ((fetchCommentsError as FetchBaseQueryError).status === 401 || (mutationCommetsError as FetchBaseQueryError).status === 401)) {
+        dispatch(logout())
+    }
 
 
     const addComment = (): void => {

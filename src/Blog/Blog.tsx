@@ -6,12 +6,10 @@ import CurrentPostPage from "./PostsContainer/CurrentPostPage";
 import Header from "../Header";
 import UserCard from "./UserCard";
 
-import {checkToken} from "../CheckAuthToken/CheckAuthToken";
 
 
 
 export function Blog(): ReactElement {
-    checkToken()
 
     return (
         <div className='blog'>

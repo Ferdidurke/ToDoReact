@@ -21,6 +21,7 @@ export const authReducer = createSlice({
     initialState,
     reducers: {
         logout: (state) => {
+            console.log('loggen out')
             state.isAuthenticated = false
             state.user = null
             state.token = null

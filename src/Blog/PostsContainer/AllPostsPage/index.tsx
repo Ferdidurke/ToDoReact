@@ -8,15 +8,23 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import NewPostForm from "./NewPostForm";
 import {Box, Button, ButtonGroup, CircularProgress} from "@mui/material";
 import {IParams} from "../../../services/UserService";
+import {logout} from "../../../store/redux-toolkit/reducers/authReducer";
+import {useDispatch} from "react-redux";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 
 
 
 
 function AllPostsPage(): ReactElement {
-
+    const dispatch = useDispatch()
     const [params, setParams] = React.useState<Partial<IParams>> ({ skip: 0, limit: 5 })
     const { data: postsData, isLoading, error  } = blogApi.useFetchPostsQuery(params)
     const [addNewPost, setAddNewPost] = useState(false)
+
+    if (error && (error as FetchBaseQueryError).status === 401) {
+        dispatch(logout())
+    }
+
 
 
     const handleAddPost = () => {

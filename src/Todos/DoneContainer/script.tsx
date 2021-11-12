@@ -6,19 +6,26 @@ import {ITask} from "../task/script";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/redux-toolkit/store";
 import {Box, Typography} from "@mui/material";
-import {IToDoParams, todoApi} from "../../services/TaskService";
+import {todoApi} from "../../services/TaskService";
 import {logApi} from "../../services/LogService";
 import {changeStatus, markTaskOnDelete} from "../../store/redux-toolkit/reducers/todoReducer";
-import {checkToken} from "../../CheckAuthToken/CheckAuthToken";
+
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {logout} from "../../store/redux-toolkit/reducers/authReducer";
 
 const DoneTasks: React.FC<Partial<TodosProps>> = (props) => {
 
     const { tasks } = useSelector((state: RootState) => state.todo)
-    const [changeTaskFields] = todoApi.useChangeTaskFieldsMutation()
-    const [patchMarkedToDeleteTask] = todoApi.useChangeTaskFieldsMutation()
+    const [changeTaskFields, { error: changeFieldsError }] = todoApi.useChangeTaskFieldsMutation()
+    const [patchMarkedToDeleteTask, { error: deleteError }] = todoApi.useChangeTaskFieldsMutation()
     const [sendLog] = logApi.useAddLogEventMutation()
     const dispatch = useDispatch()
-    checkToken()
+
+
+    if ((deleteError || changeFieldsError) && ((deleteError as FetchBaseQueryError).status === 401 || (changeFieldsError as FetchBaseQueryError).status === 401)) {
+        dispatch(logout())
+    }
+
 
 
     const markTaskToDelete = (id: string): void => {

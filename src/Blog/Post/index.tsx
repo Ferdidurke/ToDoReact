@@ -1,10 +1,8 @@
 import React, {ReactElement, useState} from 'react';
 import './styles.sass'
-import {useSelector} from "react-redux";
-import SingleComment from "./Comments/SingleComment";
-import {IComment} from "./interfaces/interfaces";
+import {useDispatch} from "react-redux";
 import {IPostForm} from "./interfaces/interfaces";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {Accordion, AccordionDetails, AccordionSummary, Button, CardActionArea, CardActions} from "@mui/material";
 import {blogApi} from "../../services/PostService";
 import CardContent from "@mui/material/CardContent";
@@ -13,13 +11,18 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Card from "@mui/material/Card";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CommentsBlock from "./Comments/CommentsBlock";
-import {use} from "msw/lib/types/utils/internal/requestHandlerUtils";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {logout} from "../../store/redux-toolkit/reducers/authReducer";
 
 
 function PostForm ({ item } : IPostForm) : ReactElement  {
     const [expandedAccordion, setExpandedAccordion] = React.useState(false)
-    const [deletePost] = blogApi.useDeletePostMutation()
-    console.log(item._id)
+    const [deletePost, { error }] = blogApi.useDeletePostMutation()
+    const dispatch = useDispatch()
+
+    if (error && (error as FetchBaseQueryError).status === 401) {
+        dispatch(logout())
+    }
 
     const handleRemovePost = (e: React.MouseEvent): void => {
         e.preventDefault()

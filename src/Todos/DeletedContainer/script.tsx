@@ -12,18 +12,20 @@ import {logApi} from "../../services/LogService";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/redux-toolkit/store";
 import {deleteTaskFromDeletedBlock} from "../../store/redux-toolkit/reducers/todoReducer";
-import {checkToken} from "../../CheckAuthToken/CheckAuthToken";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {logout} from "../../store/redux-toolkit/reducers/authReducer";
 
 
 
 const DeletedTasks: React.FC<Partial<TodosProps>> = () => {
     const { tasks } = useSelector((state: RootState) => state.todo)
-    const [deleteTaskFromServer] = todoApi.useDeleteTaskMutation()
+    const [deleteTaskFromServer, { error }] = todoApi.useDeleteTaskMutation()
     const [sendLog] = logApi.useAddLogEventMutation()
     const dispatch = useDispatch()
-    checkToken()
 
-
+    if (error && (error as FetchBaseQueryError).status === 401) {
+        dispatch(logout())
+    }
 
     const deleteTaskOnRedux = (id: string) => {
 

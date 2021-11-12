@@ -13,6 +13,8 @@ import {RootState} from "../../store/redux-toolkit/store";
 import {todoApi} from "../../services/TaskService";
 import {logApi} from "../../services/LogService";
 import {changeStatus} from "../../store/redux-toolkit/reducers/todoReducer";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {logout} from "../../store/redux-toolkit/reducers/authReducer";
 
 
 export interface ITask {
@@ -49,12 +51,15 @@ function Task (this: ITask, userId: string, taskText : string, taskDeadline : st
 function TaskForm (props: ITaskForm): ReactElement {
     const { user } = useSelector((state: RootState) => state.auth)
     const { tasks } = useSelector((state: RootState) => state.todo)
-    const [changeTaskFields, { isLoading: isChangeLoading } ] = todoApi.useChangeTaskFieldsMutation()
+    const [changeTaskFields, { isLoading: isChangeLoading, error: isChangeError } ] = todoApi.useChangeTaskFieldsMutation()
     const [input, setInput] = useState(false)
     const [textValue, setTextValue] = useState(props.item.taskText)
     const [sendLog] = logApi.useAddLogEventMutation()
     const dispatch = useDispatch()
 
+    if (isChangeError && (isChangeError as FetchBaseQueryError).status === 401) {
+        dispatch(logout())
+    }
 
 
     const changeTaskStatus = () => {

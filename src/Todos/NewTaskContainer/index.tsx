@@ -7,6 +7,8 @@ import {AddCircleOutline} from "@mui/icons-material";
 import {RootState} from "../../store/redux-toolkit/store";
 import {todoApi} from "../../services/TaskService";
 import {logApi} from "../../services/LogService";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {logout} from "../../store/redux-toolkit/reducers/authReducer";
 
 
 
@@ -14,12 +16,17 @@ import {logApi} from "../../services/LogService";
 export function NewTaskForm () : ReactElement {
     const [text, setTaskText] = useState('')
     const { user } = useSelector((state: RootState) => state.auth)
-    const [addNewTask, { isLoading }] = todoApi.useAddNewTaskMutation()
+    const [addNewTask, { isLoading, error }] = todoApi.useAddNewTaskMutation()
     const [deadlineDate, setDeadlineDate] = useState('')
     const [sendLog] =  logApi.useAddLogEventMutation()
+    const dispatch = useDispatch()
 
+    if (error && (error as FetchBaseQueryError).status === 401) {
+        dispatch(logout())
+    }
 
-    const createNewTask = (): void => {
+    const createNewTask = (e: React.FormEvent): void => {
+        e.preventDefault()
         const task: ITask = new (Task as any)(user.id, text || '...', deadlineDate)
         addNewTask(task)
         const log = (`Create new task with at ${ new Date().toLocaleString() }. Deadline date: ${ new Date(deadlineDate).toLocaleString() }`)
@@ -38,7 +45,7 @@ export function NewTaskForm () : ReactElement {
     }
     return (
 
-        <div className="new-task__container">
+        <form className="new-task__container" onSubmit={ createNewTask }>
             {
 
                 isLoading ? (<div style={{
@@ -53,7 +60,8 @@ export function NewTaskForm () : ReactElement {
                     <label className="task-form__label">Task Deadline:</label>
                     <TextField variant="outlined"
                                type="datetime-local"
-                               data-testid='dateInput'
+                               data-testid="dateInput"
+                               required={true}
                                value={deadlineDate}
                                onChange={changeInputTaskDeadline}
                     />
@@ -61,18 +69,19 @@ export function NewTaskForm () : ReactElement {
                     <TextField variant="outlined"
                                 label="Enter task text"
                                 multiline
+                                required={true}
                                 rows={4}
                                 value={text}
                                 onChange={changeInputTaskText}
                     />
                     <Button variant='contained'
                             data-testid='newTaskButton'
-                            onClick={createNewTask}>
+                            type='submit'>
                                                     <AddCircleOutline/>
                     </Button>
                     </>
                 )
             }
-        </div>
+        </form>
     )
 }

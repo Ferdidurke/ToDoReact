@@ -10,6 +10,8 @@ import {todoApi} from "../services/TaskService";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/redux-toolkit/store";
 import {logout} from "../store/redux-toolkit/reducers/authReducer";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {UseQueryStateResult} from "@reduxjs/toolkit/dist/query/react/buildHooks";
 
 
 
@@ -26,12 +28,11 @@ function Todos (): ReactElement {
     const dispatch = useDispatch()
     const { reqParams: params } = useSelector((state: RootState) => state.todo)
 
-    const { error }: any = todoApi.useFetchTasksQuery(params, {
+    const { error } = todoApi.useFetchTasksQuery(params, {
         refetchOnMountOrArgChange: true
     })
 
-    if (error && error.status === 401) {
-        console.log((error as any).status)
+    if (error && (error as FetchBaseQueryError).status === 401) {
         dispatch(logout())
     }
 

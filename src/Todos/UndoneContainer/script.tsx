@@ -15,17 +15,22 @@ import {
     markTaskOnDelete,
     setRequestParams
 } from "../../store/redux-toolkit/reducers/todoReducer";
-import {checkToken} from "../../CheckAuthToken/CheckAuthToken";
+
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {logout} from "../../store/redux-toolkit/reducers/authReducer";
 
 
 const UndoneTasks: React.FC<Partial<TodosProps>> = (props) => {
     const { id: userId } = useSelector((state: RootState)=> state.auth.user)
     const { tasks } = useSelector((state: RootState) => state.todo)
     const dispatch = useDispatch()
-    checkToken()
-    const [changeTaskFields] = todoApi.useChangeTaskFieldsMutation()
-    const [changeTaskColour] = todoApi.useChangeTaskColourMutation()
+    const [changeTaskFields, { error: changeFieldsError }] = todoApi.useChangeTaskFieldsMutation()
+    const [changeTaskColour, { error: changeColoursError }] = todoApi.useChangeTaskColourMutation()
     const [sendLog] = logApi.useAddLogEventMutation()
+
+    if ((changeColoursError || changeFieldsError) && ((changeColoursError as FetchBaseQueryError).status === 401 || (changeFieldsError as FetchBaseQueryError).status === 401)) {
+        dispatch(logout())
+    }
 
     useEffect(() => {
         changeDeadlineColor()
