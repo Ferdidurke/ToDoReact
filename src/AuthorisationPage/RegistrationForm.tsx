@@ -13,7 +13,7 @@ function RegistrationForm(): ReactElement {
     const [userLastName, setUserLastName] = useState('')
     const [userEmail, setUserEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [registerNewUser, { isLoading, isSuccess } ] = userApi.useRegisterUserMutation()
+    const [registerNewUser, { isLoading, isSuccess, isError } ] = userApi.useRegisterUserMutation()
     const history = useHistory()
 
     const handleChangeUserFirstName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +48,9 @@ function RegistrationForm(): ReactElement {
     }
 
     if (isSuccess) {
-        alert('Register Success!')
         history.push('/main')
     }
+
 
     return (
         <div>
@@ -96,6 +96,9 @@ function RegistrationForm(): ReactElement {
                                                                         value={ password }
                                                                         onChange={ handleChangePassword }/>
                         <Button variant='contained' type='submit'>Sign Up!</Button>
+                            {
+                                isError ? <p>Something wrong, try again</p> : null
+                            }
                     </form>)
                     }
                 </div>
