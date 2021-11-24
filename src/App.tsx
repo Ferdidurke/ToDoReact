@@ -10,12 +10,8 @@ import {useSelector} from "react-redux";
 
 
 
-
-
 function App (): ReactElement {
     const { isAuthenticated } = useSelector((state: RootState) => state.auth)
-
-
 
     if (isAuthenticated) {
         return (

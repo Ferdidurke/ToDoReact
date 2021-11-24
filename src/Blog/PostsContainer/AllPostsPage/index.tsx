@@ -7,16 +7,16 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import NewPostForm from "./NewPostForm";
 import {Box, Button, ButtonGroup, CircularProgress} from "@mui/material";
-import {IParams} from "../../../services/UserService";
+import {IParams, userApi} from "../../../services/UserService";
 import {useSelector} from "react-redux";
-
 import {RootState} from "../../../store/redux-toolkit/store";
 
 
 
 
-function AllPostsPage(): ReactElement {
 
+function AllPostsPage(): ReactElement {
+    userApi.useGetUserQuery({})
     const [params, setParams] = React.useState<Partial<IParams>> ({ skip: 0, limit: 5 })
     const { data: postsData, isFetching, error  } = blogApi.useFetchPostsQuery(params, {
         refetchOnMountOrArgChange: true

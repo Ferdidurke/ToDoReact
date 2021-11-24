@@ -14,8 +14,8 @@ export const logApi = createApi({
     reducerPath: 'logApi',
     baseQuery: fetchBaseQuery({
         baseUrl: baseURL,
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).auth.token
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('token')
             if (token) {
                 headers.set('Authorization', `Bearer ${ token }`)
             }

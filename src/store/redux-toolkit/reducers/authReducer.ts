@@ -3,14 +3,12 @@ import {userApi} from "../../../services/UserService";
 
 
 export interface IAuthUser {
-    token: string | null
     isAuthenticated: boolean,
     isLoading: boolean,
     user: null | any
 }
 
 const initialState: IAuthUser = {
-    token: '',
     isAuthenticated: false,
     isLoading: false,
     user: null
@@ -23,7 +21,7 @@ export const authReducer = createSlice({
         logout: (state) => {
             state.isAuthenticated = false
             state.user = null
-            state.token = null
+            localStorage.removeItem('token')
         }
     },
     extraReducers: (builder) => {
@@ -34,14 +32,19 @@ export const authReducer = createSlice({
         })
         builder.addMatcher(
             userApi.endpoints.loginUser.matchFulfilled, (state, { payload }) => {
-                state.token = payload.token
-                state.user = {
-                    id: payload.userId,
-                    firstName: payload.firstName,
-                    lastName: payload.lastName,
-                }
+                localStorage.setItem('token', payload.token)
                 state.isAuthenticated = true
                 state.isLoading = false
+            }
+        )
+        builder.addMatcher(
+            userApi.endpoints.getUser.matchFulfilled, (state, { payload }) => {
+                state.user = {
+                    id: payload.id,
+                    firstName: payload.firstName,
+                    lastName: payload.lastName,
+                    email: payload.email
+                }
             }
         )
     },

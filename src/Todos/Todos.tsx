@@ -14,11 +14,11 @@ import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 
 
 
+
 export interface TodosProps {
     handlerDragEnter(event: React.DragEvent<HTMLDivElement>): void
     handlerDragOver(event: React.DragEvent<HTMLDivElement>): void
 }
-
 
 
 

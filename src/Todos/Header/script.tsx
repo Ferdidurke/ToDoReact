@@ -8,7 +8,7 @@ import {RootState} from "../../store/redux-toolkit/store";
 
 
 function ToDoHeader () : ReactElement {
-    const { token } = useSelector((state: RootState) => state.auth)
+    const token = localStorage.getItem('token')
     const { id: userId } = useSelector( (state: RootState) => state.auth.user)
 
     const downloadFiles = async (key: string, name: string): Promise<void> => {

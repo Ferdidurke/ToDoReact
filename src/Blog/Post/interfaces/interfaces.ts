@@ -19,6 +19,7 @@ export interface IUser {
     _id: number | string,
     firstName: string,
     lastName: string,
+    email: string
 }
 
 export interface IPostForm {

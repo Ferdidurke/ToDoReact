@@ -13,7 +13,7 @@ export const initialState = {
             deadlineDate: 'asc',
         },
         filter: {
-            userId: localStorage.ReduxStorage ? JSON.parse(localStorage.getItem('ReduxStorage')!).auth.user.id : null
+            userId: null
         },
     },
     isLoading: false
@@ -73,7 +73,6 @@ export const todoReducer = createSlice({
                 }
             )
 
-
             builder.addMatcher(
                 todoApi.endpoints.fetchTasks.matchFulfilled, (state, { payload }) => {
                     state.tasks = payload
@@ -81,9 +80,9 @@ export const todoReducer = createSlice({
                 }
             )
             builder.addMatcher(
-                userApi.endpoints.loginUser.matchFulfilled, (state, { payload }) => {
+                userApi.endpoints.getUser.matchFulfilled, (state, { payload }) => {
                     state.reqParams.filter = {
-                        userId: payload.userId,
+                        userId: payload.id,
                     }
                 }
             )
