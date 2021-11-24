@@ -1,7 +1,5 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {IUser} from "../Blog/Post/interfaces/interfaces";
-import {RootState} from "../store/redux-toolkit/store";
-
 
 
 export interface IParams {
@@ -54,7 +52,7 @@ export const userApi = createApi({
             }),
             invalidatesTags: ['User']
         }),
-        getUser: build.query<any, Partial<IUser>>({
+        getUser: build.query<any, null>({
             query: () =>({
                 url: `/api/auth/me`,
                 headers: {

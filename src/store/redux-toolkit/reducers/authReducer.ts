@@ -45,6 +45,7 @@ export const authReducer = createSlice({
                     lastName: payload.lastName,
                     email: payload.email
                 }
+                state.isAuthenticated = true
             }
         )
     },

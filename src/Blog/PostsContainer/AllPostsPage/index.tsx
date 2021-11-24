@@ -16,7 +16,7 @@ import {RootState} from "../../../store/redux-toolkit/store";
 
 
 function AllPostsPage(): ReactElement {
-    userApi.useGetUserQuery({})
+    userApi.useGetUserQuery(null)
     const [params, setParams] = React.useState<Partial<IParams>> ({ skip: 0, limit: 5 })
     const { data: postsData, isFetching, error  } = blogApi.useFetchPostsQuery(params, {
         refetchOnMountOrArgChange: true

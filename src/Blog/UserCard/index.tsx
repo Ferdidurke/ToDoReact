@@ -11,7 +11,7 @@ import {userApi} from "../../services/UserService";
 function UserCard(): ReactElement {
 
     const { isAuthenticated } = useSelector((state: RootState) => state.auth)
-    const { data: user } = userApi.useGetUserQuery({})
+    const { data: user } = userApi.useGetUserQuery(null)
 
     if (isAuthenticated) {
         const dispatch = useDispatch()
@@ -25,7 +25,7 @@ function UserCard(): ReactElement {
 
 
             const userLetter = (user as IUser).firstName.slice(0, 1)
-            const userFullName = `${(user as IUser).firstName} ${(user as IUser).lastName}`
+            const userFullName = `${ (user as IUser).firstName } ${ (user as IUser).lastName }`
             return (
                 <Card sx={{
                     maxWidth: 250,
@@ -35,16 +35,16 @@ function UserCard(): ReactElement {
                 }}>
                     <CardHeader
                         avatar={
-                            <Avatar sx={{bgcolor: '#1565c0'}}>
-                                {userLetter}
+                            <Avatar sx={{ bgcolor: '#1565c0' }}>
+                                { userLetter }
                             </Avatar>
                         }
                         action={
-                            <IconButton onClick={loggingOut}>
+                            <IconButton onClick={ loggingOut }>
                                 <LogoutIcon/>
                             </IconButton>
                         }
-                        title={userFullName}
+                        title={ userFullName }
                         subheader='Online'
                     />
                 </Card>
