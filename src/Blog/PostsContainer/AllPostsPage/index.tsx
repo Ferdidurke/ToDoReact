@@ -117,7 +117,10 @@ function AllPostsPage(): ReactElement {
                         isAuthenticated && <Button sx={{
                             width: '300px',
                             margin: '40px auto',
-                            display: 'block'
+                            display: 'block',
+                            ['@media(maxWidth: 400px)'] : {
+                                width: '200px'
+                            }
                         }} variant='contained' onClick={handleAddPost}>NEW POST</Button>
                     }
                             {
