@@ -7,8 +7,6 @@ import {logApi} from "../../services/LogService";
 import {todoReducer} from "./reducers/todoReducer";
 
 
-const persistedState = localStorage.ReduxStorage ? JSON.parse(localStorage.getItem('ReduxStorage')!) : {}
-
 
 export const store = configureStore ({
     reducer: {
@@ -20,7 +18,6 @@ export const store = configureStore ({
         [logApi.reducerPath]: logApi.reducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat([blogApi.middleware, userApi.middleware, todoApi.middleware, logApi.middleware]),
-    preloadedState: persistedState
 
 })
 
