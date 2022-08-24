@@ -8,8 +8,6 @@ import {RootState} from "./store/redux-toolkit/store";
 import {useSelector} from "react-redux";
 
 
-
-
 function App (): ReactElement {
     const { isAuthenticated } = useSelector((state: RootState) => state.auth)
 
